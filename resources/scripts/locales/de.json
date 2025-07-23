@@ -1064,9 +1064,9 @@
       "email": "Benachrichtigungen senden an",
       "description": "Welche E-Mail-Benachrichtigungen möchten Sie erhalten wenn sich etwas ändert?",
       "invoice_viewed": "Rechnung angezeigt",
-      "invoice_viewed_desc": "Wenn Ihr Kunde die gesendete Rechnung anzeigt bekommt.",
+      "invoice_viewed_desc": "Wenn Ihr Kunde die gesendete Rechnung angezeigt bekommt.",
       "estimate_viewed": "Angebot angesehen",
-      "estimate_viewed_desc": "Wenn Ihr Kunde das gesendete Angebot anzeigt bekommt.",
+      "estimate_viewed_desc": "Wenn Ihr Kunde das gesendete Angebot angezeigt bekommt.",
       "save": "Speichern",
       "email_save_message": "Email erfolgreich gespeichert",
       "please_enter_email": "Bitte E-Mail eingeben"

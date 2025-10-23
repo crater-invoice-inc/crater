@@ -22,6 +22,7 @@ use Crater\Http\Controllers\V1\Admin\ExchangeRate\GetActiveProviderController;
 use Crater\Http\Controllers\V1\Admin\ExchangeRate\GetExchangeRateController;
 use Crater\Http\Controllers\V1\Admin\ExchangeRate\GetSupportedCurrenciesController;
 use Crater\Http\Controllers\V1\Admin\ExchangeRate\GetUsedCurrenciesController;
+use Crater\Http\Controllers\V1\Admin\ExchangeRate\BcvRateController;
 use Crater\Http\Controllers\V1\Admin\Expense\ExpenseCategoriesController;
 use Crater\Http\Controllers\V1\Admin\Expense\ExpensesController;
 use Crater\Http\Controllers\V1\Admin\Expense\ShowReceiptController;
@@ -366,6 +367,8 @@ Route::prefix('/v1')->group(function () {
             Route::get('/supported-currencies', GetSupportedCurrenciesController::class);
 
             Route::apiResource('exchange-rate-providers', ExchangeRateProviderController::class);
+
+            Route::get('/bcv-rate', [BcvRateController::class, 'getRate']);
 
 
             // Settings

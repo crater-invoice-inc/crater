@@ -600,6 +600,14 @@ class CurrenciesTableSeeder extends Seeder
                 'decimal_separator' => ',',
                 'swap_currency_symbol' => true,
             ],
+            [
+                'name' => 'Venezuelan Bolivar',
+                'code' => 'VES',
+                'symbol' => 'Bs.',
+                'precision' => '2',
+                'thousand_separator' => '.',
+                'decimal_separator' => ',',
+            ],
         ];
 
 

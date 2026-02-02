@@ -80,7 +80,7 @@ export const useGlobalStore = (useWindow = false) => {
                 response.data.current_company_currency
 
               global.locale =
-                response.data.current_user_settings.language || 'en'
+                response.data.current_user_settings.language || 'uk'
 
               this.isAppLoaded = true
               resolve(response)

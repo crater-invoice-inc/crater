@@ -1,5 +1,3 @@
-version: '3'
-
 services:
   app:
     build:
@@ -24,7 +22,7 @@ services:
       - db:/var/lib/mysql
       # If you want to persist data on the host, comment the line above this one...
       # and uncomment the line under this one.
-      #- ./docker-compose/db/data:/var/lib/mysql:rw,delegated
+      # - ./docker-compose/db/data:/var/lib/mysql:rw,delegated
     environment:
       MYSQL_USER: crater
       MYSQL_PASSWORD: crater
@@ -39,7 +37,7 @@ services:
     image: nginx:1.17-alpine
     restart: unless-stopped
     ports:
-      - 80:80
+      - 3080:80
     volumes:
       - ./:/var/www
       - ./docker-compose/nginx:/etc/nginx/conf.d/
@@ -54,6 +52,13 @@ services:
       - ./:/var/www
     networks:
       - crater
+
+  cloudflared:
+    container_name: creater_cloudflared
+    image: cloudflare/cloudflared:latest
+    restart: unless-stopped
+    command: tunnel run
+    env_file: ./docker-compose/.env
 
 volumes:
   db:

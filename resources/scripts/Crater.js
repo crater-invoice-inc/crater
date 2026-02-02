@@ -39,7 +39,7 @@ export default class Crater {
     app.provide('$utils', utils)
 
     const i18n = createI18n({
-      locale: 'en',
+      locale: 'uk',
       fallbackLocale: 'en',
       globalInjection: true,
       messages: this.messages,

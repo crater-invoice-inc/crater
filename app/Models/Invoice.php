@@ -187,6 +187,17 @@ class Invoice extends Model implements HasMedia
         return Carbon::parse($this->invoice_date)->format($dateFormat);
     }
 
+    /**
+     * Get the total amount in Ukrainian words.
+     *
+     * @return string
+     */
+    public function getTotalInWordsAttribute(): string
+    {
+        $amount = $this->total / 100; // convert from cents to hryvnias
+        return \Crater\Helpers\NumberToWordsUkrainian::convert($amount);
+    }
+
     public function scopeWhereStatus($query, $status)
     {
         return $query->where('invoices.status', $status);
@@ -568,6 +579,9 @@ class Invoice extends Model implements HasMedia
         App::setLocale($locale);
 
         $logo = $company->logo_path;
+
+        // Завантажуємо customer з custom fields
+        $this->load('customer.fields.customField');
 
         view()->share([
             'invoice' => $this,

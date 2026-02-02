@@ -18,6 +18,7 @@ import vi from './vi.json'
 import el from './el.json'
 import hr from './hr.json'
 import th from './th.json'
+import uk from './uk.json'
 
 export default {
   cs,
@@ -39,5 +40,6 @@ export default {
   pl,
   el,
   hr,
-  th
+  th,
+  uk
 }

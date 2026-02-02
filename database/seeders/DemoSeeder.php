@@ -18,7 +18,7 @@ class DemoSeeder extends Seeder
     {
         $user = User::whereIs('super admin')->first();
 
-        $user->setSettings(['language' => 'en']);
+        $user->setSettings(['language' => 'uk']);
 
         Address::create(['company_id' => $user->companies()->first()->id, 'country_id' => 1]);
 

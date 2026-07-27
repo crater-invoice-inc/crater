@@ -171,6 +171,26 @@ export const useExpenseStore = (useWindow = false) => {
         }
       },
 
+      markAsPaid(id) {
+        const notificationStore = useNotificationStore()
+
+        return new Promise((resolve, reject) => {
+          axios
+            .post(`/api/v1/expenses/${id}/mark-as-paid`)
+            .then((response) => {
+              notificationStore.showNotification({
+                type: 'success',
+                message: global.t('expenses.marked_as_paid_message'),
+              })
+              resolve(response)
+            })
+            .catch((err) => {
+              handleError(err)
+              reject(err)
+            })
+        })
+      },
+
       deleteExpense(id) {
         const notificationStore = useNotificationStore()
 

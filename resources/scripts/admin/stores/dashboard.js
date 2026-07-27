@@ -33,12 +33,15 @@ export const useDashboardStore = (useWindow = false) => {
 
       recentDueInvoices: [],
       recentEstimates: [],
+      upcomingExpenses: [],
 
       isDashboardDataLoaded: false,
+      lastParams: null,
     }),
 
     actions: {
       loadData(params) {
+        this.lastParams = params
         return new Promise((resolve, reject) => {
           axios
             .get(`/api/v1/dashboard`, { params })
@@ -71,6 +74,7 @@ export const useDashboardStore = (useWindow = false) => {
               // Dashboard Table Data
               this.recentDueInvoices = response.data.recent_due_invoices
               this.recentEstimates = response.data.recent_estimates
+              this.upcomingExpenses = response.data.upcoming_expenses
 
               this.isDashboardDataLoaded = true
 

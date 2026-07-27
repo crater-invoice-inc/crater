@@ -30,6 +30,15 @@ class ExpenseRequest extends FormRequest
             'expense_date' => [
                 'required',
             ],
+            'due_date' => [
+                'nullable',
+                'date',
+                'after_or_equal:expense_date',
+            ],
+            'paid_at' => [
+                'nullable',
+                'date',
+            ],
             'expense_category_id' => [
                 'required',
             ],

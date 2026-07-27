@@ -17,6 +17,8 @@ class ExpenseResource extends JsonResource
         return [
             'id' => $this->id,
             'expense_date' => $this->expense_date,
+            'due_date' => $this->due_date,
+            'paid_at' => $this->paid_at,
             'amount' => $this->amount,
             'notes' => $this->notes,
             'customer_id' => $this->customer_id,
@@ -27,6 +29,7 @@ class ExpenseResource extends JsonResource
             'expense_category_id' => $this->expense_category_id,
             'creator_id' => $this->creator_id,
             'formatted_expense_date' => $this->formattedExpenseDate,
+            'formatted_due_date' => $this->formattedDueDate,
             'formatted_created_at' => $this->formattedCreatedAt,
             'exchange_rate' => $this->exchange_rate,
             'currency_id' => $this->currency_id,

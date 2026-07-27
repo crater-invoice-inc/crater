@@ -136,6 +136,18 @@
       "amount_due": "Amount Due",
       "actions": "Actions",
       "view_all": "View All"
+    },
+    "upcoming_expenses_card": {
+      "title": "Upcoming Expenses",
+      "due_on": "Due On",
+      "category": "Category",
+      "amount": "Amount",
+      "view_all": "View All",
+      "no_expenses": "No upcoming expenses in the next 30 days.",
+      "mark_as_paid": "Mark as paid",
+      "due_today": "Due today",
+      "due_tomorrow": "Due tomorrow",
+      "due_in_days": "Due in {days} days"
     }
   },
   "tax_types": {
@@ -608,7 +620,14 @@
     "category": "Category",
     "from_date": "From Date",
     "to_date": "To Date",
+    "from_due_date": "Due Date From",
+    "to_due_date": "Due Date To",
     "expense_date": "Date",
+    "due_date": "Due Date",
+    "paid_at": "Paid On",
+    "paid": "Paid",
+    "unpaid": "Unpaid",
+    "paid_status": "Status",
     "description": "Description",
     "receipt": "Receipt",
     "amount": "Amount",
@@ -630,6 +649,7 @@
     "confirm_delete": "You will not be able to recover this Expense | You will not be able to recover these Expenses",
     "created_message": "Expense created successfully",
     "updated_message": "Expense updated successfully",
+    "marked_as_paid_message": "Expense marked as paid",
     "deleted_message": "Expense deleted successfully | Expenses deleted successfully",
     "categories": {
       "categories_list": "Categories List",
@@ -1454,7 +1474,8 @@
     "at_least_one_ability": "Please select atleast one Permission.",
     "valid_driver_key": "Please enter a valid {driver} key.",
     "valid_exchange_rate": "Please enter a valid exchange rate.",
-    "company_name_not_same": "Company name must match with given name."
+    "company_name_not_same": "Company name must match with given name.",
+    "due_date_after_expense_date": "Due date cannot be before the expense date."
   },
   "errors": {
     "starter_plan": "This feature is available on Starter plan and onwards!",

@@ -18,12 +18,15 @@ class Expense extends Model implements HasMedia
 
     protected $dates = [
         'expense_date',
+        'due_date',
+        'paid_at',
     ];
 
     protected $guarded = ['id'];
 
     protected $appends = [
         'formattedExpenseDate',
+        'formattedDueDate',
         'formattedCreatedAt',
         'receipt',
         'receiptMeta'
@@ -69,6 +72,17 @@ class Expense extends Model implements HasMedia
         $dateFormat = CompanySetting::getSetting('carbon_date_format', $this->company_id);
 
         return Carbon::parse($this->expense_date)->format($dateFormat);
+    }
+
+    public function getFormattedDueDateAttribute($value)
+    {
+        if (! $this->due_date) {
+            return null;
+        }
+
+        $dateFormat = CompanySetting::getSetting('carbon_date_format', $this->company_id);
+
+        return Carbon::parse($this->due_date)->format($dateFormat);
     }
 
     public function getFormattedCreatedAtAttribute($value)
@@ -168,6 +182,19 @@ class Expense extends Model implements HasMedia
             $query->expensesBetween($start, $end);
         }
 
+        if ($filters->get('from_due_date') && $filters->get('to_due_date')) {
+            $query->whereBetween('expenses.due_date', [
+                $filters->get('from_due_date'),
+                $filters->get('to_due_date'),
+            ]);
+        }
+
+        if ($filters->get('paid_status') === 'PAID') {
+            $query->whereNotNull('expenses.paid_at');
+        } elseif ($filters->get('paid_status') === 'UNPAID') {
+            $query->whereNull('expenses.paid_at');
+        }
+
         if ($filters->get('orderByField') || $filters->get('orderBy')) {
             $field = $filters->get('orderByField') ? $filters->get('orderByField') : 'expense_date';
             $orderBy = $filters->get('orderBy') ? $filters->get('orderBy') : 'asc';
@@ -231,7 +258,16 @@ class Expense extends Model implements HasMedia
 
     public static function createExpense($request)
     {
-        $expense = self::create($request->getExpensePayload());
+        $data = $request->getExpensePayload();
+
+        // Default paid state: future due date stays unpaid, otherwise paid on the expense date.
+        if (empty($data['paid_at'])) {
+            $data['paid_at'] = ! empty($data['due_date']) && Carbon::parse($data['due_date'])->isFuture()
+                ? null
+                : $data['expense_date'];
+        }
+
+        $expense = self::create($data);
 
         $company_currency = CompanySetting::getSetting('currency', $request->header('company'));
 

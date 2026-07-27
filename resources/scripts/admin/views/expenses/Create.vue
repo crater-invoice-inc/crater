@@ -117,6 +117,34 @@
           </BaseInputGroup>
 
           <BaseInputGroup
+            :label="$t('expenses.due_date')"
+            :error="
+              v$.currentExpense.due_date.$error &&
+              v$.currentExpense.due_date.$errors[0].$message
+            "
+            :content-loading="isFetchingInitialData"
+          >
+            <BaseDatePicker
+              v-model="expenseStore.currentExpense.due_date"
+              :content-loading="isFetchingInitialData"
+              :calendar-button="true"
+              :invalid="v$.currentExpense.due_date.$error"
+              @input="v$.currentExpense.due_date.$touch()"
+            />
+          </BaseInputGroup>
+
+          <BaseInputGroup
+            :label="$t('expenses.paid_at')"
+            :content-loading="isFetchingInitialData"
+          >
+            <BaseDatePicker
+              v-model="expenseStore.currentExpense.paid_at"
+              :content-loading="isFetchingInitialData"
+              :calendar-button="true"
+            />
+          </BaseInputGroup>
+
+          <BaseInputGroup
             :label="$t('expenses.amount')"
             :error="
               v$.currentExpense.amount.$error &&
@@ -329,6 +357,15 @@ const rules = computed(() => {
       },
       expense_date: {
         required: helpers.withMessage(t('validation.required'), required),
+      },
+      due_date: {
+        afterExpenseDate: helpers.withMessage(
+          t('validation.due_date_after_expense_date'),
+          (value) =>
+            !value ||
+            !expenseStore.currentExpense.expense_date ||
+            new Date(value) >= new Date(expenseStore.currentExpense.expense_date)
+        ),
       },
 
       amount: {

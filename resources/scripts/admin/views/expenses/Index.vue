@@ -63,6 +63,17 @@
         />
       </BaseInputGroup>
 
+      <BaseInputGroup :label="$t('expenses.paid_status')">
+        <BaseMultiselect
+          v-model="filters.paid_status"
+          value-prop="value"
+          label="label"
+          track-by="label"
+          :options="paidStatuses"
+          :can-deselect="true"
+        />
+      </BaseInputGroup>
+
       <BaseInputGroup :label="$t('expenses.from_date')">
         <BaseDatePicker
           v-model="filters.from_date"
@@ -78,6 +89,26 @@
       <BaseInputGroup :label="$t('expenses.to_date')">
         <BaseDatePicker
           v-model="filters.to_date"
+          :calendar-button="true"
+          calendar-button-icon="calendar"
+        />
+      </BaseInputGroup>
+
+      <BaseInputGroup :label="$t('expenses.from_due_date')">
+        <BaseDatePicker
+          v-model="filters.from_due_date"
+          :calendar-button="true"
+          calendar-button-icon="calendar"
+        />
+      </BaseInputGroup>
+      <div
+        class="hidden w-8 h-0 mx-4 border border-gray-400 border-solid xl:block"
+        style="margin-top: 1.5rem"
+      />
+
+      <BaseInputGroup :label="$t('expenses.to_due_date')">
+        <BaseDatePicker
+          v-model="filters.to_due_date"
           :calendar-button="true"
           calendar-button-icon="calendar"
         />
@@ -188,6 +219,16 @@
           {{ row.data.formatted_expense_date }}
         </template>
 
+        <template #cell-due_date="{ row }">
+          {{ row.data.formatted_due_date ? row.data.formatted_due_date : '-' }}
+        </template>
+
+        <template #cell-paid_status="{ row }">
+          <BasePaidStatusBadge :status="row.data.paid_at ? 'PAID' : 'UNPAID'">
+            {{ row.data.paid_at ? $t('expenses.paid') : $t('expenses.unpaid') }}
+          </BasePaidStatusBadge>
+        </template>
+
         <template #cell-user_name="{ row }">
           <BaseText
             :text="row.data.customer ? row.data.customer.name : '-'"
@@ -243,8 +284,16 @@ const filters = reactive({
   expense_category_id: '',
   from_date: '',
   to_date: '',
+  from_due_date: '',
+  to_due_date: '',
+  paid_status: '',
   customer_id: '',
 })
+
+const paidStatuses = computed(() => [
+  { value: 'PAID', label: t('expenses.paid') },
+  { value: 'UNPAID', label: t('expenses.unpaid') },
+])
 
 const { t } = useI18n()
 let tableComponent = ref(null)
@@ -281,6 +330,17 @@ const expenseColumns = computed(() => {
       label: 'Date',
       thClass: 'extra',
       tdClass: 'font-medium text-gray-900',
+    },
+    {
+      key: 'due_date',
+      label: 'Due Date',
+      thClass: 'extra',
+      tdClass: 'font-medium text-gray-900',
+    },
+    {
+      key: 'paid_status',
+      label: 'Status',
+      sortable: false,
     },
     {
       key: 'name',
@@ -363,6 +423,9 @@ function clearFilter() {
   filters.expense_category_id = ''
   filters.from_date = ''
   filters.to_date = ''
+  filters.from_due_date = ''
+  filters.to_due_date = ''
+  filters.paid_status = ''
   filters.customer_id = ''
 }
 

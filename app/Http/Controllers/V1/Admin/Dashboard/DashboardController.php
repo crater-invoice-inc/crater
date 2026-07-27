@@ -12,6 +12,7 @@ use Crater\Models\Expense;
 use Crater\Models\Invoice;
 use Crater\Models\Payment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Silber\Bouncer\BouncerFacade;
 
 class DashboardController extends Controller
@@ -71,7 +72,7 @@ class DashboardController extends Controller
             array_push(
                 $expense_totals,
                 Expense::whereBetween(
-                    'expense_date',
+                    DB::raw('DATE(paid_at)'),
                     [$start->format('Y-m-d'), $end->format('Y-m-d')]
                 )
                 ->whereCompany()
@@ -115,7 +116,7 @@ class DashboardController extends Controller
             ->sum('base_amount');
 
         $total_expenses = Expense::whereBetween(
-            'expense_date',
+            DB::raw('DATE(paid_at)'),
             [$startDate->format('Y-m-d'), $start->format('Y-m-d')]
         )
             ->whereCompany()
@@ -146,6 +147,18 @@ class DashboardController extends Controller
             ->get();
         $recent_estimates = Estimate::with('customer')->whereCompany()->take(5)->latest()->get();
 
+        $upcoming_days = (int) $request->input('upcoming_days', 30);
+        $upcoming_expenses = Expense::with(['category', 'currency'])
+            ->whereCompany()
+            ->whereNull('paid_at')
+            ->whereBetween('due_date', [
+                Carbon::now()->format('Y-m-d'),
+                Carbon::now()->addDays($upcoming_days)->format('Y-m-d'),
+            ])
+            ->orderBy('due_date')
+            ->take(5)
+            ->get();
+
         return response()->json([
             'total_amount_due' => $total_amount_due,
             'total_customer_count' => $total_customer_count,
@@ -154,6 +167,8 @@ class DashboardController extends Controller
 
             'recent_due_invoices' => BouncerFacade::can('view-invoice', Invoice::class) ? $recent_due_invoices : [],
             'recent_estimates' => BouncerFacade::can('view-estimate', Estimate::class) ? $recent_estimates : [],
+
+            'upcoming_expenses' => BouncerFacade::can('view-expense', Expense::class) ? $upcoming_expenses : [],
 
             'chart_data' => $chart_data,
 

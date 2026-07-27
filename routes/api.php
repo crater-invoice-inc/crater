@@ -24,6 +24,7 @@ use Crater\Http\Controllers\V1\Admin\ExchangeRate\GetSupportedCurrenciesControll
 use Crater\Http\Controllers\V1\Admin\ExchangeRate\GetUsedCurrenciesController;
 use Crater\Http\Controllers\V1\Admin\Expense\ExpenseCategoriesController;
 use Crater\Http\Controllers\V1\Admin\Expense\ExpensesController;
+use Crater\Http\Controllers\V1\Admin\Expense\MarkExpenseAsPaidController;
 use Crater\Http\Controllers\V1\Admin\Expense\ShowReceiptController;
 use Crater\Http\Controllers\V1\Admin\Expense\UploadReceiptController;
 use Crater\Http\Controllers\V1\Admin\General\BootstrapController;
@@ -316,6 +317,8 @@ Route::prefix('/v1')->group(function () {
             Route::post('/expenses/{expense}/upload/receipts', UploadReceiptController::class);
 
             Route::post('/expenses/delete', [ExpensesController::class, 'delete']);
+
+            Route::post('/expenses/{expense}/mark-as-paid', MarkExpenseAsPaidController::class);
 
             Route::apiResource('expenses', ExpensesController::class);
 

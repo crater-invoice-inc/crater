@@ -151,4 +151,19 @@ class EstimatePolicy
 
         return false;
     }
+
+    /**
+     * Determine whether the user can update models.
+     *
+     * @param  \Crater\Models\User  $user
+     * @return mixed
+     */
+    public function updateMultiple(User $user)
+    {
+        if (BouncerFacade::can('edit-estimate', Estimate::class)) {
+            return true;
+        }
+
+        return false;
+    }
 }

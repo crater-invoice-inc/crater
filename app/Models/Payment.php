@@ -471,4 +471,42 @@ class Payment extends Model implements HasMedia
 
         return $payment;
     }
+
+    public static function createFromInvoice(Invoice $invoice, $paymentDate = null, $paymentMethodId = null, $userId = null)
+    {
+        $serial = (new SerialNumberFormatter())
+            ->setModel(new Payment())
+            ->setCompany($invoice->company_id)
+            ->setCustomer($invoice->customer_id)
+            ->setNextNumbers();
+
+        $data['payment_number'] = $serial->getNextNumber();
+        $data['payment_date'] = $paymentDate ?: Carbon::now()->format('Y-m-d');
+        $data['amount'] = $invoice->due_amount;
+        $data['base_amount'] = $invoice->due_amount * $invoice->exchange_rate;
+        $data['invoice_id'] = $invoice->id;
+        $data['payment_method_id'] = $paymentMethodId;
+        $data['customer_id'] = $invoice->customer_id;
+        $data['currency_id'] = $invoice->currency_id;
+        $data['exchange_rate'] = $invoice->exchange_rate;
+        $data['creator_id'] = $userId;
+        $data['company_id'] = $invoice->company_id;
+        $data['notes'] = 'Payment for invoice '.$invoice->invoice_number;
+
+        $payment = Payment::create($data);
+        $payment->unique_hash = Hashids::connection(Payment::class)->encode($payment->id);
+        $payment->sequence_number = $serial->nextSequenceNumber;
+        $payment->customer_sequence_number = $serial->nextCustomerSequenceNumber;
+        $payment->save();
+
+        $company_currency = CompanySetting::getSetting('currency', $invoice->company_id);
+
+        if ((string)$payment['currency_id'] !== $company_currency) {
+            ExchangeRateLog::addExchangeRateLog($payment);
+        }
+
+        $invoice->subtractInvoicePayment($invoice->due_amount);
+
+        return $payment;
+    }
 }

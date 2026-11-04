@@ -12,6 +12,7 @@ use Crater\Http\Controllers\V1\Admin\Customer\CustomerStatsController;
 use Crater\Http\Controllers\V1\Admin\CustomField\CustomFieldsController;
 use Crater\Http\Controllers\V1\Admin\Dashboard\DashboardController;
 use Crater\Http\Controllers\V1\Admin\Estimate\ChangeEstimateStatusController;
+use Crater\Http\Controllers\V1\Admin\Estimate\ChangeEstimatesStatusController;
 use Crater\Http\Controllers\V1\Admin\Estimate\ConvertEstimateController;
 use Crater\Http\Controllers\V1\Admin\Estimate\EstimatesController;
 use Crater\Http\Controllers\V1\Admin\Estimate\EstimateTemplatesController;
@@ -40,6 +41,7 @@ use Crater\Http\Controllers\V1\Admin\General\SearchController;
 use Crater\Http\Controllers\V1\Admin\General\SearchUsersController;
 use Crater\Http\Controllers\V1\Admin\General\TimezonesController;
 use Crater\Http\Controllers\V1\Admin\Invoice\ChangeInvoiceStatusController;
+use Crater\Http\Controllers\V1\Admin\Invoice\ChangeInvoicesStatusController;
 use Crater\Http\Controllers\V1\Admin\Invoice\CloneInvoiceController;
 use Crater\Http\Controllers\V1\Admin\Invoice\InvoicesController;
 use Crater\Http\Controllers\V1\Admin\Invoice\InvoiceTemplatesController;
@@ -58,6 +60,7 @@ use Crater\Http\Controllers\V1\Admin\Modules\ModuleController;
 use Crater\Http\Controllers\V1\Admin\Modules\ModulesController;
 use Crater\Http\Controllers\V1\Admin\Modules\UnzipModuleController;
 use Crater\Http\Controllers\V1\Admin\Modules\UploadModuleController;
+use Crater\Http\Controllers\V1\Admin\Payment\BulkStorePaymentsController;
 use Crater\Http\Controllers\V1\Admin\Payment\PaymentMethodsController;
 use Crater\Http\Controllers\V1\Admin\Payment\PaymentsController;
 use Crater\Http\Controllers\V1\Admin\Payment\SendPaymentController;
@@ -275,6 +278,8 @@ Route::prefix('/v1')->group(function () {
 
             Route::post('/invoices/delete', [InvoicesController::class, 'delete']);
 
+            Route::post('/invoices/change-status', ChangeInvoicesStatusController::class);
+
             Route::get('/invoices/templates', InvoiceTemplatesController::class);
 
             Route::apiResource('invoices', InvoicesController::class);
@@ -305,6 +310,8 @@ Route::prefix('/v1')->group(function () {
 
             Route::post('/estimates/delete', [EstimatesController::class, 'delete']);
 
+            Route::post('/estimates/change-status', ChangeEstimatesStatusController::class);
+
             Route::apiResource('estimates', EstimatesController::class);
 
 
@@ -330,6 +337,8 @@ Route::prefix('/v1')->group(function () {
             Route::post('/payments/{payment}/send', SendPaymentController::class);
 
             Route::post('/payments/delete', [PaymentsController::class, 'delete']);
+
+            Route::post('/payments/bulk-store', BulkStorePaymentsController::class);
 
             Route::apiResource('payments', PaymentsController::class);
 

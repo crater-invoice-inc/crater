@@ -80,7 +80,7 @@
         </template>
         <template #cell-status="{ row }">
           <BaseEstimateStatusBadge :status="row.data.status" class="px-3 py-1">
-            {{ row.data.status }}
+            {{ $t(`estimates.${row.data.status.toLowerCase()}`) }}
           </BaseEstimateStatusBadge>
         </template>
         <template #cell-total="{ row }">

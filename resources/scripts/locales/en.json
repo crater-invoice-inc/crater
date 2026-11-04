@@ -264,6 +264,16 @@
     "deleted_message": "Item deleted successfully | Items deleted successfully"
   },
   "estimates": {
+    "mark_as": "Mark as",
+
+    "mark_as_draft": "Mark as draft",
+
+    "marked_as_draft_message": "Estimate marked as draft",
+
+    "confirm_mark_as_draft": "Are you sure you want to mark this estimate as draft?",
+    "confirm_change_status": "Change the status of the selected estimates?",
+
+    "status_updated_message": "Estimates status updated successfully",
     "title": "Estimates",
     "accept_estimate": "Accept Estimate",
     "reject_estimate": "Reject Estimate",
@@ -358,6 +368,16 @@
     "mark_as_default_estimate_template_description": "If enabled, the selected template will be automatically selected for new estimates."
   },
   "invoices": {
+    "paid_invoice_selected": "A paid invoice is selected",
+    "draft": "Draft",
+
+    "sent": "Sent",
+
+    "mark_as": "Mark as",
+
+    "status_updated_message": "Invoices status updated successfully",
+
+    "confirm_change_status": "Change the status of the selected invoices?",
     "title": "Invoices",
     "download": "Download",
     "pay_invoice": "Pay Invoice",
@@ -560,6 +580,13 @@
     "invalid_due_amount_message": "Total Recurring Invoice amount cannot be less than total paid amount for this Recurring Invoice. Please update the invoice or delete the associated payments to continue."
   },
   "payments": {
+    "record_payments": "Record payments",
+
+    "confirm_bulk_payment": "Record a payment for the full due amount of each selected invoice?",
+
+    "confirm_single_bulk_payment": "Record a payment for the full due amount of the selected invoice?",
+
+    "bulk_created_message": "Payments recorded successfully",
     "title": "Payments",
     "payments_list": "Payments List",
     "record_payment": "Record Payment",

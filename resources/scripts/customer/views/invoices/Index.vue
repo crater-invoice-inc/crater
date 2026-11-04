@@ -110,7 +110,7 @@
 
         <template #cell-status="{ row }">
           <BaseInvoiceStatusBadge :status="row.data.status" class="px-3 py-1">
-            {{ row.data.status }}
+            {{ $t(`invoices.${row.data.status.toLowerCase()}`) }}
           </BaseInvoiceStatusBadge>
         </template>
 
@@ -119,7 +119,7 @@
             :status="row.data.paid_status"
             class="px-3 py-1"
           >
-            {{ row.data.paid_status }}
+            {{ $t(`invoices.${row.data.paid_status.toLowerCase()}`) }}
           </BaseInvoiceStatusBadge>
         </template>
 

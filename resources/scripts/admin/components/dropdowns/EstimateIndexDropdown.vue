@@ -144,6 +144,20 @@
       />
       {{ $t('estimates.mark_as_rejected') }}
     </BaseDropdownItem>
+
+    <!-- Mark as Draft  -->
+    <BaseDropdownItem
+      v-if="
+        row.status !== 'DRAFT' &&
+        userStore.hasAbilities(abilities.EDIT_ESTIMATE)
+      "
+      @click="onMarkAsDraft(row.id)"
+    >
+      <PencilSheetIcon
+        class="w-5 h-5 mr-3 text-gray-400 group-hover:text-gray-500"
+      />
+      {{ $t('estimates.mark_as_draft') }}
+    </BaseDropdownItem>
   </BaseDropdown>
 </template>
 
@@ -157,6 +171,7 @@ import { useDialogStore } from '@/scripts/stores/dialog'
 import { inject } from 'vue'
 import { useUserStore } from '@/scripts/admin/stores/user'
 import abilities from '@/scripts/admin/stub/abilities'
+import PencilSheetIcon from '@/scripts/components/icons/PencilSheetIcon.vue'
 
 const props = defineProps({
   row: {
@@ -319,6 +334,30 @@ async function onMarkAsRejected(id) {
       }
       if (response) {
         estimateStore.markAsRejected(data).then((response) => {
+          props.table && props.table.refresh()
+        })
+      }
+    })
+}
+
+async function onMarkAsDraft(id) {
+  dialogStore
+    .openDialog({
+      title: t('general.are_you_sure'),
+      message: t('estimates.confirm_mark_as_draft'),
+      yesLabel: t('general.ok'),
+      noLabel: t('general.cancel'),
+      variant: 'primary',
+      hideNoButton: false,
+      size: 'lg',
+    })
+    .then((response) => {
+      const data = {
+        id: id,
+        status: 'DRAFT',
+      }
+      if (response) {
+        estimateStore.markAsDraft(data).then((response) => {
           props.table && props.table.refresh()
         })
       }

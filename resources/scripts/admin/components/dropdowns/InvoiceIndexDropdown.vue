@@ -37,7 +37,7 @@
     <!-- Record payment  -->
     <router-link :to="`/admin/payments/${row.id}/create`">
       <BaseDropdownItem
-        v-if="row.status == 'SENT' && route.name !== 'invoices.view'"
+        v-if="row.due_amount > 0 && route.name !== 'invoices.view'"
       >
         <BaseIcon
           name="CreditCardIcon"

@@ -86,6 +86,12 @@ jobs:
             set -e
             cd /root/crater
 
+            if [ ! -f public/build-new/manifest.json ]; then
+              echo "FATAL: public/build-new is missing, the scp step failed"
+              ls -la public/
+              exit 1
+            fi
+
             git pull origin master
 
             rm -rf public/build-old
@@ -94,3 +100,7 @@ jobs:
 
             docker compose exec -T app php artisan config:clear
             docker compose exec -T app php artisan route:clear
+
+            echo "Deployed commit: $(git rev-parse --short HEAD)"
+            echo "Deployed manifest main entry:"
+            grep -o 'main\.[a-z0-9]*\.js' public/build/manifest.json | head -1

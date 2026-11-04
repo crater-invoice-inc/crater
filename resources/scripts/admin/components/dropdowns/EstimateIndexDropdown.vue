@@ -70,7 +70,7 @@
     <!-- Send Estimate  -->
     <BaseDropdownItem
       v-if="
-        row.status !== 'SENT' &&
+        row.status === 'DRAFT' &&
         route.name !== 'estimates.view' &&
         userStore.hasAbilities(abilities.SEND_ESTIMATE)
       "

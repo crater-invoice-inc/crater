@@ -247,9 +247,24 @@ class Company extends Model implements HasMedia
             'estimate_convert_action' => 'no_action',
             'automatically_expire_public_links' => 'YES',
             'link_expiry_days' => 7,
+            'module_estimates' => 'YES',
+            'module_invoices' => 'YES',
+            'module_recurring_invoices' => 'YES',
+            'module_payments' => 'YES',
+            'module_expenses' => 'YES',
+            'module_modules' => 'YES',
         ];
 
         CompanySetting::setSettings($settings, $this->id);
+    }
+
+    public function disabledModules()
+    {
+        return collect(config('crater.company_modules'))
+            ->filter(function ($module) {
+                return CompanySetting::getSetting('module_'.$module['key'], $this->id) === 'NO';
+            })
+            ->pluck('menu');
     }
 
     public function setupDefaultData()

@@ -838,7 +838,12 @@
       "payment_modes": "Payment Modes",
       "notes": "Notes",
       "exchange_rate": "Exchange Rate",
-      "address_information": "Address Information"
+      "address_information": "Address Information",
+      "modules": "Modules"
+    },
+    "modules": {
+      "description": "Choose which modules are available for this company.",
+      "toggle_description": "Show or hide this module in the sidebar menu."
     },
     "address_information": {
       "section_description": "  You can update Your Address information using form below."

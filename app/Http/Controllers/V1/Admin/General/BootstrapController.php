@@ -29,10 +29,6 @@ class BootstrapController extends Controller
         $current_user = $request->user();
         $current_user_settings = $current_user->getAllSettings();
 
-        $main_menu = $this->generateMenu('main_menu', $current_user);
-
-        $setting_menu = $this->generateMenu('setting_menu', $current_user);
-
         $companies = $current_user->companies;
 
         $current_company = Company::find($request->header('company'));
@@ -40,6 +36,17 @@ class BootstrapController extends Controller
         if ((! $current_company) || ($current_company && ! $current_user->hasCompany($current_company->id))) {
             $current_company = $current_user->companies()->first();
         }
+
+        $disabled_modules = $current_company->disabledModules();
+
+        $main_menu = collect($this->generateMenu('main_menu', $current_user))
+            ->filter(function ($item) use ($disabled_modules) {
+                return ! $disabled_modules->contains($item['name']);
+            })
+            ->values()
+            ->toArray();
+
+        $setting_menu = $this->generateMenu('setting_menu', $current_user);
 
         $current_company_settings = CompanySetting::getAllSettings($current_company->id);
 

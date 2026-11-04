@@ -838,7 +838,12 @@
       "payment_modes": "Modes de paiement",
       "notes": "Notes de bas de page",
       "exchange_rate": "Taux de change",
-      "address_information": "Information d'adresse"
+      "address_information": "Information d'adresse",
+      "modules": "Modules"
+    },
+    "modules": {
+      "description": "Choisissez les modules disponibles pour cette entreprise.",
+      "toggle_description": "Afficher ou masquer ce module dans le menu latéral."
     },
     "address_information": {
       "section_description": "  Vous pouvez mettre à jour vos informations d'adresse via le formulaire ci dessous."

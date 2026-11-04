@@ -19,17 +19,9 @@ jobs:
             set -e
             cd /root/crater
 
+            # Frontend assets are built locally and committed to public/build,
+            # so no build is needed on the droplet (it OOM-kills on small instances).
             git pull
-
-            export NVM_DIR="$HOME/.nvm"
-            source "$NVM_DIR/nvm.sh"
-
-            # Build frontend (php is shimmed to the app container via .docker-bin)
-            mkdir -p .docker-bin
-            printf '#!/bin/sh\nexec docker compose exec -T app php "$@"\n' > .docker-bin/php
-            chmod +x .docker-bin/php
-            PATH="$PWD/.docker-bin:$PATH" yarn install --frozen-lockfile
-            PATH="$PWD/.docker-bin:$PATH" yarn build
 
             docker compose exec -T app php artisan config:clear
             docker compose exec -T app php artisan route:clear

@@ -7,45 +7,14 @@
       <BaseIcon v-else name="DotsHorizontalIcon" class="h-5 text-gray-500" />
     </template>
 
-    <!-- Edit Invoice  -->
-    <router-link
-      v-if="userStore.hasAbilities(abilities.EDIT_INVOICE)"
-      :to="`/admin/invoices/${row.id}/edit`"
-    >
-      <BaseDropdownItem v-show="row.allow_edit">
-        <BaseIcon
-          name="PencilIcon"
-          class="w-5 h-5 mr-3 text-gray-400 group-hover:text-gray-500"
-        />
-        {{ $t('general.edit') }}
-      </BaseDropdownItem>
-    </router-link>
-
-    <!-- Copy PDF url  -->
-    <BaseDropdownItem v-if="route.name === 'invoices.view'" @click="copyPdfUrl">
+    <!-- Mark as sent Invoice -->
+    <BaseDropdownItem v-if="canSendInvoice(row)" @click="onMarkAsSent(row.id)">
       <BaseIcon
-        name="LinkIcon"
+        name="CheckCircleIcon"
         class="w-5 h-5 mr-3 text-gray-400 group-hover:text-gray-500"
       />
-      {{ $t('general.copy_pdf_url') }}
+      {{ $t('invoices.mark_as_sent') }}
     </BaseDropdownItem>
-
-    <!-- View Invoice  -->
-    <router-link
-      v-if="
-        route.name !== 'invoices.view' &&
-        userStore.hasAbilities(abilities.VIEW_INVOICE)
-      "
-      :to="`/admin/invoices/${row.id}/view`"
-    >
-      <BaseDropdownItem>
-        <BaseIcon
-          name="EyeIcon"
-          class="w-5 h-5 mr-3 text-gray-400 group-hover:text-gray-500"
-        />
-        {{ $t('general.view') }}
-      </BaseDropdownItem>
-    </router-link>
 
     <!-- Send Invoice Mail  -->
     <BaseDropdownItem v-if="canSendInvoice(row)" @click="sendInvoice(row)">
@@ -78,13 +47,49 @@
       </BaseDropdownItem>
     </router-link>
 
-    <!-- Mark as sent Invoice -->
-    <BaseDropdownItem v-if="canSendInvoice(row)" @click="onMarkAsSent(row.id)">
+    <div
+      v-if="hasStatusActions && hasDocumentActions"
+      class="mx-4 my-1 border-t border-gray-200"
+    />
+
+    <!-- Edit Invoice  -->
+    <router-link
+      v-if="userStore.hasAbilities(abilities.EDIT_INVOICE)"
+      :to="`/admin/invoices/${row.id}/edit`"
+    >
+      <BaseDropdownItem v-show="row.allow_edit">
+        <BaseIcon
+          name="PencilIcon"
+          class="w-5 h-5 mr-3 text-gray-400 group-hover:text-gray-500"
+        />
+        {{ $t('general.edit') }}
+      </BaseDropdownItem>
+    </router-link>
+
+    <!-- View Invoice  -->
+    <router-link
+      v-if="
+        route.name !== 'invoices.view' &&
+        userStore.hasAbilities(abilities.VIEW_INVOICE)
+      "
+      :to="`/admin/invoices/${row.id}/view`"
+    >
+      <BaseDropdownItem>
+        <BaseIcon
+          name="EyeIcon"
+          class="w-5 h-5 mr-3 text-gray-400 group-hover:text-gray-500"
+        />
+        {{ $t('general.view') }}
+      </BaseDropdownItem>
+    </router-link>
+
+    <!-- Copy PDF url  -->
+    <BaseDropdownItem v-if="route.name === 'invoices.view'" @click="copyPdfUrl">
       <BaseIcon
-        name="CheckCircleIcon"
+        name="LinkIcon"
         class="w-5 h-5 mr-3 text-gray-400 group-hover:text-gray-500"
       />
-      {{ $t('invoices.mark_as_sent') }}
+      {{ $t('general.copy_pdf_url') }}
     </BaseDropdownItem>
 
     <!-- Clone Invoice into new invoice  -->
@@ -99,11 +104,13 @@
       {{ $t('invoices.clone_invoice') }}
     </BaseDropdownItem>
 
+    <div
+      v-if="(hasStatusActions || hasDocumentActions) && canDelete"
+      class="mx-4 my-1 border-t border-gray-200"
+    />
+
     <!--  Delete Invoice  -->
-    <BaseDropdownItem
-      v-if="userStore.hasAbilities(abilities.DELETE_INVOICE)"
-      @click="removeInvoice(row.id)"
-    >
+    <BaseDropdownItem v-if="canDelete" @click="removeInvoice(row.id)">
       <BaseIcon
         name="TrashIcon"
         class="w-5 h-5 mr-3 text-gray-400 group-hover:text-gray-500"
@@ -121,7 +128,7 @@ import { useModalStore } from '@/scripts/stores/modal'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import { useUserStore } from '@/scripts/admin/stores/user'
-import { inject } from 'vue'
+import { inject, computed } from 'vue'
 import abilities from '@/scripts/admin/stub/abilities'
 
 const props = defineProps({
@@ -149,6 +156,27 @@ const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
 const utils = inject('utils')
+
+const hasStatusActions = computed(() => {
+  return (
+    canSendInvoice(props.row) ||
+    canReSendInvoice(props.row) ||
+    (props.row.status == 'SENT' && route.name !== 'invoices.view')
+  )
+})
+
+const hasDocumentActions = computed(() => {
+  return (
+    (route.name !== 'invoices.view' &&
+      userStore.hasAbilities(abilities.VIEW_INVOICE)) ||
+    route.name === 'invoices.view' ||
+    userStore.hasAbilities(abilities.CREATE_INVOICE)
+  )
+})
+
+const canDelete = computed(() =>
+  userStore.hasAbilities(abilities.DELETE_INVOICE)
+)
 
 function canReSendInvoice(row) {
   return (

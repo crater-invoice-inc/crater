@@ -19,7 +19,7 @@
             {!! $data['body'] !!}
             @if(!$data['attach']['data'])
                 @component('mail::button', ['url' => $data['url']])
-                    View Invoice
+                    {{ $data['view_label'] }}
                 @endcomponent
             @endif
         @endcomponent

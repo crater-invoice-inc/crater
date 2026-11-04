@@ -2,6 +2,7 @@
 
 namespace Crater\Mail;
 
+use Crater\Models\CompanySetting;
 use Crater\Models\EmailLog;
 use Crater\Models\Estimate;
 use Illuminate\Bus\Queueable;
@@ -45,7 +46,10 @@ class SendEstimateMail extends Mailable
         $log->token = Hashids::connection(EmailLog::class)->encode($log->id);
         $log->save();
 
-        $this->data['url'] = route('estimate', ['email_log' => $log->token]);
+        $this->data['url'] = route('estimate', ['email_log' => $log->token]).'?pdf=1';
+
+        $locale = CompanySetting::getSetting('language', $this->data['estimate']['company_id']);
+        $this->data['view_label'] = __('estimates.view_estimate', [], $locale ?: 'en');
 
         $mailContent = $this->from($this->data['from'], config('mail.from.name'))
                     ->subject($this->data['subject'])

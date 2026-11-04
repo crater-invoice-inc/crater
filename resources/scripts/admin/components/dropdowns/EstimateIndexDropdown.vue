@@ -1,5 +1,5 @@
 <template>
-  <BaseDropdown>
+  <BaseDropdown width-class="w-72">
     <template #activator>
       <BaseButton v-if="route.name === 'estimates.view'" variant="primary">
         <BaseIcon name="DotsHorizontalIcon" class="text-white" />

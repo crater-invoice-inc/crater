@@ -270,6 +270,32 @@ export const useEstimateStore = (useWindow = false) => {
         })
       },
 
+      updateEstimatesStatus(status) {
+        const notificationStore = useNotificationStore()
+
+        return new Promise((resolve, reject) => {
+          axios
+            .post(`/api/v1/estimates/change-status`, {
+              ids: this.selectedEstimates,
+              status,
+            })
+            .then((response) => {
+              this.selectedEstimates = []
+              this.selectAllField = false
+
+              notificationStore.showNotification({
+                type: 'success',
+                message: global.t('estimates.status_updated_message'),
+              })
+              resolve(response)
+            })
+            .catch((err) => {
+              handleError(err)
+              reject(err)
+            })
+        })
+      },
+
       updateEstimate(data) {
         return new Promise((resolve, reject) => {
           axios
@@ -355,6 +381,33 @@ export const useEstimateStore = (useWindow = false) => {
                 notificationStore.showNotification({
                   type: 'success',
                   message: global.t('estimates.mark_as_sent_successfully'),
+                })
+              }
+
+              resolve(response)
+            })
+            .catch((err) => {
+              handleError(err)
+              reject(err)
+            })
+        })
+      },
+
+      markAsDraft(data) {
+        return new Promise((resolve, reject) => {
+          axios
+            .post(`/api/v1/estimates/${data.id}/status`, data)
+            .then((response) => {
+              let pos = this.estimates.findIndex(
+                (estimate) => estimate.id === data.id
+              )
+              if (this.estimates[pos]) {
+                this.estimates[pos].status = 'DRAFT'
+
+                const notificationStore = useNotificationStore()
+                notificationStore.showNotification({
+                  type: 'success',
+                  message: global.t('estimates.marked_as_draft_message'),
                 })
               }
 

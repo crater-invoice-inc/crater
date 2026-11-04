@@ -175,7 +175,7 @@
               {{ invoice.invoice_number }}
             </div>
             <BaseInvoiceStatusBadge :status="invoice.status">
-              {{ invoice.status }}
+              {{ $t(`invoices.${invoice.status.toLowerCase()}`) }}
             </BaseInvoiceStatusBadge>
           </div>
 

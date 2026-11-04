@@ -212,7 +212,7 @@
                 :status="estimate.status"
                 class="px-1 text-xs"
               >
-                {{ estimate.status }}
+                {{ $t(`estimates.${estimate.status.toLowerCase()}`) }}
               </BaseEstimateStatusBadge>
             </div>
 

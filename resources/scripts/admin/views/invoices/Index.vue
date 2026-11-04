@@ -140,7 +140,10 @@
         <BaseDropdown
           v-if="
             invoiceStore.selectedInvoices.length &&
-            userStore.hasAbilities(abilities.DELETE_INVOICE)
+            userStore.hasAbilities([
+              abilities.SEND_INVOICE,
+              abilities.DELETE_INVOICE,
+            ])
           "
           class="absolute float-right"
         >
@@ -160,7 +163,80 @@
             </span>
           </template>
 
-          <BaseDropdownItem @click="removeMultipleInvoices">
+          <div
+            v-if="visibleBulkStatuses.length"
+            class="px-4 pt-2 pb-1 text-xs font-medium text-gray-400 uppercase select-none"
+          >
+            {{ $t('invoices.mark_as') }}
+          </div>
+          <BaseDropdownItem
+            v-for="bulkStatus in visibleBulkStatuses"
+            :key="bulkStatus.value"
+            :disabled="hasPaidInvoiceSelected"
+            @click="changeMultipleInvoicesStatus(bulkStatus)"
+          >
+            <span
+              class="flex items-center"
+              :class="hasPaidInvoiceSelected ? 'text-gray-300 cursor-not-allowed' : ''"
+              :title="hasPaidInvoiceSelected ? $t('invoices.paid_invoice_selected') : ''"
+            >
+              <component
+                :is="bulkStatus.icon"
+                v-if="typeof bulkStatus.icon !== 'string'"
+                class="mr-3"
+                :class="hasPaidInvoiceSelected ? 'text-gray-300' : 'text-gray-600'"
+              />
+              <BaseIcon
+                v-else
+                :name="bulkStatus.icon"
+                class="mr-3"
+                :class="hasPaidInvoiceSelected ? 'text-gray-300' : 'text-gray-600'"
+              />
+              {{ $t(bulkStatus.label, 2) }}
+            </span>
+          </BaseDropdownItem>
+
+          <div
+            v-if="
+              visibleBulkStatuses.length &&
+              userStore.hasAbilities(abilities.CREATE_PAYMENT)
+            "
+            class="mx-4 my-1 border-t border-gray-200"
+          />
+
+          <BaseDropdownItem
+            v-if="userStore.hasAbilities(abilities.CREATE_PAYMENT)"
+            :disabled="!hasPayableInvoiceSelected"
+            @click="addBulkPayments"
+          >
+            <span
+              class="flex items-center"
+              :class="!hasPayableInvoiceSelected ? 'text-gray-300 cursor-not-allowed' : ''"
+              :title="!hasPayableInvoiceSelected ? $t('invoices.paid_invoice_selected') : ''"
+            >
+              <BaseIcon
+                name="CreditCardIcon"
+                class="mr-3"
+                :class="!hasPayableInvoiceSelected ? 'text-gray-300' : 'text-gray-600'"
+              />
+              {{
+                invoiceStore.selectedInvoices.length > 1
+                  ? $t('payments.record_payments')
+                  : $t('payments.record_payment')
+              }}
+            </span>
+          </BaseDropdownItem>
+          <div
+            v-if="
+              visibleBulkStatuses.length &&
+              userStore.hasAbilities(abilities.DELETE_INVOICE)
+            "
+            class="mx-4 my-1 border-t border-gray-200"
+          />
+          <BaseDropdownItem
+            v-if="userStore.hasAbilities(abilities.DELETE_INVOICE)"
+            @click="removeMultipleInvoices"
+          >
             <BaseIcon name="TrashIcon" class="mr-3 text-gray-600" />
             {{ $t('general.delete') }}
           </BaseDropdownItem>
@@ -225,7 +301,7 @@
         <!-- Invoice status  -->
         <template #cell-status="{ row }">
           <BaseInvoiceStatusBadge :status="row.data.status" class="px-3 py-1">
-            {{ row.data.status }}
+            {{ $t(`invoices.${row.data.status.toLowerCase()}`) }}
           </BaseInvoiceStatusBadge>
         </template>
 
@@ -246,10 +322,11 @@
             </BasePaidStatusBadge>
 
             <BasePaidStatusBadge
+              v-if="row.data.paid_status !== 'PAID'"
               :status="row.data.paid_status"
               class="px-1 py-0.5 ml-2"
             >
-              {{ row.data.paid_status }}
+              {{ $t(`invoices.${row.data.paid_status.toLowerCase()}`) }}
             </BasePaidStatusBadge>
           </div>
         </template>
@@ -275,6 +352,7 @@ import abilities from '@/scripts/admin/stub/abilities'
 import { debouncedWatch } from '@vueuse/core'
 
 import MoonwalkerIcon from '@/scripts/components/icons/empty/MoonwalkerIcon.vue'
+import PencilSheetIcon from '@/scripts/components/icons/PencilSheetIcon.vue'
 import InvoiceDropdown from '@/scripts/admin/components/dropdowns/InvoiceIndexDropdown.vue'
 import SendInvoiceModal from '@/scripts/admin/components/modal-components/SendInvoiceModal.vue'
 // Stores
@@ -304,6 +382,33 @@ const isRequestOngoing = ref(true)
 const activeTab = ref('general.draft')
 const router = useRouter()
 const userStore = useUserStore()
+
+const bulkStatuses = [
+  { value: 'DRAFT', label: 'invoices.draft', icon: PencilSheetIcon },
+  { value: 'SENT', label: 'invoices.sent', icon: 'PaperAirplaneIcon' },
+]
+
+const selectedInvoicesList = computed(() =>
+  invoiceStore.invoices.filter((invoice) =>
+    invoiceStore.selectedInvoices.includes(invoice.id)
+  )
+)
+
+const visibleBulkStatuses = computed(() =>
+  bulkStatuses.filter((bulkStatus) =>
+    selectedInvoicesList.value.some(
+      (invoice) => invoice.status !== bulkStatus.value
+    )
+  )
+)
+
+const hasPaidInvoiceSelected = computed(() =>
+  selectedInvoicesList.value.some((invoice) => invoice.paid_status === 'PAID')
+)
+
+const hasPayableInvoiceSelected = computed(() =>
+  selectedInvoicesList.value.some((invoice) => invoice.due_amount > 0)
+)
 
 let filters = reactive({
   customer_id: '',
@@ -465,6 +570,53 @@ function clearFilter() {
   filters.invoice_number = ''
 
   activeTab.value = t('general.all')
+}
+
+async function addBulkPayments() {
+  dialogStore
+    .openDialog({
+      title: t('general.are_you_sure'),
+      message:
+        invoiceStore.selectedInvoices.length > 1
+          ? t('payments.confirm_bulk_payment')
+          : t('payments.confirm_single_bulk_payment'),
+      yesLabel: t('general.ok'),
+      noLabel: t('general.cancel'),
+      variant: 'primary',
+      hideNoButton: false,
+      size: 'lg',
+    })
+    .then((res) => {
+      if (res) {
+        invoiceStore
+          .addBulkPayments({
+            ids: invoiceStore.selectedInvoices,
+          })
+          .then(() => {
+            router.push('/admin/payments')
+          })
+      }
+    })
+}
+
+async function changeMultipleInvoicesStatus(bulkStatus) {
+  dialogStore
+    .openDialog({
+      title: t('general.are_you_sure'),
+      message: t('invoices.confirm_change_status'),
+      yesLabel: t('general.ok'),
+      noLabel: t('general.cancel'),
+      variant: 'primary',
+      hideNoButton: false,
+      size: 'lg',
+    })
+    .then((res) => {
+      if (res) {
+        invoiceStore.updateInvoicesStatus(bulkStatus.value).then((res) => {
+          table.value && table.value.refresh()
+        })
+      }
+    })
 }
 
 async function removeMultipleInvoices() {

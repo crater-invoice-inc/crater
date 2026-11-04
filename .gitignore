@@ -18,3 +18,4 @@ Homestead.yaml
 /.scribe
 !storage/fonts/.gitkeep
 .DS_Store
+.docker-bin/

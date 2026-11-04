@@ -264,6 +264,16 @@
     "deleted_message": "Article supprimé avec succès | Articles supprimés avec succès"
   },
   "estimates": {
+    "mark_as": "Marquer comme",
+
+    "mark_as_draft": "Marquer comme brouillon",
+
+    "marked_as_draft_message": "Devis marqué comme brouillon",
+
+    "confirm_mark_as_draft": "Voulez-vous vraiment marquer ce devis comme brouillon ?",
+    "confirm_change_status": "Changer le statut des devis sélectionnés ?",
+
+    "status_updated_message": "Statut des devis mis à jour avec succès",
     "title": "Devis",
     "accept_estimate": "Accepter devis",
     "reject_estimate": "Rejeter devis",
@@ -358,6 +368,16 @@
     "mark_as_default_estimate_template_description": "If enabled, the selected template will be automatically selected for new estimates."
   },
   "invoices": {
+    "paid_invoice_selected": "Une facture payée est sélectionnée",
+    "draft": "Brouillon",
+
+    "sent": "Envoyée",
+
+    "mark_as": "Marquer comme",
+
+    "status_updated_message": "Statut des factures mis à jour avec succès",
+
+    "confirm_change_status": "Changer le statut des factures sélectionnées ?",
     "title": "Factures",
     "download": "Télécharger",
     "pay_invoice": "Payer facture",
@@ -560,6 +580,13 @@
     "invalid_due_amount_message": "Le montant total de la facture récurrente ne peut pas être inférieur au montant total payé pour cette facture récurrente. Veuillez mettre à jour la facture ou supprimer les paiements associés pour continuer."
   },
   "payments": {
+    "record_payments": "Enregistrer des paiements",
+
+    "confirm_bulk_payment": "Enregistrer un paiement du montant total dû pour chaque facture sélectionnée ?",
+
+    "confirm_single_bulk_payment": "Enregistrer un paiement du montant total dû pour la facture sélectionnée ?",
+
+    "bulk_created_message": "Paiements enregistrés avec succès",
     "title": "Paiements",
     "payments_list": "Liste de paiements",
     "record_payment": "Enregistrer un paiement",

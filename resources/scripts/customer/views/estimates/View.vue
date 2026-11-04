@@ -170,7 +170,7 @@
             </div>
 
             <BaseEstimateStatusBadge :status="estimate.status">
-              {{ estimate.status }}
+              {{ $t(`estimates.${estimate.status.toLowerCase()}`) }}
             </BaseEstimateStatusBadge>
           </div>
 

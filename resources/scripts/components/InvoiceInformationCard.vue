@@ -32,7 +32,7 @@
               :status="invoice.paid_status"
               class="px-3 py-1"
             >
-              {{ invoice.paid_status }}
+              {{ $t(`invoices.${invoice.paid_status.toLowerCase()}`) }}
             </BaseInvoiceStatusBadge>
           </dd>
         </div>

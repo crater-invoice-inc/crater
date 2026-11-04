@@ -63,5 +63,5 @@ return [
     | The URL at which the Vite development server runs.
     | This is used to generate the script tags when developing.
     */
-    'dev_url' => 'http://localhost:3000',
+    'dev_url' => env('VITE_DEV_URL', 'http://localhost:3000'),
 ];

@@ -315,6 +315,50 @@ export const useInvoiceStore = (useWindow = false) => {
         })
       },
 
+      updateInvoicesStatus(status) {
+        return new Promise((resolve, reject) => {
+          axios
+            .post(`/api/v1/invoices/change-status`, {
+              ids: this.selectedInvoices,
+              status,
+            })
+            .then((response) => {
+              this.selectedInvoices = []
+              this.selectAllField = false
+
+              notificationStore.showNotification({
+                type: 'success',
+                message: global.t('invoices.status_updated_message'),
+              })
+              resolve(response)
+            })
+            .catch((err) => {
+              handleError(err)
+              reject(err)
+            })
+        })
+      },
+
+      addBulkPayments(data) {
+        const notificationStore = useNotificationStore()
+
+        return new Promise((resolve, reject) => {
+          axios
+            .post(`/api/v1/payments/bulk-store`, data)
+            .then((response) => {
+              notificationStore.showNotification({
+                type: 'success',
+                message: global.t('payments.bulk_created_message'),
+              })
+              resolve(response)
+            })
+            .catch((err) => {
+              handleError(err)
+              reject(err)
+            })
+        })
+      },
+
       getNextNumber(params, setState = false) {
         return new Promise((resolve, reject) => {
           axios

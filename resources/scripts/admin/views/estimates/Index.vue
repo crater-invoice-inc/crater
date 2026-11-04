@@ -142,7 +142,7 @@
         <BaseDropdown
           v-if="
             estimateStore.selectedEstimates.length &&
-            userStore.hasAbilities(abilities.DELETE_ESTIMATE)
+            userStore.hasAbilities(abilities.EDIT_ESTIMATE)
           "
           class="absolute float-right"
         >
@@ -162,7 +162,42 @@
             </span>
           </template>
 
-          <BaseDropdownItem @click="removeMultipleEstimates">
+          <div
+            v-if="visibleBulkStatuses.length"
+            class="px-4 pt-2 pb-1 text-xs font-medium text-gray-400 uppercase select-none"
+          >
+            {{ $t('estimates.mark_as') }}
+          </div>
+          <BaseDropdownItem
+            v-for="bulkStatus in visibleBulkStatuses"
+            :key="bulkStatus.value"
+            @click="changeMultipleEstimatesStatus(bulkStatus)"
+          >
+            <component
+              :is="bulkStatus.icon"
+              v-if="typeof bulkStatus.icon !== 'string'"
+              class="mr-3 text-gray-600"
+            />
+            <BaseIcon
+              v-else
+              :name="bulkStatus.icon"
+              class="mr-3 text-gray-600"
+            />
+            {{ $t(bulkStatus.label, 2) }}
+          </BaseDropdownItem>
+
+          <div
+            v-if="
+              visibleBulkStatuses.length &&
+              userStore.hasAbilities(abilities.DELETE_ESTIMATE)
+            "
+            class="mx-4 my-1 border-t border-gray-200"
+          />
+
+          <BaseDropdownItem
+            v-if="userStore.hasAbilities(abilities.DELETE_ESTIMATE)"
+            @click="removeMultipleEstimates"
+          >
             <BaseIcon name="TrashIcon" class="mr-3 text-gray-600" />
             {{ $t('general.delete') }}
           </BaseDropdownItem>
@@ -215,8 +250,11 @@
         </template>
 
         <template #cell-status="{ row }">
-          <BaseEstimateStatusBadge :status="row.data.status" class="px-3 py-1">
-            {{ row.data.status }}
+          <BaseEstimateStatusBadge
+            :status="row.data.status"
+            class="px-3 py-1"
+          >
+            {{ $t(`estimates.${row.data.status.toLowerCase()}`) }}
           </BaseEstimateStatusBadge>
         </template>
 
@@ -247,6 +285,7 @@ import { debouncedWatch } from '@vueuse/core'
 import abilities from '@/scripts/admin/stub/abilities'
 
 import ObservatoryIcon from '@/scripts/components/icons/empty/ObservatoryIcon.vue'
+import PencilSheetIcon from '@/scripts/components/icons/PencilSheetIcon.vue'
 import EstimateDropDown from '@/scripts/admin/components/dropdowns/EstimateIndexDropdown.vue'
 import SendEstimateModal from '@/scripts/admin/components/modal-components/SendEstimateModal.vue'
 
@@ -269,6 +308,27 @@ const status = ref([
 const isRequestOngoing = ref(true)
 const activeTab = ref('general.draft')
 const router = useRouter()
+
+const bulkStatuses = [
+  { value: 'DRAFT', label: 'estimates.draft', icon: PencilSheetIcon },
+  { value: 'SENT', label: 'estimates.sent', icon: 'PaperAirplaneIcon' },
+  { value: 'ACCEPTED', label: 'estimates.accepted', icon: 'CheckCircleIcon' },
+  { value: 'REJECTED', label: 'estimates.rejected', icon: 'XCircleIcon' },
+]
+
+const selectedEstimatesList = computed(() =>
+  estimateStore.estimates.filter((estimate) =>
+    estimateStore.selectedEstimates.includes(estimate.id)
+  )
+)
+
+const visibleBulkStatuses = computed(() =>
+  bulkStatuses.filter((bulkStatus) =>
+    selectedEstimatesList.value.some(
+      (estimate) => estimate.status !== bulkStatus.value
+    )
+  )
+)
 
 let filters = reactive({
   customer_id: '',
@@ -426,6 +486,26 @@ function toggleFilter() {
   }
 
   showFilters.value = !showFilters.value
+}
+
+async function changeMultipleEstimatesStatus(status) {
+  dialogStore
+    .openDialog({
+      title: t('general.are_you_sure'),
+      message: t('estimates.confirm_change_status'),
+      yesLabel: t('general.ok'),
+      noLabel: t('general.cancel'),
+      variant: 'primary',
+      hideNoButton: false,
+      size: 'lg',
+    })
+    .then((res) => {
+      if (res) {
+        estimateStore.updateEstimatesStatus(status.value).then((res) => {
+          refreshTable()
+        })
+      }
+    })
 }
 
 async function removeMultipleEstimates() {

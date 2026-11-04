@@ -151,4 +151,19 @@ class InvoicePolicy
 
         return false;
     }
+
+    /**
+     * Determine whether the user can update the status of models.
+     *
+     * @param  \Crater\Models\User  $user
+     * @return mixed
+     */
+    public function sendMultiple(User $user)
+    {
+        if (BouncerFacade::can('send-invoice', Invoice::class)) {
+            return true;
+        }
+
+        return false;
+    }
 }

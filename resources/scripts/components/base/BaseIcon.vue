@@ -1,5 +1,5 @@
 <template>
-  <component :is="heroIcons[name]" v-if="isLoaded" class="h-5 w-5" />
+  <component :is="heroIcons[name]" v-if="isLoaded" class="h-5 w-5 shrink-0" />
 </template>
 
 <script setup>

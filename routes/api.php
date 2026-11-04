@@ -13,6 +13,7 @@ use Crater\Http\Controllers\V1\Admin\CustomField\CustomFieldsController;
 use Crater\Http\Controllers\V1\Admin\Dashboard\DashboardController;
 use Crater\Http\Controllers\V1\Admin\Estimate\ChangeEstimateStatusController;
 use Crater\Http\Controllers\V1\Admin\Estimate\ChangeEstimatesStatusController;
+use Crater\Http\Controllers\V1\Admin\Estimate\CloneEstimateController;
 use Crater\Http\Controllers\V1\Admin\Estimate\ConvertEstimateController;
 use Crater\Http\Controllers\V1\Admin\Estimate\EstimatesController;
 use Crater\Http\Controllers\V1\Admin\Estimate\EstimateTemplatesController;
@@ -305,6 +306,8 @@ Route::prefix('/v1')->group(function () {
             Route::post('/estimates/{estimate}/status', ChangeEstimateStatusController::class);
 
             Route::post('/estimates/{estimate}/convert-to-invoice', ConvertEstimateController::class);
+
+            Route::post('/estimates/{estimate}/clone', CloneEstimateController::class);
 
             Route::get('/estimates/templates', EstimateTemplatesController::class);
 

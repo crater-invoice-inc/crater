@@ -61,6 +61,21 @@ jobs:
           name: frontend-build
           path: public/build
 
+      - name: Upload frontend assets
+        uses: appleboy/scp-action@v1
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          source: "public/build/*"
+          target: "/root/crater/public/build-new"
+          strip_components: 2
+          rm: true
+          overwrite: true
+
+      # Atomic swap: the old assets stay served until both the new code and
+      # the new manifest are in place, so there is never a window where
+      # public/build/manifest.json is missing.
       - name: Sync code on droplet
         uses: appleboy/ssh-action@v1
         with:
@@ -73,17 +88,9 @@ jobs:
 
             git pull origin master
 
+            rm -rf public/build-old
+            mv public/build public/build-old
+            mv public/build-new public/build
+
             docker compose exec -T app php artisan config:clear
             docker compose exec -T app php artisan route:clear
-
-      - name: Upload frontend assets
-        uses: appleboy/scp-action@v1
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_KEY }}
-          source: "public/build/*"
-          target: "/root/crater/public/build"
-          strip_components: 2
-          rm: true
-          overwrite: true

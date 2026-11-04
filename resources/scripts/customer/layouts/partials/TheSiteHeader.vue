@@ -232,8 +232,7 @@ const previewAvatar = computed(() => {
 })
 
 function getDefaultAvatar() {
-  const imgUrl = new URL('/img/default-avatar.jpg', import.meta.url)
-  return imgUrl
+  return import.meta.env.DEV ? '/img/default-avatar.jpg' : '/build/img/default-avatar.jpg'
 }
 
 watch(

@@ -9,7 +9,8 @@
     "payments": "Pagamentos",
     "reports": "Relatórios",
     "settings": "Configurações",
-    "logout": "Encerrar sessão"
+    "logout": "Encerrar sessão",
+    "profile": "Perfil"
   },
   "general": {
     "view_pdf": "Ver PDF",

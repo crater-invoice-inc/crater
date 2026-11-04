@@ -12,7 +12,8 @@
     "settings": "Nustatymai",
     "logout": "Atsijungti",
     "users": "Vartotojai",
-    "modules": "Moduliai"
+    "modules": "Moduliai",
+    "profile": "Profilis"
   },
   "general": {
     "add_company": "Pridėti įmonę",

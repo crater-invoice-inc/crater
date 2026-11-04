@@ -1,31 +1,61 @@
 <template>
-  <div ref="companySwitchBar" class="relative rounded">
+  <div ref="companySwitchBar" class="relative rounded-lg">
     <CompanyModal />
 
     <div
       class="
         flex
         items-center
-        justify-center
-        px-3
-        h-8
-        md:h-9
-        ml-2
-        text-sm text-white
-        bg-white
-        rounded
+        w-full
+        px-2.5
+        py-2
+        text-sm
+        bg-gray-50
+        rounded-lg
         cursor-pointer
-        bg-opacity-20
+        hover:bg-gray-100
       "
       @click="isShow = !isShow"
     >
       <span
         v-if="companyStore.selectedCompany"
-        class="w-16 text-sm font-medium truncate sm:w-auto"
+        class="
+          flex
+          items-center
+          justify-center
+          shrink-0
+          overflow-hidden
+          text-base
+          font-semibold
+          bg-gray-200
+          rounded-md
+          w-9
+          h-9
+          text-primary-500
+        "
+      >
+        <span v-if="!companyStore.selectedCompany.logo">
+          {{ initGenerator(companyStore.selectedCompany.name) }}
+        </span>
+        <img
+          v-else
+          :src="companyStore.selectedCompany.logo"
+          alt="Company logo"
+          class="w-full h-full object-contain"
+        />
+      </span>
+
+      <span
+        v-if="companyStore.selectedCompany"
+        class="flex-1 ml-3 font-medium text-gray-900 truncate"
       >
         {{ companyStore.selectedCompany.name }}
       </span>
-      <BaseIcon name="ChevronDownIcon" class="h-5 ml-1 text-white" />
+
+      <BaseIcon
+        name="ChevronDownIcon"
+        class="h-5 ml-2 shrink-0 text-gray-400"
+      />
     </div>
 
     <transition
@@ -38,16 +68,17 @@
     >
       <div
         v-if="isShow"
-        class="absolute right-0 mt-2 bg-white rounded-md shadow-lg"
+        class="absolute left-0 z-30 mt-2 bg-white rounded-lg shadow-lg"
       >
         <div
           class="
             overflow-y-auto
             scrollbar-thin scrollbar-thumb-rounded-full
-            w-[250px]
+            w-full
+            min-w-[200px]
             max-h-[350px]
             scrollbar-thumb-gray-300 scrollbar-track-gray-10
-            pb-4
+            pb-2
           "
         >
           <label
@@ -86,49 +117,55 @@
                 v-for="(company, index) in companyStore.companies"
                 :key="index"
                 class="
+                  flex
+                  items-center
+                  mx-1.5
                   p-2
-                  px-3
+                  px-2
                   rounded-md
                   cursor-pointer
-                  hover:bg-gray-100 hover:text-primary-500
+                  hover:bg-gray-100
                 "
                 :class="{
-                  'bg-gray-100 text-primary-500':
+                  'bg-gray-100':
                     companyStore.selectedCompany.id === company.id,
                 }"
                 @click="changeCompany(company)"
               >
-                <div class="flex items-center">
-                  <span
-                    class="
-                      flex
-                      items-center
-                      justify-center
-                      mr-3
-                      overflow-hidden
-                      text-base
-                      font-semibold
-                      bg-gray-200
-                      rounded-md
-                      w-9
-                      h-9
-                      text-primary-500
-                    "
-                  >
-                    <span v-if="!company.logo">
-                      {{ initGenerator(company.name) }}
-                    </span>
-                    <img
-                      v-else
-                      :src="company.logo"
-                      alt="Company logo"
-                      class="w-full h-full object-contain"
-                    />
+                <span
+                  class="
+                    flex
+                    items-center
+                    justify-center
+                    mr-3
+                    overflow-hidden
+                    text-base
+                    font-semibold
+                    bg-gray-200
+                    rounded-md
+                    w-9
+                    h-9
+                    text-primary-500
+                  "
+                >
+                  <span v-if="!company.logo">
+                    {{ initGenerator(company.name) }}
                   </span>
-                  <div class="flex flex-col">
-                    <span class="text-sm">{{ company.name }}</span>
-                  </div>
+                  <img
+                    v-else
+                    :src="company.logo"
+                    alt="Company logo"
+                    class="w-full h-full object-contain"
+                  />
+                </span>
+                <div class="flex flex-col">
+                  <span class="text-sm text-gray-900">{{ company.name }}</span>
                 </div>
+                <BaseIcon
+                  v-if="companyStore.selectedCompany.id === company.id"
+                  name="CheckIcon"
+                  class="h-5 ml-auto text-primary-500"
+                />
               </div>
             </div>
           </div>
@@ -138,17 +175,15 @@
           class="
             flex
             items-center
-            justify-center
-            p-4
-            pl-3
-            border-t-2 border-gray-100
+            p-3
+            border-t border-gray-100
             cursor-pointer
             text-primary-400
             hover:text-primary-500
           "
           @click="addNewCompany"
         >
-          <BaseIcon name="PlusIcon" class="h-5 mr-2" />
+          <BaseIcon name="PlusCircleIcon" class="h-5 mr-2" />
 
           <span class="font-medium">
             {{ $t('company_switcher.add_new_company') }}
@@ -170,7 +205,6 @@ import { useGlobalStore } from '@/scripts/admin//stores/global'
 import { useUserStore } from '@/scripts/admin/stores/user'
 
 import CompanyModal from '@/scripts/admin/components/modal-components/CompanyModal.vue'
-import abilities from '@/scripts/admin/stub/abilities'
 
 const companyStore = useCompanyStore()
 const modalStore = useModalStore()

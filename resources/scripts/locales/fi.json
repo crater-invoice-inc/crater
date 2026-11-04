@@ -12,7 +12,8 @@
     "settings": "Asetukset",
     "logout": "Kirjaudu ulos",
     "users": "Käyttäjät",
-    "modules": "Moduulit"
+    "modules": "Moduulit",
+    "profile": "Profiili"
   },
   "general": {
     "add_company": "Lisää Yritys",

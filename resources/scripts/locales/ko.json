@@ -10,7 +10,8 @@
     "reports": "보고서",
     "settings": "설정",
     "logout": "로그 아웃",
-    "users": "사용자"
+    "users": "사용자",
+    "profile": "프로필"
   },
   "general": {
     "add_company": "회사 추가",

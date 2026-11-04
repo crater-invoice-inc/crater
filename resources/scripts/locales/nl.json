@@ -12,7 +12,8 @@
     "settings": "Instellingen",
     "logout": "Uitloggen",
     "users": "Gebruikers",
-    "modules": "Modules"
+    "modules": "Modules",
+    "profile": "Profiel"
   },
   "general": {
     "add_company": "Bedrijf toevoegen",

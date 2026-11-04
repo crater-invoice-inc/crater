@@ -12,7 +12,8 @@
     "settings": "Configurazione",
     "logout": "Disconnessione",
     "users": "Utenti",
-    "modules": "Moduli"
+    "modules": "Moduli",
+    "profile": "Profilo"
   },
   "general": {
     "add_company": "Aggiungi azienda",

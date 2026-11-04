@@ -6,10 +6,61 @@ on:
   workflow_dispatch:
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - name: Deploy to droplet
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          extensions: mbstring, xml, sqlite3
+
+      - name: Install composer dependencies
+        run: composer install --no-interaction --prefer-dist --no-progress
+
+      # laravel-vite calls `php artisan vite:config` to discover entrypoints,
+      # so the Laravel app must boot. It never touches the DB, but the console
+      # kernel still needs a bootable environment.
+      - name: Prepare Laravel environment
+        run: |
+          cp .env.example .env
+          echo "DB_CONNECTION=sqlite" >> .env
+          touch database/database.sqlite
+          php artisan key:generate
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '16'
+          cache: npm
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Build frontend
+        run: npm run build
+
+      - name: Upload frontend assets
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-build
+          path: public/build
+          retention-days: 1
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download frontend assets
+        uses: actions/download-artifact@v4
+        with:
+          name: frontend-build
+          path: public/build
+
+      - name: Sync code on droplet
         uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -19,9 +70,19 @@ jobs:
             set -e
             cd /root/crater
 
-            # Frontend assets are built locally and committed to public/build,
-            # so no build is needed on the droplet (it OOM-kills on small instances).
             git pull origin master
 
             docker compose exec -T app php artisan config:clear
             docker compose exec -T app php artisan route:clear
+
+      - name: Upload frontend assets
+        uses: appleboy/scp-action@v1
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          source: "public/build/*"
+          target: "/root/crater/public/build"
+          strip_components: 2
+          rm: true
+          overwrite: true

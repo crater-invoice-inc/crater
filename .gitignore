@@ -19,3 +19,6 @@ Homestead.yaml
 !storage/fonts/.gitkeep
 .DS_Store
 .docker-bin/
+
+# Frontend assets are built in CI and uploaded to the droplet
+/public/build

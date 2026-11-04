@@ -35,12 +35,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '16'
-          cache: npm
+          cache: yarn
 
-      - name: Install npm dependencies
-        # legacy-peer-deps reproduces the lockfile's original resolution
-        # (old lockfile with peer conflicts on vue@3.2).
-        run: npm ci --legacy-peer-deps
+      - name: Install frontend dependencies
+        # The project uses yarn (yarn.lock); package-lock.json is stale.
+        run: yarn install --frozen-lockfile --ignore-engines
 
       - name: Build frontend
         run: npm run build

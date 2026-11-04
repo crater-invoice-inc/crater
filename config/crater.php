@@ -156,6 +156,16 @@ return [
             'model' => ''
         ],
         [
+            'title' => 'settings.menu_title.modules',
+            'group' => '',
+            'name' => 'Modules',
+            'link' => '/admin/settings/modules',
+            'icon' => 'PuzzleIcon',
+            'owner_only' => true,
+            'ability' => '',
+            'model' => ''
+        ],
+        [
             'title' => 'settings.roles.title',
             'group' => '',
             'name' => 'Roles',
@@ -275,6 +285,18 @@ return [
             'ability' => '',
             'model' => ''
         ],
+    ],
+
+    /*
+    * Modules whose main menu item can be enabled/disabled per company
+    */
+    'company_modules' => [
+        ['key' => 'estimates', 'menu' => 'Estimates'],
+        ['key' => 'invoices', 'menu' => 'Invoices'],
+        ['key' => 'recurring_invoices', 'menu' => 'Recurring Invoices'],
+        ['key' => 'payments', 'menu' => 'Payments'],
+        ['key' => 'expenses', 'menu' => 'Expenses'],
+        ['key' => 'modules', 'menu' => 'Modules'],
     ],
 
     /*

@@ -56,6 +56,8 @@ const UpdateApp = () =>
   import('@/scripts/admin/views/settings/UpdateAppSetting.vue')
 const RolesSettings = () =>
   import('@/scripts/admin/views/settings/RolesSettings.vue')
+const ModulesSetting = () =>
+  import('@/scripts/admin/views/settings/ModulesSetting.vue')
 
 // Items
 const ItemsIndex = () => import('@/scripts/admin/views/items/Index.vue')
@@ -260,6 +262,12 @@ export default [
             name: 'notifications',
             meta: { isOwner: true },
             component: Notifications,
+          },
+          {
+            path: 'modules',
+            name: 'modules.settings',
+            meta: { isOwner: true },
+            component: ModulesSetting,
           },
           {
             path: 'roles-settings',

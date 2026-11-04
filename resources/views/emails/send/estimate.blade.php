@@ -17,11 +17,9 @@
     @slot('subcopy')
         @component('mail::subcopy')
             {!! $data['body'] !!}
-            @if(!$data['attach']['data'])
-                @component('mail::button', ['url' => $data['url']])
-                    {{ $data['view_label'] }}
-                @endcomponent
-            @endif
+            @component('mail::button', ['url' => $data['url']])
+                {{ $data['view_label'] }}
+            @endcomponent
         @endcomponent
     @endslot
 

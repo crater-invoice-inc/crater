@@ -21,7 +21,7 @@ jobs:
 
             # Frontend assets are built locally and committed to public/build,
             # so no build is needed on the droplet (it OOM-kills on small instances).
-            git pull
+            git pull origin master
 
             docker compose exec -T app php artisan config:clear
             docker compose exec -T app php artisan route:clear

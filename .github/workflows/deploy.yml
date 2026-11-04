@@ -29,7 +29,7 @@ jobs:
           cp .env.example .env
           echo "DB_CONNECTION=sqlite" >> .env
           touch database/database.sqlite
-          php artisan key:generate
+          php artisan key:generate --force
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -38,7 +38,9 @@ jobs:
           cache: npm
 
       - name: Install npm dependencies
-        run: npm ci
+        # legacy-peer-deps reproduces the lockfile's original resolution
+        # (old lockfile with peer conflicts on vue@3.2).
+        run: npm ci --legacy-peer-deps
 
       - name: Build frontend
         run: npm run build

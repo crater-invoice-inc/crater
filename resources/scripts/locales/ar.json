@@ -12,7 +12,8 @@
     "settings": "الإعدادات",
     "logout": "تسجيل الخروج",
     "users": "المستخدمون",
-    "modules": "Modules"
+    "modules": "Modules",
+    "profile": "الملف الشخصي"
   },
   "general": {
     "add_company": "أضف شركة",

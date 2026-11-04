@@ -12,7 +12,8 @@
     "settings": "Settings",
     "logout": "Logout",
     "users": "Users",
-    "modules": "Modules"
+    "modules": "Modules",
+    "profile": "Profile"
   },
   "general": {
     "add_company": "Add Company",

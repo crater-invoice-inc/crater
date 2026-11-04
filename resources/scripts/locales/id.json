@@ -12,7 +12,8 @@
     "settings": "Pengaturan",
     "logout": "Keluar",
     "users": "Pengguna",
-    "modules": "Modul"
+    "modules": "Modul",
+    "profile": "Profil"
   },
   "general": {
     "add_company": "Tambahkan Perusahaan",

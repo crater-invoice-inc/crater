@@ -63,28 +63,29 @@
               </button>
             </div>
           </TransitionChild>
-          <div class="flex-1 h-0 pt-5 pb-4 overflow-y-auto">
-            <div class="flex items-center shrink-0 px-4 mb-10">
+
+          <div class="flex flex-col flex-1 h-0 pt-5 pb-4 overflow-y-auto">
+            <div class="flex items-center shrink-0 px-4 mb-6">
               <MainLogo
                 class="block h-auto max-w-full w-36 text-primary-400"
                 alt="Crater Logo"
               />
             </div>
 
-            <nav
-              v-for="menu in globalStore.menuGroups"
-              :key="menu"
-              class="mt-5 space-y-1"
-            >
+            <div class="px-4 mb-6">
+              <CompanySwitcher />
+            </div>
+
+            <nav class="flex-1 px-2 space-y-1">
               <router-link
-                v-for="item in menu"
+                v-for="item in mainMenuItems"
                 :key="item.name"
                 :to="item.link"
                 :class="[
                   hasActiveUrl(item.link)
-                    ? 'text-primary-500 border-primary-500 bg-gray-100 '
-                    : 'text-black',
-                  'cursor-pointer px-0 pl-4 py-3 border-transparent flex items-center border-l-4 border-solid text-sm not-italic font-medium',
+                    ? 'text-primary-600 bg-primary-50'
+                    : 'text-gray-700',
+                  'cursor-pointer px-3 py-2.5 rounded-lg flex items-center text-sm not-italic font-medium hover:bg-gray-50',
                 ]"
                 @click="globalStore.setSidebarVisibility(false)"
               >
@@ -94,13 +95,42 @@
                     hasActiveUrl(item.link)
                       ? 'text-primary-500 '
                       : 'text-gray-400',
-                    'mr-4 shrink-0 h-5 w-5',
+                    'mr-3.5 shrink-0 h-5 w-5',
                   ]"
-                  @click="globalStore.setSidebarVisibility(false)"
                 />
                 {{ $t(item.title) }}
               </router-link>
             </nav>
+
+            <nav class="px-2 mt-4 space-y-1">
+              <router-link
+                v-for="item in bottomMenuItems"
+                :key="item.name"
+                :to="item.link"
+                :class="[
+                  hasActiveUrl(item.link)
+                    ? 'text-primary-600 bg-primary-50'
+                    : 'text-gray-700',
+                  'cursor-pointer px-3 py-2.5 rounded-lg flex items-center text-sm not-italic font-medium hover:bg-gray-50',
+                ]"
+                @click="globalStore.setSidebarVisibility(false)"
+              >
+                <BaseIcon
+                  :name="item.icon"
+                  :class="[
+                    hasActiveUrl(item.link)
+                      ? 'text-primary-500 '
+                      : 'text-gray-400',
+                    'mr-3.5 shrink-0 h-5 w-5',
+                  ]"
+                />
+                {{ $t(item.title) }}
+              </router-link>
+            </nav>
+
+            <div class="px-4 mt-4">
+              <SidebarUserCard />
+            </div>
           </div>
         </div>
       </TransitionChild>
@@ -116,7 +146,6 @@
       hidden
       w-56
       h-screen
-      pb-32
       overflow-y-auto
       bg-white
       border-r border-gray-200 border-solid
@@ -125,40 +154,73 @@
       pt-16
     "
   >
-    <div
-      v-for="menu in globalStore.menuGroups"
-      :key="menu"
-      class="p-0 m-0 mt-6 list-none"
-    >
-      <router-link
-        v-for="item in menu"
-        :key="item"
-        :to="item.link"
-        :class="[
-          hasActiveUrl(item.link)
-            ? 'text-primary-500 border-primary-500 bg-gray-100 '
-            : 'text-black',
-          'cursor-pointer px-0 pl-6 hover:bg-gray-50 py-3 group flex items-center border-l-4 border-solid border-transparent text-sm not-italic font-medium',
-        ]"
-      >
-        <BaseIcon
-          :name="item.icon"
+    <div class="flex flex-col flex-1 px-4 pt-4 pb-4 overflow-y-auto">
+      <CompanySwitcher />
+
+      <nav class="flex-1 mt-6 space-y-1">
+        <router-link
+          v-for="item in mainMenuItems"
+          :key="item"
+          :to="item.link"
           :class="[
             hasActiveUrl(item.link)
-              ? 'text-primary-500 group-hover:text-primary-500 '
-              : 'text-gray-400 group-hover:text-black',
-            'mr-4 shrink-0 h-5 w-5 ',
+              ? 'text-primary-600 bg-primary-50'
+              : 'text-gray-700',
+            'cursor-pointer px-3 py-2.5 rounded-lg hover:bg-gray-50 group flex items-center text-sm not-italic font-medium',
           ]"
-        />
+        >
+          <BaseIcon
+            :name="item.icon"
+            :class="[
+              hasActiveUrl(item.link)
+                ? 'text-primary-500 group-hover:text-primary-500 '
+                : 'text-gray-400 group-hover:text-gray-600',
+              'mr-3.5 shrink-0 h-5 w-5',
+            ]"
+          />
 
-        {{ $t(item.title) }}
-      </router-link>
+          {{ $t(item.title) }}
+        </router-link>
+      </nav>
+
+      <nav class="mt-6 space-y-1">
+        <router-link
+          v-for="item in bottomMenuItems"
+          :key="item"
+          :to="item.link"
+          :class="[
+            hasActiveUrl(item.link)
+              ? 'text-primary-600 bg-primary-50'
+              : 'text-gray-700',
+            'cursor-pointer px-3 py-2.5 rounded-lg hover:bg-gray-50 group flex items-center text-sm not-italic font-medium',
+          ]"
+        >
+          <BaseIcon
+            :name="item.icon"
+            :class="[
+              hasActiveUrl(item.link)
+                ? 'text-primary-500 group-hover:text-primary-500 '
+                : 'text-gray-400 group-hover:text-gray-600',
+              'mr-3.5 shrink-0 h-5 w-5',
+            ]"
+          />
+
+          {{ $t(item.title) }}
+        </router-link>
+      </nav>
+
+      <div class="pt-4 mt-4 border-t border-gray-100">
+        <SidebarUserCard />
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
+import { computed } from 'vue'
 import MainLogo from '@/scripts/components/icons/MainLogo.vue'
+import CompanySwitcher from '@/scripts/components/CompanySwitcher.vue'
+import SidebarUserCard from '@/scripts/admin/layouts/partials/SidebarUserCard.vue'
 
 import {
   Dialog,
@@ -172,6 +234,20 @@ import { useGlobalStore } from '@/scripts/admin/stores/global'
 
 const route = useRoute()
 const globalStore = useGlobalStore()
+
+const BOTTOM_MENU_NAMES = ['Users', 'Reports', 'Settings']
+
+const mainMenuItems = computed(() => {
+  return globalStore.mainMenu.filter(
+    (item) => !BOTTOM_MENU_NAMES.includes(item.name)
+  )
+})
+
+const bottomMenuItems = computed(() => {
+  return globalStore.mainMenu.filter((item) =>
+    BOTTOM_MENU_NAMES.includes(item.name)
+  )
+})
 
 function hasActiveUrl(url) {
   return route.path.indexOf(url) > -1

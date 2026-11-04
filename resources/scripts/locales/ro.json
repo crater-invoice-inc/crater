@@ -12,7 +12,8 @@
     "settings": "Setări",
     "logout": "Deconectare",
     "users": "Utilizatori",
-    "modules": "Modules"
+    "modules": "Modules",
+    "profile": "Profil"
   },
   "general": {
     "add_company": "Adaugă firmă",

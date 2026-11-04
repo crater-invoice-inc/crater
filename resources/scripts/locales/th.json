@@ -12,7 +12,8 @@
     "settings": "การตั้งค่า",
     "logout": "ออกจากระบบ",
     "users": "ผู้ใช้งาน",
-    "modules": "โมดูล"
+    "modules": "โมดูล",
+    "profile": "โปรไฟล์"
   },
   "general": {
     "add_company": "เพิ่มบริษัท",

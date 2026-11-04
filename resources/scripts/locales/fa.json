@@ -12,7 +12,8 @@
     "settings": "تنظیمات",
     "logout": "خروج از حساب",
     "users": "کاربران",
-    "modules": "Modules"
+    "modules": "Modules",
+    "profile": "پروفایل"
   },
   "general": {
     "add_company": "افزودن شرکت",

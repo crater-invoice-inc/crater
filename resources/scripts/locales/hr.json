@@ -12,7 +12,8 @@
     "settings": "Postavke",
     "logout": "Odjava",
     "users": "Korisnici",
-    "modules": "Modules"
+    "modules": "Modules",
+    "profile": "Profil"
   },
   "general": {
     "add_company": "Dodaj tvrtku",

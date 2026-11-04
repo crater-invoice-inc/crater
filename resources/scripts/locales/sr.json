@@ -12,7 +12,8 @@
     "settings": "Podešavanja",
     "logout": "Odjavi se",
     "users": "Korisnici",
-    "modules": "Modules"
+    "modules": "Modules",
+    "profile": "Profil"
   },
   "general": {
     "add_company": "Dodaj kompaniju",

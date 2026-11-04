@@ -12,7 +12,8 @@
     "settings": "समायोजन",
     "logout": "लॉग आउट",
     "users": "कर्मचारी",
-    "modules": "मॉड्यूल"
+    "modules": "मॉड्यूल",
+    "profile": "प्रोफ़ाइल"
   },
   "general": {
     "add_company": "कंपनी जोड़ें",

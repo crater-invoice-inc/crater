@@ -372,6 +372,7 @@
   },
   "invoices": {
     "paid_invoice_selected": "Une facture payée est sélectionnée",
+    "viewed_invoice_selected": "Une facture consultée est sélectionnée",
     "draft": "Brouillon",
 
     "sent": "Envoyée",

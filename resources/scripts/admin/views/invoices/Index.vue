@@ -172,25 +172,25 @@
           <BaseDropdownItem
             v-for="bulkStatus in visibleBulkStatuses"
             :key="bulkStatus.value"
-            :disabled="hasPaidInvoiceSelected"
+            :disabled="hasStatusChangeBlocked"
             @click="changeMultipleInvoicesStatus(bulkStatus)"
           >
             <span
               class="flex items-center"
-              :class="hasPaidInvoiceSelected ? 'text-gray-300 cursor-not-allowed' : ''"
-              :title="hasPaidInvoiceSelected ? $t('invoices.paid_invoice_selected') : ''"
+              :class="hasStatusChangeBlocked ? 'text-gray-300 cursor-not-allowed' : ''"
+              :title="hasStatusChangeBlocked ? statusChangeBlockedMessage : ''"
             >
               <component
                 :is="bulkStatus.icon"
                 v-if="typeof bulkStatus.icon !== 'string'"
                 class="mr-3"
-                :class="hasPaidInvoiceSelected ? 'text-gray-300' : 'text-gray-600'"
+                :class="hasStatusChangeBlocked ? 'text-gray-300' : 'text-gray-600'"
               />
               <BaseIcon
                 v-else
                 :name="bulkStatus.icon"
                 class="mr-3"
-                :class="hasPaidInvoiceSelected ? 'text-gray-300' : 'text-gray-600'"
+                :class="hasStatusChangeBlocked ? 'text-gray-300' : 'text-gray-600'"
               />
               {{ $t(bulkStatus.label, 2) }}
             </span>
@@ -404,6 +404,20 @@ const visibleBulkStatuses = computed(() =>
 
 const hasPaidInvoiceSelected = computed(() =>
   selectedInvoicesList.value.some((invoice) => invoice.paid_status === 'PAID')
+)
+
+const hasViewedInvoiceSelected = computed(() =>
+  selectedInvoicesList.value.some((invoice) => invoice.status === 'VIEWED')
+)
+
+const hasStatusChangeBlocked = computed(
+  () => hasPaidInvoiceSelected.value || hasViewedInvoiceSelected.value
+)
+
+const statusChangeBlockedMessage = computed(() =>
+  hasPaidInvoiceSelected.value
+    ? t('invoices.paid_invoice_selected')
+    : t('invoices.viewed_invoice_selected')
 )
 
 const hasPayableInvoiceSelected = computed(() =>

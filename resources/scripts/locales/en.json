@@ -372,6 +372,7 @@
   },
   "invoices": {
     "paid_invoice_selected": "A paid invoice is selected",
+    "viewed_invoice_selected": "A viewed invoice is selected",
     "draft": "Draft",
 
     "sent": "Sent",

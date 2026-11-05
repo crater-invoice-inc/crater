@@ -11,13 +11,14 @@
             {{ $t('dashboard.recent_invoices_card.title') }}
           </h6>
 
-          <BaseButton
-            size="sm"
-            variant="primary-outline"
+          <button
+            type="button"
+            class="flex items-center justify-center w-9 h-9 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 transition-colors"
+            :title="$t('dashboard.recent_invoices_card.view_all')"
             @click="$router.push('/admin/invoices')"
           >
-            {{ $t('dashboard.recent_invoices_card.view_all') }}
-          </BaseButton>
+            <BaseIcon name="EyeIcon" class="w-5 h-5 text-primary-500" />
+          </button>
         </div>
 
         <BaseTable
@@ -61,13 +62,14 @@
             {{ $t('dashboard.recent_estimate_card.title') }}
           </h6>
 
-          <BaseButton
-            variant="primary-outline"
-            size="sm"
+          <button
+            type="button"
+            class="flex items-center justify-center w-9 h-9 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 transition-colors"
+            :title="$t('dashboard.recent_estimate_card.view_all')"
             @click="$router.push('/admin/estimates')"
           >
-            {{ $t('dashboard.recent_estimate_card.view_all') }}
-          </BaseButton>
+            <BaseIcon name="EyeIcon" class="w-5 h-5 text-primary-500" />
+          </button>
         </div>
 
         <BaseTable

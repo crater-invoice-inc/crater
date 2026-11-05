@@ -31,6 +31,7 @@
         :expenses="dashboardStore.chartData.expenseTotals"
         :receipts="dashboardStore.chartData.receiptTotals"
         :labels="dashboardStore.chartData.months"
+        :year="selectedYear"
         class="sm:w-full"
       />
     </div>

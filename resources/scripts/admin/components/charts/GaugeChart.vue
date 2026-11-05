@@ -1,44 +1,14 @@
 <template>
   <div class="flex flex-col h-full">
-    <div class="flex items-center justify-center gap-6">
-      <span class="flex items-center text-sm text-gray-500">
-        <span
-          class="inline-block w-2.5 h-2.5 rounded-full mr-2"
-          :style="{ background: COLOR_PAID }"
-        />
-        {{ $t('dashboard.gauge.collected') }}
-      </span>
-      <span class="flex items-center text-sm text-gray-500">
-        <span
-          class="inline-block w-2.5 h-2.5 rounded-full mr-2"
-          :style="{ background: COLOR_DUE }"
-        />
-        {{ $t('dashboard.gauge.outstanding') }}
-      </span>
-    </div>
-
-    <div class="relative mt-2 flex-1">
+    <div class="relative">
       <svg viewBox="0 0 220 128" class="w-full">
-        <!-- Tick marks -->
-        <line
-          v-for="(tick, i) in ticks"
-          :key="'tick-' + i"
-          :x1="tick.x1"
-          :y1="tick.y1"
-          :x2="tick.x2"
-          :y2="tick.y2"
-          stroke="#E5E7EB"
-          stroke-width="1"
-          stroke-linecap="round"
-        />
-        <!-- Gauge segments -->
         <path
           v-for="(segment, i) in segments"
           :key="'seg-' + i"
           :d="segment.path"
           fill="none"
           :stroke="segment.color"
-          stroke-width="20"
+          stroke-width="18"
           stroke-linecap="round"
         />
       </svg>
@@ -52,14 +22,43 @@
         </span>
       </div>
     </div>
+
+    <div class="mt-6">
+      <div
+        v-for="row in rows"
+        :key="row.label"
+        class="border-t border-gray-100 py-4 last:pb-0"
+      >
+        <div class="flex justify-between items-center mb-2.5">
+          <span class="flex items-center text-sm text-gray-500">
+            <span
+              class="inline-block w-2.5 h-2.5 rounded-full mr-2"
+              :style="{ background: row.color }"
+            />
+            {{ row.label }}
+          </span>
+          <span class="text-sm font-semibold text-gray-900">
+            {{ row.amount }}
+          </span>
+        </div>
+        <div class="h-2 rounded-full bg-gray-100 overflow-hidden">
+          <div
+            class="h-full rounded-full"
+            :style="{ width: (row.ratio * 100) + '%', background: row.color }"
+          />
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup>
 import { computed, inject } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useCompanyStore } from '@/scripts/admin/stores/company'
 
 const utils = inject('utils')
+const { t } = useI18n()
 
 const props = defineProps({
   sales: {
@@ -80,9 +79,7 @@ const SEGMENTS = 14
 const CX = 110
 const CY = 112
 const RADIUS = 86
-const GAP_DEG = 4
-const TICK_START = 102
-const TICK_END = 110
+const GAP_DEG = 7
 
 const companyStore = useCompanyStore()
 
@@ -136,24 +133,20 @@ const segments = computed(() => {
   return paths
 })
 
-const ticks = computed(() => {
-  let lines = []
-  let step = 180 / 50
-
-  for (let i = 0; i <= 50; i++) {
-    let angle = 180 + i * step
-    let p1 = polar(angle, TICK_START)
-    let p2 = polar(angle, TICK_END)
-    lines.push({
-      x1: p1.x.toFixed(2),
-      y1: p1.y.toFixed(2),
-      x2: p2.x.toFixed(2),
-      y2: p2.y.toFixed(2),
-    })
-  }
-
-  return lines
-})
+const rows = computed(() => [
+  {
+    label: t('dashboard.gauge.collected'),
+    amount: utils.formatMoney(props.receipts, companyStore.selectedCompanyCurrency),
+    ratio: paidRatio.value,
+    color: COLOR_PAID,
+  },
+  {
+    label: t('dashboard.gauge.outstanding'),
+    amount: utils.formatMoney(Math.max(props.sales - props.receipts, 0), companyStore.selectedCompanyCurrency),
+    ratio: dueRatio.value,
+    color: COLOR_DUE,
+  },
+])
 
 const amountDue = computed(() => {
   return utils.formatMoney(Math.max(props.sales - props.receipts, 0), companyStore.selectedCompanyCurrency)

@@ -620,6 +620,7 @@ function updateDonutChart() {
 
   if (donutChart) {
     donutChart.data.datasets[0].data = data
+    donutChart.data.datasets[0].backgroundColor = colors
     donutChart.update()
     return
   }

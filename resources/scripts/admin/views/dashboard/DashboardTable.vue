@@ -13,11 +13,11 @@
 
           <button
             type="button"
-            class="flex items-center justify-center w-9 h-9 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 transition-colors"
+            class="flex items-center justify-center text-primary-500 hover:text-primary-600 transition-colors"
             :title="$t('dashboard.recent_invoices_card.view_all')"
             @click="$router.push('/admin/invoices')"
           >
-            <BaseIcon name="EyeIcon" class="w-5 h-5 text-primary-500" />
+            <BaseIcon name="EyeIcon" class="w-6 h-6" />
           </button>
         </div>
 
@@ -64,11 +64,11 @@
 
           <button
             type="button"
-            class="flex items-center justify-center w-9 h-9 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 transition-colors"
+            class="flex items-center justify-center text-primary-500 hover:text-primary-600 transition-colors"
             :title="$t('dashboard.recent_estimate_card.view_all')"
             @click="$router.push('/admin/estimates')"
           >
-            <BaseIcon name="EyeIcon" class="w-5 h-5 text-primary-500" />
+            <BaseIcon name="EyeIcon" class="w-6 h-6" />
           </button>
         </div>
 

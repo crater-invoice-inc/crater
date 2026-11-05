@@ -19,10 +19,6 @@
   >
     <div class="px-4 pt-8 pb-4">
       <div class="flex items-center justify-between mb-4">
-        <h6 class="text-sm font-semibold text-gray-900">
-          {{ $t('calculator.title') }}
-        </h6>
-
         <BaseButton
           size="sm"
           variant="primary-outline"
@@ -31,19 +27,9 @@
           <template #left="slotProps">
             <BaseIcon name="PlusIcon" :class="slotProps.class" />
           </template>
+          {{ $t('calculator.new_calculator') }}
         </BaseButton>
       </div>
-
-      <BaseInput
-        v-model="searchText"
-        :placeholder="$t('general.search')"
-        type="text"
-        variant="gray"
-      >
-        <template #right>
-          <BaseIcon name="SearchIcon" class="h-5 text-gray-400" />
-        </template>
-      </BaseInput>
     </div>
 
     <div v-if="isLoadingList" class="flex justify-center pt-6">
@@ -64,6 +50,12 @@
                 :class="hasActiveUrl(calculator.id) ? 'text-primary-600' : ''"
               >
                 {{ calculator.name }}
+              </p>
+              <p
+                v-if="calculator.customer"
+                class="text-xs text-gray-700 mt-0.5 truncate"
+              >
+                {{ calculator.customer.name }}
               </p>
               <p class="text-xs text-gray-500 mt-0.5">
                 {{ calculator.formatted_created_at }}
@@ -162,7 +154,7 @@
           />
         </div>
 
-        <div class="lg:w-72 shrink-0 lg:text-right lg:pt-1">
+        <div class="lg:w-72 shrink-0 lg:pt-1" style="text-align: center">
           <p class="text-xs font-medium uppercase tracking-wide text-gray-500">
             {{ $t('calculator.budget_total') }}
           </p>
@@ -183,7 +175,10 @@
           </h5>
         </div>
 
-        <div class="px-5 pb-6 flex flex-col lg:flex-row gap-8">
+        <div
+          class="px-5 pb-6 flex flex-col lg:flex-row gap-8"
+          style="align-items: center"
+        >
           <!-- categories breakdown -->
           <div class="flex-1">
             <div
@@ -193,6 +188,7 @@
                 items-center
                 text-sm
               "
+              style="width: 85%"
             >
               <template v-for="category in categories" :key="category.key">
                 <span
@@ -248,10 +244,10 @@
           <table class="min-w-full table-fixed">
             <thead>
               <tr class="text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                <th class="pb-2 pr-3 w-56">{{ $t('calculator.category') }}</th>
+                <th class="pb-2 pr-3 w-64">{{ $t('calculator.category') }}</th>
                 <th class="pb-2 pr-3">{{ $t('calculator.role') }}</th>
-                <th class="pb-2 pr-3 w-32">{{ $t('calculator.rate_per_hour') }}</th>
-                <th class="pb-2 pr-3 w-24">{{ $t('calculator.hours') }}</th>
+                <th class="pb-2 pr-3 w-24">{{ $t('calculator.rate_per_hour') }}</th>
+                <th class="pb-2 pr-3 w-16">{{ $t('calculator.hours') }}</th>
                 <th class="pb-2 pr-3 w-36 text-right">{{ $t('calculator.amount') }}</th>
                 <th class="pb-2 w-8" />
               </tr>
@@ -321,10 +317,10 @@
           <table class="min-w-full table-fixed">
             <thead>
               <tr class="text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                <th class="pb-2 pr-3 w-56">{{ $t('calculator.category') }}</th>
+                <th class="pb-2 pr-3 w-64">{{ $t('calculator.category') }}</th>
                 <th class="pb-2 pr-3">{{ $t('calculator.expense') }}</th>
-                <th class="pb-2 pr-3 w-32">{{ $t('calculator.cost') }}</th>
-                <th class="pb-2 pr-3 w-24">{{ $t('calculator.quantity') }}</th>
+                <th class="pb-2 pr-3 w-24">{{ $t('calculator.cost') }}</th>
+                <th class="pb-2 pr-3 w-16">{{ $t('calculator.quantity') }}</th>
                 <th class="pb-2 pr-3 w-36 text-right">{{ $t('calculator.amount') }}</th>
                 <th class="pb-2 w-8" />
               </tr>
@@ -434,7 +430,6 @@ const customerValid = { $error: false, $errors: [] }
 const isLoadingList = ref(true)
 const isSaving = ref(false)
 const isReady = ref(false)
-const searchText = ref('')
 const donutCanvas = ref(null)
 let donutChart = null
 let itemKeySeed = 0
@@ -466,17 +461,7 @@ const selectedCustomer = computed({
   },
 })
 
-const filteredCalculators = computed(() => {
-  const search = (searchText.value || '').toLowerCase()
-
-  if (!search) {
-    return calculatorStore.calculators
-  }
-
-  return calculatorStore.calculators.filter((calculator) =>
-    calculator.name.toLowerCase().includes(search)
-  )
-})
+const filteredCalculators = computed(() => calculatorStore.calculators)
 
 const roleItems = computed(() =>
   calculatorStore.currentCalculator.calculator_items.filter(

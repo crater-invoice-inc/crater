@@ -146,6 +146,11 @@
       "vs_last_year": "vs last year",
       "stable": "Stable vs last year",
       "no_last_year_data": "No data last year"
+    },
+    "gauge": {
+      "title": "Outstanding",
+      "collected": "Collected",
+      "outstanding": "Outstanding"
     }
   },
   "tax_types": {

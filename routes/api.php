@@ -7,6 +7,7 @@ use Crater\Http\Controllers\V1\Admin\Backup\BackupsController;
 use Crater\Http\Controllers\V1\Admin\Backup\DownloadBackupController;
 use Crater\Http\Controllers\V1\Admin\Company\CompaniesController;
 use Crater\Http\Controllers\V1\Admin\Company\CompanyController as AdminCompanyController;
+use Crater\Http\Controllers\V1\Admin\Calculator\CalculatorsController;
 use Crater\Http\Controllers\V1\Admin\Customer\CustomersController;
 use Crater\Http\Controllers\V1\Admin\Customer\CustomerStatsController;
 use Crater\Http\Controllers\V1\Admin\CustomField\CustomFieldsController;
@@ -262,6 +263,13 @@ Route::prefix('/v1')->group(function () {
             Route::post('/items/delete', [ItemsController::class, 'delete']);
 
             Route::resource('items', ItemsController::class);
+
+            // Calculators
+            //----------------------------------
+
+            Route::post('/calculators/delete', [CalculatorsController::class, 'delete']);
+
+            Route::resource('calculators', CalculatorsController::class);
 
             Route::resource('units', UnitsController::class);
 

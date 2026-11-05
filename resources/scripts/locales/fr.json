@@ -1,5 +1,6 @@
 {
   "navigation": {
+    "calculator": "Calculateur",
     "dashboard": "Tableau de bord",
     "customers": "Clients",
     "items": "Articles",
@@ -15,6 +16,39 @@
     "modules": "Modules",
     "profile": "Profil"
   },
+
+  "calculator": {
+    "title": "Calculateur",
+    "name": "Nom du mandat",
+    "notes": "Notes",
+    "new_calculator": "Nouveau calcul",
+    "edit_calculator": "Modifier le calcul",
+    "save_calculator": "Enregistrer le calcul",
+    "update_calculator": "Mettre à jour le calcul",
+    "no_calculators": "Aucun calcul",
+    "list_of_calculators": "Créez vos budgets de mandat pour estimer vos coûts et préparer vos devis",
+    "items_count": "Lignes",
+    "total": "Coût total",
+    "added_on": "Ajouté le",
+    "confirm_delete": "Voulez-vous vraiment supprimer ce calcul ?",
+    "created_message": "Calcul enregistré avec succès",
+    "updated_message": "Calcul mis à jour avec succès",
+    "deleted_message": "Calcul supprimé avec succès",
+    "item_name": "Nom (rôle, tâche, matériel...)",
+    "summary": "Résumé",
+    "total_cost": "Coût total",
+    "add_role": "Ajouter un rôle",
+    "add_task": "Ajouter une tâche",
+    "add_cost": "Ajouter une dépense",
+    "categories": {
+      "pre_production": "Pré-production",
+      "production": "Production",
+      "post_production": "Post-production",
+      "travel": "Frais de déplacement",
+      "production_expenses": "Dépenses de production"
+    }
+  }
+,
   "general": {
     "add_company": "Ajouter une entreprise",
     "view_pdf": "Afficher le PDF",

@@ -334,6 +334,16 @@ return [
             'model' => Item::class
         ],
         [
+            'title' => 'navigation.calculator',
+            'group' => 1,
+            'link' => '/admin/calculators',
+            'icon' => 'CalculatorIcon',
+            'name' => 'Calculator',
+            'owner_only' => false,
+            'ability' => 'view-calculator',
+            'model' => Crater\Models\Calculator::class
+        ],
+        [
             'title' => 'navigation.estimates',
             'group' => 2,
             'link' => '/admin/estimates',

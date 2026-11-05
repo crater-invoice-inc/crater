@@ -1,5 +1,6 @@
 {
   "navigation": {
+    "calculator": "Calculator",
     "dashboard": "Dashboard",
     "customers": "Customers",
     "items": "Items",
@@ -15,6 +16,39 @@
     "modules": "Modules",
     "profile": "Profile"
   },
+
+  "calculator": {
+    "title": "Calculator",
+    "name": "Mandate name",
+    "notes": "Notes",
+    "new_calculator": "New calculation",
+    "edit_calculator": "Edit calculation",
+    "save_calculator": "Save calculation",
+    "update_calculator": "Update calculation",
+    "no_calculators": "No calculations",
+    "list_of_calculators": "Create your mandate budgets to estimate costs and prepare quotes",
+    "items_count": "Lines",
+    "total": "Total cost",
+    "added_on": "Added on",
+    "confirm_delete": "Are you sure you want to delete this calculation?",
+    "created_message": "Calculation saved successfully",
+    "updated_message": "Calculation updated successfully",
+    "deleted_message": "Calculation deleted successfully",
+    "item_name": "Name (role, task, equipment...)",
+    "summary": "Summary",
+    "total_cost": "Total cost",
+    "add_role": "Add role",
+    "add_task": "Add task",
+    "add_cost": "Add expense",
+    "categories": {
+      "pre_production": "Pre-production",
+      "production": "Production",
+      "post_production": "Post-production",
+      "travel": "Travel expenses",
+      "production_expenses": "Production expenses"
+    }
+  }
+,
   "general": {
     "add_company": "Add Company",
     "view_pdf": "View PDF",

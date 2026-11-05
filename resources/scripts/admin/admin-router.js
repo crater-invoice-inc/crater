@@ -62,6 +62,8 @@ const ModulesSetting = () =>
 // Items
 const ItemsIndex = () => import('@/scripts/admin/views/items/Index.vue')
 const ItemCreate = () => import('@/scripts/admin/views/items/Create.vue')
+const CalculatorIndex = () => import('@/scripts/admin/views/calculator/Index.vue')
+const CalculatorCreate = () => import('@/scripts/admin/views/calculator/Create.vue')
 
 // Expenses
 const ExpensesIndex = () => import('@/scripts/admin/views/expenses/Index.vue')
@@ -355,6 +357,25 @@ export default [
         name: 'items.edit',
         meta: { ability: abilities.EDIT_ITEM },
         component: ItemCreate,
+      },
+
+      // Calculators
+      {
+        path: 'calculators',
+        meta: { ability: abilities.VIEW_CALCULATOR },
+        component: CalculatorIndex,
+      },
+      {
+        path: 'calculators/create',
+        name: 'calculators.create',
+        meta: { ability: abilities.CREATE_CALCULATOR },
+        component: CalculatorCreate,
+      },
+      {
+        path: 'calculators/:id/edit',
+        name: 'calculators.edit',
+        meta: { ability: abilities.EDIT_CALCULATOR },
+        component: CalculatorCreate,
       },
 
       // Expenses

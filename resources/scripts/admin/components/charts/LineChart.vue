@@ -45,7 +45,7 @@ const props = defineProps({
   },
 })
 
-const COLOR_SALES = '#C9C7F2'
+const COLOR_SALES = '#5851D8'
 const COLOR_RECEIPTS = '#3FAE8C'
 const COLOR_EXPENSES = '#E0785C'
 const COLOR_INCOME = '#4B5563'

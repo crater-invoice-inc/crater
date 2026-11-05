@@ -64,7 +64,7 @@ function makeDataset(label, color, values) {
     fill: false,
     lineTension: 0.4,
     borderColor: color,
-    borderWidth: 2,
+    borderWidth: 3,
     borderCapStyle: 'round',
     borderJoinStyle: 'round',
     pointBorderColor: color,

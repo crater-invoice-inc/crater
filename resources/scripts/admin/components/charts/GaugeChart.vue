@@ -30,7 +30,7 @@
         />
       </svg>
 
-      <div class="absolute inset-x-0 text-center" style="top: 52%">
+      <div class="absolute inset-x-0 text-center" style="top: 65%">
         <span class="block text-2xl font-bold tracking-tight text-gray-900">
           {{ amountDue }}
         </span>

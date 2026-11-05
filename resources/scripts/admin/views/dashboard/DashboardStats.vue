@@ -3,7 +3,7 @@
     <!-- Sales -->
     <div v-if="!loading" class="flex flex-col p-6 bg-white rounded-xl border border-gray-100 shadow-sm">
       <div class="flex items-center justify-between">
-        <span class="text-sm font-medium text-gray-500">
+        <span class="text-sm font-medium text-gray-900">
           {{ $t('dashboard.stats.sales') }}
         </span>
         <BaseIcon name="TrendingUpIcon" class="w-8 h-8 text-gray-900" />
@@ -14,7 +14,7 @@
           :currency="companyStore.selectedCompanyCurrency"
         />
       </span>
-      <span class="mt-1 text-xs text-gray-900">
+      <span class="mt-1 text-xs text-gray-400">
         {{ trendText(dashboardStore.totalSales, dashboardStore.previousYear.sales) }}
       </span>
     </div>
@@ -22,7 +22,7 @@
     <!-- Expenses -->
     <div v-if="!loading" class="flex flex-col p-6 bg-white rounded-xl border border-gray-100 shadow-sm">
       <div class="flex items-center justify-between">
-        <span class="text-sm font-medium text-gray-500">
+        <span class="text-sm font-medium text-gray-900">
           {{ $t('dashboard.stats.expenses') }}
         </span>
         <BaseIcon name="TrendingDownIcon" class="w-8 h-8 text-gray-900" />
@@ -33,7 +33,7 @@
           :currency="companyStore.selectedCompanyCurrency"
         />
       </span>
-      <span class="mt-1 text-xs text-gray-900">
+      <span class="mt-1 text-xs text-gray-400">
         {{ trendText(dashboardStore.totalExpenses, dashboardStore.previousYear.expenses) }}
       </span>
     </div>
@@ -41,7 +41,7 @@
     <!-- Net Income -->
     <div v-if="!loading" class="flex flex-col p-6 bg-white rounded-xl border border-gray-100 shadow-sm">
       <div class="flex items-center justify-between">
-        <span class="text-sm font-medium text-gray-500">
+        <span class="text-sm font-medium text-gray-900">
           {{ $t('dashboard.stats.net_income') }}
         </span>
         <BaseIcon name="CurrencyDollarIcon" class="w-8 h-8 text-gray-900" />
@@ -52,7 +52,7 @@
           :currency="companyStore.selectedCompanyCurrency"
         />
       </span>
-      <span class="mt-1 text-xs text-gray-900">
+      <span class="mt-1 text-xs text-gray-400">
         {{ trendText(dashboardStore.totalNetIncome, dashboardStore.previousYear.netIncome) }}
       </span>
     </div>

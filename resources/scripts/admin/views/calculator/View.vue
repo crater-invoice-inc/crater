@@ -658,6 +658,11 @@ function updateDonutChart() {
 }
 
 async function loadCalculatorData() {
+  if (donutChart) {
+    donutChart.destroy()
+    donutChart = null
+  }
+
   if (!currentId.value) {
     calculatorStore.resetCurrentCalculator()
     return

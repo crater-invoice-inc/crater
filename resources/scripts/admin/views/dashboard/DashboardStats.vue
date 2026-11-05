@@ -6,7 +6,7 @@
         <span class="text-sm font-medium text-gray-500">
           {{ $t('dashboard.stats.sales') }}
         </span>
-        <InvoiceIcon class="w-6 h-6 text-gray-400" />
+        <BaseIcon name="TrendingUpIcon" class="w-8 h-8 text-gray-900" />
       </div>
       <span class="mt-3 text-3xl font-bold tracking-tight text-gray-900">
         <BaseFormatMoney
@@ -14,7 +14,7 @@
           :currency="companyStore.selectedCompanyCurrency"
         />
       </span>
-      <span class="mt-1 text-xs" :class="trendClass(dashboardStore.totalSales, dashboardStore.previousYear.sales)">
+      <span class="mt-1 text-xs text-gray-900">
         {{ trendText(dashboardStore.totalSales, dashboardStore.previousYear.sales) }}
       </span>
     </div>
@@ -25,7 +25,7 @@
         <span class="text-sm font-medium text-gray-500">
           {{ $t('dashboard.stats.expenses') }}
         </span>
-        <DollarIcon class="w-6 h-6 text-gray-400" />
+        <BaseIcon name="TrendingDownIcon" class="w-8 h-8 text-gray-900" />
       </div>
       <span class="mt-3 text-3xl font-bold tracking-tight text-gray-900">
         <BaseFormatMoney
@@ -33,7 +33,7 @@
           :currency="companyStore.selectedCompanyCurrency"
         />
       </span>
-      <span class="mt-1 text-xs" :class="trendClass(dashboardStore.totalExpenses, dashboardStore.previousYear.expenses)">
+      <span class="mt-1 text-xs text-gray-900">
         {{ trendText(dashboardStore.totalExpenses, dashboardStore.previousYear.expenses) }}
       </span>
     </div>
@@ -44,7 +44,7 @@
         <span class="text-sm font-medium text-gray-500">
           {{ $t('dashboard.stats.net_income') }}
         </span>
-        <PaymentIcon class="w-6 h-6 text-gray-400" />
+        <BaseIcon name="CurrencyDollarIcon" class="w-8 h-8 text-gray-900" />
       </div>
       <span class="mt-3 text-3xl font-bold tracking-tight text-gray-900">
         <BaseFormatMoney
@@ -52,7 +52,7 @@
           :currency="companyStore.selectedCompanyCurrency"
         />
       </span>
-      <span class="mt-1 text-xs" :class="trendClass(dashboardStore.totalNetIncome, dashboardStore.previousYear.netIncome)">
+      <span class="mt-1 text-xs text-gray-900">
         {{ trendText(dashboardStore.totalNetIncome, dashboardStore.previousYear.netIncome) }}
       </span>
     </div>
@@ -77,9 +77,6 @@ import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useDashboardStore } from '@/scripts/admin/stores/dashboard'
 import { useCompanyStore } from '@/scripts/admin/stores/company'
-import InvoiceIcon from '@/scripts/components/icons/dashboard/InvoiceIcon.vue'
-import DollarIcon from '@/scripts/components/icons/dashboard/DollarIcon.vue'
-import PaymentIcon from '@/scripts/components/icons/dashboard/PaymentIcon.vue'
 
 const { t } = useI18n()
 
@@ -108,15 +105,5 @@ function trendText(current, previous) {
 
   const sign = pct > 0 ? '+' : ''
   return `${sign}${pct}% ${t('dashboard.stats.vs_last_year')}`
-}
-
-function trendClass(current, previous) {
-  const pct = trendPercent(current, previous)
-
-  if (pct === null || pct === 0) {
-    return 'text-gray-400'
-  }
-
-  return pct > 0 ? 'text-green-500' : 'text-red-400'
 }
 </script>

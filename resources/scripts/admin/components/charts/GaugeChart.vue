@@ -34,9 +34,6 @@
         <span class="block text-2xl font-bold tracking-tight text-gray-900">
           {{ amountDue }}
         </span>
-        <span class="block mt-0.5 text-sm text-gray-400">
-          {{ $t('dashboard.gauge.outstanding') }}
-        </span>
       </div>
     </div>
 

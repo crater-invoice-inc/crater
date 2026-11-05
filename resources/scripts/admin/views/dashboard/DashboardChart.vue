@@ -9,7 +9,7 @@
           <h6 class="text-lg font-semibold text-gray-900">
             {{ $t('dashboard.monthly_chart.title') }}
           </h6>
-          <p class="mt-0.5 text-sm text-gray-400">
+          <p v-if="selectedYear" class="mt-0.5 text-sm text-gray-400">
             {{ $t('dashboard.monthly_chart.subtitle', { year: selectedYear }) }}
           </p>
         </div>
@@ -40,7 +40,7 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, watch, nextTick, onMounted } from 'vue'
 import { useDashboardStore } from '@/scripts/admin/stores/dashboard'
 import LineChart from '@/scripts/admin/components/charts/LineChart.vue'
 import ChartPlaceholder from './DashboardChartPlaceholder.vue'
@@ -50,25 +50,33 @@ import { useUserStore } from '@/scripts/admin/stores/user'
 const dashboardStore = useDashboardStore()
 const userStore = useUserStore()
 const selectedYear = ref(null)
+let syncingDefaultYear = false
 
+onMounted(() => {
+  loadData()
+})
+
+// Sync the filter to the most recent year with data without re-triggering a load
 watch(
   () => dashboardStore.availableYears,
   (years) => {
     if (years.length && selectedYear.value === null) {
-      selectedYear.value = years[0]
+      syncingDefaultYear = true
+      selectedYear.value = Number(years[0])
+      nextTick(() => {
+        syncingDefaultYear = false
+      })
     }
-  },
-  { immediate: true }
+  }
 )
 
 watch(
   selectedYear,
   (year) => {
-    if (year) {
+    if (year && !syncingDefaultYear) {
       loadData({ year })
     }
-  },
-  { immediate: true }
+  }
 )
 
 async function loadData(params) {

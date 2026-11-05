@@ -37,7 +37,7 @@
     "updated_message": "Budget updated successfully",
     "deleted_message": "Budget deleted successfully",
     "roles_table": "Production",
-    "expenses_table": "Travel & production expenses",
+    "expenses_table": "Travel & expenses",
     "category": "Category",
     "role": "Role",
     "rate_per_hour": "$/h",

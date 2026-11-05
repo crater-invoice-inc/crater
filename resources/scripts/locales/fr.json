@@ -37,7 +37,7 @@
     "updated_message": "Budget mis à jour avec succès",
     "deleted_message": "Budget supprimé avec succès",
     "roles_table": "Production",
-    "expenses_table": "Frais de déplacement & dépenses de production",
+    "expenses_table": "Frais et dépenses",
     "category": "Catégorie",
     "role": "Rôle",
     "rate_per_hour": "$/h",

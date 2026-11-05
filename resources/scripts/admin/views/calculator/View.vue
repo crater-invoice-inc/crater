@@ -246,9 +246,9 @@
               <tr class="text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 <th class="pb-2 pr-3" style="width: 10.5rem">{{ $t('calculator.category') }}</th>
                 <th class="pb-2 pr-3" style="width: 15rem">{{ $t('calculator.role') }}</th>
-                <th class="pb-2 pr-3 w-20">{{ $t('calculator.rate_per_hour') }}</th>
+                <th class="pb-2 pr-3" style="width: 7rem">{{ $t('calculator.rate_per_hour') }}</th>
                 <th class="pb-2 pr-3 w-20">{{ $t('calculator.hours') }}</th>
-                <th class="pb-2 pr-3 w-36 text-right">{{ $t('calculator.amount') }}</th>
+                <th class="pb-2 pr-3 text-right" style="width: 15%">{{ $t('calculator.amount') }}</th>
                 <th class="pb-2 w-8" />
               </tr>
             </thead>
@@ -330,9 +330,9 @@
               <tr class="text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 <th class="pb-2 pr-3" style="width: 10.5rem">{{ $t('calculator.category') }}</th>
                 <th class="pb-2 pr-3" style="width: 15rem">{{ $t('calculator.expense') }}</th>
-                <th class="pb-2 pr-3 w-20">{{ $t('calculator.cost') }}</th>
+                <th class="pb-2 pr-3" style="width: 7rem">{{ $t('calculator.cost') }}</th>
                 <th class="pb-2 pr-3 w-20">{{ $t('calculator.quantity') }}</th>
-                <th class="pb-2 pr-3 w-36 text-right">{{ $t('calculator.amount') }}</th>
+                <th class="pb-2 pr-3 text-right" style="width: 15%">{{ $t('calculator.amount') }}</th>
                 <th class="pb-2 w-8" />
               </tr>
             </thead>
@@ -552,14 +552,17 @@ function ensureTrailingEmptyRows() {
     }
   }
 
-  // keep one empty row per table
-  if (!items.some((item) => item.type === 'role' && isEmptyItem(item))) {
-    items.push(makeItem('production', 'role'))
-  }
+  // keep one empty row in last position of each table
+  ;[
+    { type: 'role', category: 'production' },
+    { type: 'cost', category: 'travel' },
+  ].forEach(({ type, category }) => {
+    const last = [...items].reverse().find((item) => item.type === type)
 
-  if (!items.some((item) => item.type === 'cost' && isEmptyItem(item))) {
-    items.push(makeItem('travel', 'cost'))
-  }
+    if (!last || !isEmptyItem(last)) {
+      items.push(makeItem(category, type))
+    }
+  })
 }
 
 function removeItem(item) {
@@ -592,64 +595,18 @@ function onTemplateSelected(item, templateId) {
   }
 }
 
-// chart.js v2 n'a pas de borderRadius sur les arcs : on masque les arcs
-// natifs (transparent) et on redessine chaque portion avec des extrémités
-// arrondies (lineCap round) après le rendu.
-const roundedDonutPlugin = {
-  afterDraw(chart) {
-    const meta = chart.getDatasetMeta(0)
-
-    if (!meta.data.length) {
-      return
-    }
-
-    const view = meta.data[0]._view
-    const ctx = chart.ctx
-    const data = chart.data.datasets[0].data
-    const colors = chart.data.datasets[0].backgroundColor
-    const total = data.reduce((sum, value) => sum + value, 0)
-
-    if (total <= 0) {
-      return
-    }
-
-    const thickness = view.outerRadius - view.innerRadius
-    const radius = (view.outerRadius + view.innerRadius) / 2
-    const gap = 0.045
-
-    ctx.save()
-    ctx.lineWidth = thickness
-    ctx.lineCap = 'round'
-
-    let angle = -Math.PI / 2
-
-    data.forEach((value, index) => {
-      if (value <= 0) {
-        return
-      }
-
-      const slice = (value / total) * Math.PI * 2
-      const start = angle + Math.min(gap / 2, slice / 4)
-      const end = angle + slice - Math.min(gap / 2, slice / 4)
-
-      ctx.beginPath()
-      ctx.strokeStyle = colors[index]
-      ctx.arc(view.x, view.y, radius, start, end)
-      ctx.stroke()
-
-      angle += slice
-    })
-
-    ctx.restore()
-  },
-}
-
 function updateDonutChart() {
   if (!donutCanvas.value) {
     return
   }
 
-  const data = categories.map((category) => categoryTotal(category.key))
+  let data = categories.map((category) => categoryTotal(category.key))
+  let colors = categories.map((category) => category.color)
+
+  if (data.reduce((sum, value) => sum + value, 0) === 0) {
+    data = [1]
+    colors = ['#E5E7EB']
+  }
 
   if (donutChart) {
     donutChart.data.datasets[0].data = data
@@ -659,15 +616,14 @@ function updateDonutChart() {
 
   donutChart = new Chart(donutCanvas.value.getContext('2d'), {
     type: 'doughnut',
-    plugins: [roundedDonutPlugin],
     data: {
       labels: categories.map((category) => category.key),
       datasets: [
         {
           data,
-          backgroundColor: categories.map((category) => category.color),
-          borderWidth: 0,
-          hoverBorderColor: 'transparent',
+          backgroundColor: colors,
+          borderWidth: 2,
+          hoverBorderColor: '#fff',
         },
       ],
     },
@@ -702,12 +658,18 @@ async function loadCalculatorData() {
   calculatorStore.currentCalculator.calculator_items =
     (
       calculatorStore.currentCalculator.calculator_items || []
-    ).map((item) => ({
-      ...item,
-      __key: ++itemKeySeed,
-      template_id: null,
-      unit_price: item.unit_price / 100,
-    }))
+    ).map((item) => {
+      const template = calculatorStore.templates.find(
+        (candidate) => candidate.name === item.item_name
+      )
+
+      return {
+        ...item,
+        __key: ++itemKeySeed,
+        template_id: template ? template.id : null,
+        unit_price: item.unit_price / 100,
+      }
+    })
 
   calculatorStore.currentCalculator.calculator_items =
     calculatorStore.currentCalculator.calculator_items.filter(
@@ -835,12 +797,11 @@ watch(
 )
 
 let isEnsuringRows = false
-let ensureRuns = 0
 
 watch(
   () => calculatorStore.currentCalculator.calculator_items,
   () => {
-    if (isEnsuringRows || ensureRuns > 20) {
+    if (isEnsuringRows) {
       return
     }
 
@@ -848,7 +809,6 @@ watch(
 
     setTimeout(() => {
       try {
-        ensureRuns += 1
         ensureTrailingEmptyRows()
       } finally {
         isEnsuringRows = false

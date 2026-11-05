@@ -2,22 +2,35 @@
   <div class="flex flex-col h-full">
     <div class="relative">
       <svg viewBox="0 0 220 128" class="w-full">
-        <rect
-          v-for="(segment, i) in segments"
-          :key="'seg-' + i"
-          :x="-PILL_LENGTH / 2"
-          :y="-PILL_WIDTH / 2"
-          :width="PILL_LENGTH"
-          :height="PILL_WIDTH"
-          :rx="PILL_WIDTH / 2"
+        <!-- Remaining track -->
+        <path
+          :d="arcPath(180, 360)"
           fill="none"
-          :stroke="segment.color"
-          :stroke-width="PILL_WIDTH"
-          :transform="segment.transform"
+          :stroke="COLOR_EMPTY"
+          stroke-width="22"
+          stroke-linecap="round"
+        />
+        <!-- Collected -->
+        <path
+          v-if="paidArc.end > paidArc.start"
+          :d="arcPath(paidArc.start, paidArc.end)"
+          fill="none"
+          :stroke="COLOR_PAID"
+          stroke-width="22"
+          stroke-linecap="round"
+        />
+        <!-- Outstanding -->
+        <path
+          v-if="dueArc.end > dueArc.start"
+          :d="arcPath(dueArc.start, dueArc.end)"
+          fill="none"
+          :stroke="COLOR_DUE"
+          stroke-width="22"
+          stroke-linecap="round"
         />
       </svg>
 
-      <div class="absolute inset-x-0 bottom-0 text-center">
+      <div class="absolute inset-x-0 text-center" style="top: 52%">
         <span class="block text-2xl font-bold tracking-tight text-gray-900">
           {{ amountDue }}
         </span>
@@ -79,12 +92,9 @@ const COLOR_PAID = '#C9C7F2'
 const COLOR_DUE = '#5851D8'
 const COLOR_EMPTY = '#EEF0F4'
 
-const SEGMENTS = 12
 const CX = 110
 const CY = 112
 const RADIUS = 86
-const PILL_LENGTH = 16
-const PILL_WIDTH = 14
 
 const companyStore = useCompanyStore()
 
@@ -96,43 +106,39 @@ function polar(angleDeg, radius) {
   }
 }
 
-const paidRatio = computed(() => {
-  if (!props.sales || props.sales <= 0) {
+function arcPath(startDeg, endDeg) {
+  let start = polar(startDeg, RADIUS)
+  let end = polar(endDeg, RADIUS)
+  return `M ${start.x.toFixed(2)} ${start.y.toFixed(2)} A ${RADIUS} ${RADIUS} 0 0 1 ${end.x.toFixed(2)} ${end.y.toFixed(2)}`
+}
+
+function ratio(value, total) {
+  if (!total || total <= 0) {
     return 0
   }
-  return Math.min(Math.max(props.receipts / props.sales, 0), 1)
+  return Math.min(Math.max(value / total, 0), 1)
+}
+
+const paidRatio = computed(() => ratio(props.receipts, props.sales))
+
+const dueRatio = computed(() => ratio(props.sales - props.receipts, props.sales))
+
+const paidArc = computed(() => {
+  let start = 180
+  let end = 180 + 180 * paidRatio.value
+  if (end - start < 3) {
+    end = start
+  }
+  return { start, end }
 })
 
-const dueRatio = computed(() => {
-  if (!props.sales || props.sales <= 0) {
-    return 0
+const dueArc = computed(() => {
+  let start = paidArc.value.end
+  let end = Math.min(start + 180 * dueRatio.value, 360)
+  if (end - start < 3) {
+    end = start
   }
-  return Math.min(Math.max((props.sales - props.receipts) / props.sales, 0), 1)
-})
-
-const segments = computed(() => {
-  let pills = []
-  let step = 180 / SEGMENTS
-
-  for (let i = 0; i < SEGMENTS; i++) {
-    let midAngle = 180 + (i + 0.5) * step
-    let center = polar(midAngle, RADIUS)
-    let boundary = (i + 1) / SEGMENTS
-    let color = COLOR_EMPTY
-
-    if (paidRatio.value >= boundary) {
-      color = COLOR_PAID
-    } else if (paidRatio.value + dueRatio.value >= boundary) {
-      color = COLOR_DUE
-    }
-
-    pills.push({
-      color,
-      transform: `translate(${center.x.toFixed(2)} ${center.y.toFixed(2)}) rotate(${midAngle + 90})`,
-    })
-  }
-
-  return pills
+  return { start, end }
 })
 
 const rows = computed(() => [

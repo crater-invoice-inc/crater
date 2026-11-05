@@ -213,7 +213,9 @@ onMounted(() => {
 })
 </script>
 
-<style scoped>
+<style>
+/* Not scoped: the tooltip markup is injected via innerHTML, so it never
+   receives the scoped-style data attribute. Classes are prefixed instead. */
 .chart-tooltip {
   position: absolute;
   min-width: 190px;

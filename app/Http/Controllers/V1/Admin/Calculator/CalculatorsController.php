@@ -23,7 +23,7 @@ class CalculatorsController extends Controller
 
         $limit = $request->has('limit') ? $request->limit : 10;
 
-        $calculators = Calculator::with('calculatorItems')
+        $calculators = Calculator::with(['customer', 'calculatorItems'])
             ->whereCompany()
             ->applyFilters($request->all())
             ->latest()

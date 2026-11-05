@@ -398,6 +398,7 @@ import { useUserStore } from '@/scripts/admin/stores/user'
 import abilities from '@/scripts/admin/stub/abilities'
 import { useRoute } from 'vue-router'
 import CustomerModal from '@/scripts/admin/components/modal-components/CustomerModal.vue'
+import { useCalculatorStore } from '@/scripts/admin/stores/calculator'
 
 const props = defineProps({
   valid: {
@@ -424,6 +425,7 @@ const customerStore = useCustomerStore()
 const globalStore = useGlobalStore()
 const invoiceStore = useInvoiceStore()
 const recurringInvoiceStore = useRecurringInvoiceStore()
+const calculatorStore = useCalculatorStore()
 const userStore = useUserStore()
 const routes = useRoute()
 const { t } = useI18n()
@@ -438,6 +440,8 @@ const selectedCustomer = computed(() => {
       return invoiceStore.newInvoice.customer
     case 'recurring-invoice':
       return recurringInvoiceStore.newRecurringInvoice.customer
+    case 'calculator':
+      return calculatorStore.currentCalculator.customer
     default:
       return ''
   }
@@ -448,6 +452,8 @@ function resetSelectedCustomer() {
     estimateStore.resetSelectedCustomer()
   } else if (props.type === 'invoice') {
     invoiceStore.resetSelectedCustomer()
+  } else if (props.type === 'calculator') {
+    calculatorStore.resetSelectedCustomer()
   } else {
     recurringInvoiceStore.resetSelectedCustomer()
   }
@@ -457,6 +463,8 @@ if (props.customerId && props.type === 'estimate') {
   estimateStore.selectCustomer(props.customerId)
 } else if (props.customerId && props.type === 'invoice') {
   invoiceStore.selectCustomer(props.customerId)
+} else if (props.customerId && props.type === 'calculator') {
+  calculatorStore.selectCustomer(props.customerId)
 } else {
   if (props.customerId) recurringInvoiceStore.selectCustomer(props.customerId)
 }
@@ -522,6 +530,8 @@ function selectNewCustomer(id, close) {
   } else if (props.type === 'invoice') {
     invoiceStore.getNextNumber(params, true)
     invoiceStore.selectCustomer(id)
+  } else if (props.type === 'calculator') {
+    calculatorStore.selectCustomer(id)
   } else {
     recurringInvoiceStore.selectCustomer(id)
   }

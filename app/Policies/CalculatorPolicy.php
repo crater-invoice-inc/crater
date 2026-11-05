@@ -33,9 +33,11 @@ class CalculatorPolicy
      * @param  \Crater\Models\Calculator  $calculator
      * @return mixed
      */
-    public function view(User $user, Calculator $calculator)
+    public function view(User $user, $calculator = null)
     {
-        if (BouncerFacade::can('view-calculator', $calculator) && $user->hasCompany($calculator->company_id)) {
+        $model = $calculator ?? Calculator::class;
+
+        if (BouncerFacade::can('view-calculator', $model) && (! is_object($calculator) || $user->hasCompany($calculator->company_id))) {
             return true;
         }
 
@@ -64,9 +66,11 @@ class CalculatorPolicy
      * @param  \Crater\Models\Calculator  $calculator
      * @return mixed
      */
-    public function update(User $user, Calculator $calculator)
+    public function update(User $user, $calculator = null)
     {
-        if (BouncerFacade::can('edit-calculator', $calculator) && $user->hasCompany($calculator->company_id)) {
+        $model = $calculator ?? Calculator::class;
+
+        if (BouncerFacade::can('edit-calculator', $model) && (! is_object($calculator) || $user->hasCompany($calculator->company_id))) {
             return true;
         }
 
@@ -80,9 +84,11 @@ class CalculatorPolicy
      * @param  \Crater\Models\Calculator  $calculator
      * @return mixed
      */
-    public function delete(User $user, Calculator $calculator)
+    public function delete(User $user, $calculator = null)
     {
-        if (BouncerFacade::can('delete-calculator', $calculator) && $user->hasCompany($calculator->company_id)) {
+        $model = $calculator ?? Calculator::class;
+
+        if (BouncerFacade::can('delete-calculator', $model) && (! is_object($calculator) || $user->hasCompany($calculator->company_id))) {
             return true;
         }
 

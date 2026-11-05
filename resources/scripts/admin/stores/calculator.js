@@ -12,11 +12,20 @@ export const useCalculatorStore = (useWindow = false) => {
     state: () => ({
       calculators: [],
       totalCalculators: 0,
-      selectAllField: false,
       selectedCalculators: [],
+      selectAllField: false,
+      templates: [],
+      currentTemplate: {
+        name: '',
+        category: 'production',
+        unit_price: 0,
+      },
+      isTemplateEdit: false,
       currentCalculator: {
         name: '',
         notes: '',
+        customer_id: null,
+        customer: null,
         calculator_items: [],
       },
     }),
@@ -25,8 +34,31 @@ export const useCalculatorStore = (useWindow = false) => {
         this.currentCalculator = {
           name: '',
           notes: '',
+          customer_id: null,
+          customer: null,
           calculator_items: [],
         }
+      },
+
+      selectCustomer(id) {
+        return new Promise((resolve, reject) => {
+          axios
+            .get(`/api/v1/customers/${id}`)
+            .then((response) => {
+              this.currentCalculator.customer = response.data.data
+              this.currentCalculator.customer_id = response.data.data.id
+              resolve(response)
+            })
+            .catch((err) => {
+              handleError(err)
+              reject(err)
+            })
+        })
+      },
+
+      resetSelectedCustomer() {
+        this.currentCalculator.customer = null
+        this.currentCalculator.customer_id = null
       },
       fetchCalculators(params) {
         return new Promise((resolve, reject) => {
@@ -136,23 +168,44 @@ export const useCalculatorStore = (useWindow = false) => {
         })
       },
 
-      deleteMultipleCalculators() {
+      selectCalculator(data) {
+        this.selectedCalculators = data
+        if (this.selectedCalculators.length === this.calculators.length) {
+          this.selectAllField = true
+        } else {
+          this.selectAllField = false
+        }
+      },
+
+      // Templates (predefined roles & expenses)
+      fetchTemplates(params) {
+        return new Promise((resolve, reject) => {
+          axios
+            .get(`/api/v1/calculator-templates`, { params })
+            .then((response) => {
+              this.templates = response.data.data
+
+              resolve(response)
+            })
+            .catch((err) => {
+              handleError(err)
+              reject(err)
+            })
+        })
+      },
+
+      addTemplate(data) {
         const notificationStore = useNotificationStore()
 
         return new Promise((resolve, reject) => {
           axios
-            .post(`/api/v1/calculators/delete`, { ids: this.selectedCalculators })
+            .post(`/api/v1/calculator-templates`, data)
             .then((response) => {
-              this.selectedCalculators.forEach((calculator) => {
-                let index = this.calculators.findIndex(
-                  (_calculator) => _calculator.id === calculator.id
-                )
-                this.calculators.splice(index, 1)
-              })
+              this.templates.push(response.data.data)
 
               notificationStore.showNotification({
                 type: 'success',
-                message: global.t('calculator.deleted_message'),
+                message: global.t('calculator.templates.created_message'),
               })
 
               resolve(response)
@@ -164,26 +217,66 @@ export const useCalculatorStore = (useWindow = false) => {
         })
       },
 
-      selectCalculator(data) {
-        this.selectedCalculators = data
-        if (this.selectedCalculators.length === this.calculators.length) {
-          this.selectAllField = true
-        } else {
-          this.selectAllField = false
-        }
+      updateTemplate(data) {
+        const notificationStore = useNotificationStore()
+
+        return new Promise((resolve, reject) => {
+          axios
+            .put(`/api/v1/calculator-templates/${data.id}`, data)
+            .then((response) => {
+              let pos = this.templates.findIndex(
+                (template) => template.id === response.data.data.id
+              )
+
+              this.templates[pos] = response.data.data
+
+              notificationStore.showNotification({
+                type: 'success',
+                message: global.t('calculator.templates.updated_message'),
+              })
+
+              resolve(response)
+            })
+            .catch((err) => {
+              handleError(err)
+              reject(err)
+            })
+        })
       },
 
-      selectAllCalculators() {
-        if (this.selectedCalculators.length === this.calculators.length) {
-          this.selectedCalculators = []
-          this.selectAllField = false
-        } else {
-          let allCalculatorIds = this.calculators.map(
-            (calculator) => calculator.id
-          )
-          this.selectedCalculators = allCalculatorIds
-          this.selectAllField = true
+      deleteTemplate(id) {
+        const notificationStore = useNotificationStore()
+
+        return new Promise((resolve, reject) => {
+          axios
+            .post(`/api/v1/calculator-templates/delete`, { ids: [id] })
+            .then((response) => {
+              let index = this.templates.findIndex(
+                (template) => template.id === id
+              )
+              this.templates.splice(index, 1)
+
+              notificationStore.showNotification({
+                type: 'success',
+                message: global.t('calculator.templates.deleted_message'),
+              })
+
+              resolve(response)
+            })
+            .catch((err) => {
+              handleError(err)
+              reject(err)
+            })
+        })
+      },
+
+      resetCurrentTemplate() {
+        this.currentTemplate = {
+          name: '',
+          category: 'production',
+          unit_price: 0,
         }
+        this.isTemplateEdit = false
       },
     },
   })()

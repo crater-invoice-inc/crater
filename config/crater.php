@@ -226,6 +226,16 @@ return [
             'model' => CustomField::class
         ],
         [
+            'title' => 'settings.menu_title.calculator',
+            'group' => '',
+            'name' => 'Calculator',
+            'link' => '/admin/settings/calculator',
+            'icon' => 'CalculatorIcon',
+            'owner_only' => false,
+            'ability' => 'view-calculator',
+            'model' => Crater\Models\Calculator::class
+        ],
+        [
             'title' => 'settings.menu_title.notes',
             'group' => '',
             'name' => 'Notes',

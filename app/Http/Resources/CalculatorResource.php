@@ -21,10 +21,13 @@ class CalculatorResource extends JsonResource
             'company_id' => $this->company_id,
             'creator_id' => $this->creator_id,
             'formatted_created_at' => $this->formattedCreatedAt,
+            'total' => $this->total,
+            'items_count' => $this->itemsCount,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
             'calculator_items' => CalculatorItemResource::collection($this->whenLoaded('calculatorItems')),
-            'items' => CalculatorItemResource::collection($this->whenLoaded('calculatorItems')),
+            'customer_id' => $this->customer_id,
+            'customer' => new CustomerResource($this->whenLoaded('customer')),
             'creator' => $this->when($this->creator()->exists(), function () {
                 return new UserResource($this->creator);
             }),

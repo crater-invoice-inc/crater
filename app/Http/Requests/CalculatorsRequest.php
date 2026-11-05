@@ -28,6 +28,10 @@ class CalculatorsRequest extends FormRequest
             'name' => [
                 'required',
             ],
+            'customer_id' => [
+                'nullable',
+                'integer',
+            ],
             'notes' => [
                 'nullable',
             ],

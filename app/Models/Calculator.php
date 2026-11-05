@@ -46,6 +46,11 @@ class Calculator extends Model
         return $this->hasMany(CalculatorItem::class);
     }
 
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class);
+    }
+
     public function scopeWhereCompany($query)
     {
         $query->where('calculators.company_id', request()->header('company'));
@@ -114,7 +119,7 @@ class Calculator extends Model
 
         $calculator->saveItems($request);
 
-        return self::with('calculatorItems')->find($calculator->id);
+        return self::with(['customer', 'calculatorItems'])->find($calculator->id);
     }
 
     public function updateCalculator($request)
@@ -123,7 +128,7 @@ class Calculator extends Model
 
         $this->saveItems($request);
 
-        return self::with('calculatorItems')->find($this->id);
+        return self::with(['customer', 'calculatorItems'])->find($this->id);
     }
 
     public function saveItems($request)

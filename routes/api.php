@@ -7,6 +7,7 @@ use Crater\Http\Controllers\V1\Admin\Backup\BackupsController;
 use Crater\Http\Controllers\V1\Admin\Backup\DownloadBackupController;
 use Crater\Http\Controllers\V1\Admin\Company\CompaniesController;
 use Crater\Http\Controllers\V1\Admin\Company\CompanyController as AdminCompanyController;
+use Crater\Http\Controllers\V1\Admin\Calculator\CalculatorTemplatesController;
 use Crater\Http\Controllers\V1\Admin\Calculator\CalculatorsController;
 use Crater\Http\Controllers\V1\Admin\Customer\CustomersController;
 use Crater\Http\Controllers\V1\Admin\Customer\CustomerStatsController;
@@ -270,6 +271,13 @@ Route::prefix('/v1')->group(function () {
             Route::post('/calculators/delete', [CalculatorsController::class, 'delete']);
 
             Route::resource('calculators', CalculatorsController::class);
+
+            // Calculator templates (predefined roles & expenses)
+            //----------------------------------------------------------------
+
+            Route::post('/calculator-templates/delete', [CalculatorTemplatesController::class, 'delete']);
+
+            Route::apiResource('calculator-templates', CalculatorTemplatesController::class);
 
             Route::resource('units', UnitsController::class);
 

@@ -114,6 +114,11 @@
                 <BaseIcon name="DotsHorizontalIcon" />
               </BaseButton>
             </template>
+            <BaseDropdownItem @click="onDuplicateCalculator">
+              <BaseIcon name="DuplicateIcon" class="mr-3 text-gray-600" />
+              {{ $t('calculator.duplicate') }}
+            </BaseDropdownItem>
+
             <BaseDropdownItem @click="onDeleteCalculator">
               <BaseIcon name="TrashIcon" class="mr-3 text-gray-600" />
               {{ $t('general.delete') }}
@@ -143,49 +148,39 @@
 
     <template v-else>
       <!-- budget name & customer (outside the overview card) -->
-      <div class="grid grid-cols-1 gap-6 mt-6 lg:grid-cols-12">
-        <BaseInputGroup
-          :label="$t('calculator.name')"
-          class="lg:col-span-4"
-        >
-          <BaseInput v-model="nameField" />
-        </BaseInputGroup>
+      <div class="flex flex-col gap-6 mt-6 lg:flex-row">
+        <div class="flex-1 min-w-0">
+          <BaseInputGroup :label="$t('calculator.name')">
+            <BaseInput v-model="nameField" />
+          </BaseInputGroup>
 
-        <BaseCustomerSelectPopup
-          v-model="selectedCustomer"
-          :valid="customerValid"
-          type="calculator"
-          class="lg:col-span-8"
-        />
+          <BaseCustomerSelectPopup
+            v-model="selectedCustomer"
+            :valid="customerValid"
+            type="calculator"
+            class="mt-4"
+          />
+        </div>
+
+        <div class="lg:w-72 shrink-0 lg:text-right lg:pt-1">
+          <p class="text-xs font-medium uppercase tracking-wide text-gray-500">
+            {{ $t('calculator.budget_total') }}
+          </p>
+          <p class="mt-1 text-4xl font-bold text-gray-900">
+            <BaseFormatMoney
+              :amount="totalCost * 100"
+              :currency="companyStore.selectedCompanyCurrency"
+            />
+          </p>
+        </div>
       </div>
 
       <!-- budget overview card -->
       <BaseCard class="mt-6">
-        <div
-          class="
-            flex flex-col
-            justify-between
-            gap-6
-            px-5
-            py-5
-            lg:flex-row lg:items-center
-          "
-        >
-          <h5 class="text-sm font-semibold text-gray-900">
+        <div class="px-5 py-5">
+          <h5 class="text-lg font-semibold text-gray-900">
             {{ $t('calculator.overview') }}
           </h5>
-
-          <div class="lg:text-right lg:pl-8 shrink-0">
-            <p class="text-xs font-medium uppercase tracking-wide text-gray-500">
-              {{ $t('calculator.budget_total') }}
-            </p>
-            <p class="mt-1 text-4xl font-bold text-gray-900">
-              <BaseFormatMoney
-                :amount="totalCost * 100"
-                :currency="companyStore.selectedCompanyCurrency"
-              />
-            </p>
-          </div>
         </div>
 
         <div class="px-5 pb-6 flex flex-col lg:flex-row gap-8">
@@ -244,26 +239,19 @@
       <!-- roles table -->
       <BaseCard class="mt-6">
         <div class="flex items-center justify-between px-5 py-4 border-b border-gray-200 border-solid">
-          <h5 class="text-sm font-semibold text-gray-900">
+          <h5 class="text-lg font-semibold text-gray-900">
             {{ $t('calculator.roles_table') }}
           </h5>
-
-          <BaseButton size="sm" variant="primary-outline" @click="addRoleItem">
-            <template #left="slotProps">
-              <BaseIcon name="PlusIcon" :class="slotProps.class" />
-            </template>
-            {{ $t('calculator.add_role') }}
-          </BaseButton>
         </div>
 
-        <div class="px-5 py-4">
-          <table class="min-w-full">
+        <div class="px-5 py-4 overflow-hidden calc-table">
+          <table class="min-w-full table-fixed">
             <thead>
               <tr class="text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                <th class="pb-2 pr-3 w-44">{{ $t('calculator.category') }}</th>
+                <th class="pb-2 pr-3 w-56">{{ $t('calculator.category') }}</th>
                 <th class="pb-2 pr-3">{{ $t('calculator.role') }}</th>
                 <th class="pb-2 pr-3 w-32">{{ $t('calculator.rate_per_hour') }}</th>
-                <th class="pb-2 pr-3 w-28">{{ $t('calculator.hours') }}</th>
+                <th class="pb-2 pr-3 w-24">{{ $t('calculator.hours') }}</th>
                 <th class="pb-2 pr-3 w-36 text-right">{{ $t('calculator.amount') }}</th>
                 <th class="pb-2 w-8" />
               </tr>
@@ -316,11 +304,6 @@
                   />
                 </td>
               </tr>
-              <tr v-if="!roleItems.length">
-                <td colspan="6" class="py-4 text-sm text-gray-500">
-                  {{ $t('calculator.no_rows') }}
-                </td>
-              </tr>
             </tbody>
           </table>
         </div>
@@ -329,26 +312,19 @@
       <!-- travel / expenses table -->
       <BaseCard class="mt-6">
         <div class="flex items-center justify-between px-5 py-4 border-b border-gray-200 border-solid">
-          <h5 class="text-sm font-semibold text-gray-900">
+          <h5 class="text-lg font-semibold text-gray-900">
             {{ $t('calculator.expenses_table') }}
           </h5>
-
-          <BaseButton size="sm" variant="primary-outline" @click="addCostItem">
-            <template #left="slotProps">
-              <BaseIcon name="PlusIcon" :class="slotProps.class" />
-            </template>
-            {{ $t('calculator.add_expense') }}
-          </BaseButton>
         </div>
 
-        <div class="px-5 py-4">
-          <table class="min-w-full">
+        <div class="px-5 py-4 overflow-hidden calc-table">
+          <table class="min-w-full table-fixed">
             <thead>
               <tr class="text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                <th class="pb-2 pr-3 w-44">{{ $t('calculator.category') }}</th>
+                <th class="pb-2 pr-3 w-56">{{ $t('calculator.category') }}</th>
                 <th class="pb-2 pr-3">{{ $t('calculator.expense') }}</th>
                 <th class="pb-2 pr-3 w-32">{{ $t('calculator.cost') }}</th>
-                <th class="pb-2 pr-3 w-28">{{ $t('calculator.quantity') }}</th>
+                <th class="pb-2 pr-3 w-24">{{ $t('calculator.quantity') }}</th>
                 <th class="pb-2 pr-3 w-36 text-right">{{ $t('calculator.amount') }}</th>
                 <th class="pb-2 w-8" />
               </tr>
@@ -399,11 +375,6 @@
                     class="h-5 text-gray-400 cursor-pointer hover:text-red-500"
                     @click="removeItem(item)"
                   />
-                </td>
-              </tr>
-              <tr v-if="!costItems.length">
-                <td colspan="6" class="py-4 text-sm text-gray-500">
-                  {{ $t('calculator.no_rows') }}
                 </td>
               </tr>
             </tbody>
@@ -560,16 +531,28 @@ function makeItem(category, type) {
   }
 }
 
-function addRoleItem() {
-  calculatorStore.currentCalculator.calculator_items.push(
-    makeItem('production', 'role')
-  )
+function isEmptyItem(item) {
+  return !item.item_name && !(item.unit_price > 0)
 }
 
-function addCostItem() {
-  calculatorStore.currentCalculator.calculator_items.push(
-    makeItem('travel', 'cost')
-  )
+function ensureTrailingEmptyRows() {
+  const items = calculatorStore.currentCalculator.calculator_items
+
+  // never two consecutive empty rows
+  for (let i = items.length - 2; i >= 0; i--) {
+    if (isEmptyItem(items[i]) && isEmptyItem(items[i + 1])) {
+      items.splice(i, 1)
+    }
+  }
+
+  // keep one empty row per table
+  if (!items.some((item) => item.type === 'role' && isEmptyItem(item))) {
+    items.push(makeItem('production', 'role'))
+  }
+
+  if (!items.some((item) => item.type === 'cost' && isEmptyItem(item))) {
+    items.push(makeItem('travel', 'cost'))
+  }
 }
 
 function removeItem(item) {
@@ -663,6 +646,13 @@ async function loadCalculatorData() {
       unit_price: item.unit_price / 100,
     }))
 
+  calculatorStore.currentCalculator.calculator_items =
+    calculatorStore.currentCalculator.calculator_items.filter(
+      (item) => item.item_name
+    )
+
+  ensureTrailingEmptyRows()
+
   await nextTick()
   updateDonutChart()
 }
@@ -717,20 +707,35 @@ async function onSaveCalculator() {
       name: calculatorStore.currentCalculator.name,
       notes: calculatorStore.currentCalculator.notes,
       customer_id: calculatorStore.currentCalculator.customer_id,
-      calculator_items: calculatorStore.currentCalculator.calculator_items.map(
-        (item) => ({
+      calculator_items: calculatorStore.currentCalculator.calculator_items
+        .filter((item) => item.item_name)
+        .map((item) => ({
           category: item.category,
           type: item.type,
           item_name: item.item_name,
           description: item.description,
           unit_price: Math.round((item.unit_price || 0) * 100),
           quantity: item.quantity || 0,
-        })
-      ),
+        })),
     })
 
     await refreshListAndMaybeRedirect()
     isSaving.value = false
+  } catch (err) {
+    isSaving.value = false
+  }
+}
+
+async function onDuplicateCalculator() {
+  isSaving.value = true
+
+  try {
+    const response = await calculatorStore.duplicateCalculator(currentId.value)
+
+    await refreshListAndMaybeRedirect()
+
+    isSaving.value = false
+    router.push(`/admin/calculators/${response.data.data.id}/view`)
   } catch (err) {
     isSaving.value = false
   }
@@ -766,6 +771,30 @@ watch(
   }
 )
 
+let isEnsuringRows = false
+let ensureRuns = 0
+
+watch(
+  () => calculatorStore.currentCalculator.calculator_items,
+  () => {
+    if (isEnsuringRows || ensureRuns > 20) {
+      return
+    }
+
+    isEnsuringRows = true
+
+    setTimeout(() => {
+      try {
+        ensureRuns += 1
+        ensureTrailingEmptyRows()
+      } finally {
+        isEnsuringRows = false
+      }
+    }, 300)
+  },
+  { deep: true }
+)
+
 watch(totalCost, () => {
   updateDonutChart()
 })
@@ -785,3 +814,12 @@ onMounted(async () => {
   updateDonutChart()
 })
 </script>
+
+<style scoped>
+.calc-table :deep(.multiselect-single-label) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+</style>

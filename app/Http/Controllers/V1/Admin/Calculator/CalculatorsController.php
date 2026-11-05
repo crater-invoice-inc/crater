@@ -60,7 +60,7 @@ class CalculatorsController extends Controller
     {
         $this->authorize('view', $calculator);
 
-        return new CalculatorResource($calculator);
+        return new CalculatorResource($calculator->load(['customer', 'calculatorItems']));
     }
 
     /**
@@ -80,6 +80,33 @@ class CalculatorsController extends Controller
     }
 
     /**
+     * Duplicate an existing Calculator.
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @param  \Crater\Models\Calculator $calculator
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function duplicate(Request $request, Calculator $calculator)
+    {
+        $this->authorize('create', Calculator::class);
+
+        $copy = $calculator->replicate(['created_at', 'updated_at']);
+        $copy->name = $calculator->name.' (copie)';
+        $copy->company_id = $request->header('company');
+        $copy->creator_id = \Auth::id();
+        $copy->save();
+
+        foreach ($calculator->calculatorItems as $item) {
+            $newItem = $item->replicate(['created_at', 'updated_at', 'calculator_id']);
+            $newItem->calculator_id = $copy->id;
+            $newItem->company_id = $request->header('company');
+            $newItem->save();
+        }
+
+        return new CalculatorResource($copy->load(['customer', 'calculatorItems']));
+    }
+
+    /**
      * Delete a list of existing Calculators.
      *
      * @param  \Illuminate\Http\Request $request
@@ -87,7 +114,7 @@ class CalculatorsController extends Controller
      */
     public function delete(DeleteCalculatorsRequest $request)
     {
-        $this->authorize('delete multiple calculators');
+        $this->authorize('deleteMultiple', Calculator::class);
 
         Calculator::whereCompany()->whereIn('calculators.id', $request->ids)->delete();
 

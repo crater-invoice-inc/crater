@@ -19,6 +19,7 @@ export const useCalculatorStore = (useWindow = false) => {
         name: '',
         category: 'production',
         unit_price: 0,
+        is_default: false,
       },
       isTemplateEdit: false,
       currentCalculator: {
@@ -132,6 +133,27 @@ export const useCalculatorStore = (useWindow = false) => {
                   message: global.t('calculator.updated_message'),
                 })
               }
+
+              resolve(response)
+            })
+            .catch((err) => {
+              handleError(err)
+              reject(err)
+            })
+        })
+      },
+
+      duplicateCalculator(id) {
+        const notificationStore = useNotificationStore()
+
+        return new Promise((resolve, reject) => {
+          axios
+            .post(`/api/v1/calculators/${id}/duplicate`)
+            .then((response) => {
+              notificationStore.showNotification({
+                type: 'success',
+                message: global.t('calculator.duplicated_message'),
+              })
 
               resolve(response)
             })
@@ -275,6 +297,7 @@ export const useCalculatorStore = (useWindow = false) => {
           name: '',
           category: 'production',
           unit_price: 0,
+          is_default: false,
         }
         this.isTemplateEdit = false
       },

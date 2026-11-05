@@ -117,7 +117,11 @@ class Calculator extends Model
 
         $calculator = self::create($data);
 
-        $calculator->saveItems($request);
+        if ($request->has('calculator_items') && count($request->calculator_items)) {
+            $calculator->saveItems($request);
+        } else {
+            $calculator->fillFromDefaultTemplates($request->header('company'));
+        }
 
         return self::with(['customer', 'calculatorItems'])->find($calculator->id);
     }
@@ -126,9 +130,29 @@ class Calculator extends Model
     {
         $this->update($request->validated());
 
-        $this->saveItems($request);
+        if ($request->has('calculator_items')) {
+            $this->saveItems($request);
+        }
 
         return self::with(['customer', 'calculatorItems'])->find($this->id);
+    }
+
+    public function fillFromDefaultTemplates($companyId)
+    {
+        $templates = CalculatorTemplate::where('company_id', $companyId)
+            ->where('is_default', true)
+            ->get();
+
+        foreach ($templates as $template) {
+            $this->calculatorItems()->create([
+                'company_id' => $companyId,
+                'category' => $template->category,
+                'type' => in_array($template->category, ['pre_production', 'production', 'post_production']) ? 'role' : 'cost',
+                'item_name' => $template->name,
+                'unit_price' => $template->unit_price,
+                'quantity' => 1,
+            ]);
+        }
     }
 
     public function saveItems($request)
@@ -137,6 +161,10 @@ class Calculator extends Model
 
         if ($request->has('calculator_items')) {
             foreach ($request->calculator_items as $item) {
+                if (empty($item['item_name'])) {
+                    continue;
+                }
+
                 $item['company_id'] = $request->header('company');
                 $this->calculatorItems()->create($item);
             }

@@ -36,6 +36,15 @@
           />
         </template>
 
+        <template #cell-is_default="{ row }">
+          <BaseBadge
+            :bg-color="row.data.is_default ? '#D9F2E7' : '#F3F4F6'"
+            :color="row.data.is_default ? '#2C7A5B' : '#6B7280'"
+          >
+            {{ row.data.is_default ? $t('general.yes') : $t('general.no') }}
+          </BaseBadge>
+        </template>
+
         <template #cell-actions="{ row }">
           <CalculatorTemplateDropdown
             :row="row.data"
@@ -92,6 +101,10 @@ const templateColumns = computed(() => {
     {
       key: 'unit_price',
       label: t('calculator.templates.default_price'),
+    },
+    {
+      key: 'is_default',
+      label: t('calculator.templates.is_default'),
     },
     {
       key: 'actions',

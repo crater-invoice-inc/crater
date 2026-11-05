@@ -53,6 +53,7 @@ function editTemplate(template) {
     name: template.name,
     category: template.category,
     unit_price: template.unit_price / 100,
+    is_default: !!template.is_default,
   }
 
   modalStore.openModal({

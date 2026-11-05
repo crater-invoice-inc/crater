@@ -270,6 +270,8 @@ Route::prefix('/v1')->group(function () {
 
             Route::post('/calculators/delete', [CalculatorsController::class, 'delete']);
 
+            Route::post('/calculators/{calculator}/duplicate', [CalculatorsController::class, 'duplicate']);
+
             Route::resource('calculators', CalculatorsController::class);
 
             // Calculator templates (predefined roles & expenses)

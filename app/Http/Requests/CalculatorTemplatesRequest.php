@@ -36,6 +36,10 @@ class CalculatorTemplatesRequest extends FormRequest
                 'nullable',
                 'numeric',
             ],
+            'is_default' => [
+                'nullable',
+                'boolean',
+            ],
         ];
     }
 }

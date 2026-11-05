@@ -36,7 +36,7 @@
     "created_message": "Budget saved successfully",
     "updated_message": "Budget updated successfully",
     "deleted_message": "Budget deleted successfully",
-    "roles_table": "Roles (pre-production / production / post-production)",
+    "roles_table": "Production",
     "expenses_table": "Travel & production expenses",
     "category": "Category",
     "role": "Role",
@@ -71,9 +71,12 @@
       "confirm_delete": "Are you sure you want to delete this entry?",
       "created_message": "Entry saved successfully",
       "updated_message": "Entry updated successfully",
-      "deleted_message": "Entry deleted successfully"
+      "deleted_message": "Entry deleted successfully",
+      "is_default": "Set as default"
     },
-    "overview": "Budget overview"
+    "overview": "Budget overview",
+    "duplicate": "Duplicate",
+    "duplicated_message": "Budget duplicated successfully"
   },
   "general": {
     "add_company": "Add Company",

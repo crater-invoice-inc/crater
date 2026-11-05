@@ -53,6 +53,17 @@
           >
             <BaseMoney v-model="calculatorStore.currentTemplate.unit_price" />
           </BaseInputGroup>
+
+          <BaseInputGroup
+            :label="$t('calculator.templates.is_default')"
+            variant="horizontal"
+            class="flex flex-row-reverse"
+          >
+            <BaseSwitch
+              v-model="calculatorStore.currentTemplate.is_default"
+              class="flex items-center"
+            />
+          </BaseInputGroup>
         </BaseInputGrid>
       </div>
 
@@ -139,6 +150,7 @@ async function submitTemplateData() {
       name: calculatorStore.currentTemplate.name,
       category: calculatorStore.currentTemplate.category,
       unit_price: Math.round((calculatorStore.currentTemplate.unit_price || 0) * 100),
+      is_default: calculatorStore.currentTemplate.is_default ? 1 : 0,
     }
 
     const action = calculatorStore.isTemplateEdit

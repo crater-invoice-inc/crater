@@ -13,6 +13,7 @@ class CalculatorTemplate extends Model
 
     protected $casts = [
         'unit_price' => 'integer',
+        'is_default' => 'boolean',
     ];
 
     public function company()

@@ -36,7 +36,7 @@
     "created_message": "Budget enregistré avec succès",
     "updated_message": "Budget mis à jour avec succès",
     "deleted_message": "Budget supprimé avec succès",
-    "roles_table": "Rôles (pré-production / production / post-production)",
+    "roles_table": "Production",
     "expenses_table": "Frais de déplacement & dépenses de production",
     "category": "Catégorie",
     "role": "Rôle",
@@ -71,9 +71,12 @@
       "confirm_delete": "Voulez-vous vraiment supprimer cette entrée ?",
       "created_message": "Entrée enregistrée avec succès",
       "updated_message": "Entrée mise à jour avec succès",
-      "deleted_message": "Entrée supprimée avec succès"
+      "deleted_message": "Entrée supprimée avec succès",
+      "is_default": "Par défaut"
     },
-    "overview": "Aperçu du budget"
+    "overview": "Aperçu du budget",
+    "duplicate": "Dupliquer",
+    "duplicated_message": "Budget dupliqué avec succès"
   },
   "general": {
     "add_company": "Ajouter une entreprise",

@@ -246,8 +246,8 @@
               <tr class="text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 <th class="pb-2 pr-3" style="width: 10.5rem">{{ $t('calculator.category') }}</th>
                 <th class="pb-2 pr-3" style="width: 15rem">{{ $t('calculator.role') }}</th>
-                <th class="pb-2 pr-3 w-24">{{ $t('calculator.rate_per_hour') }}</th>
-                <th class="pb-2 pr-3 w-16">{{ $t('calculator.hours') }}</th>
+                <th class="pb-2 pr-3 w-20">{{ $t('calculator.rate_per_hour') }}</th>
+                <th class="pb-2 pr-3 w-20">{{ $t('calculator.hours') }}</th>
                 <th class="pb-2 pr-3 w-36 text-right">{{ $t('calculator.amount') }}</th>
                 <th class="pb-2 w-8" />
               </tr>
@@ -281,7 +281,16 @@
                   />
                 </td>
                 <td class="py-2 pr-3">
-                  <BaseMoney v-model="item.unit_price" />
+                  <BaseMoney
+                    v-model="item.unit_price"
+                    :currency="{
+                      decimal: '.',
+                      thousands: ',',
+                      prefix: '',
+                      precision: 2,
+                      masked: false,
+                    }"
+                  />
                 </td>
                 <td class="py-2 pr-3">
                   <BaseInput v-model.number="item.quantity" type="number" step="0.5" min="0" />
@@ -319,8 +328,8 @@
               <tr class="text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 <th class="pb-2 pr-3" style="width: 10.5rem">{{ $t('calculator.category') }}</th>
                 <th class="pb-2 pr-3" style="width: 15rem">{{ $t('calculator.expense') }}</th>
-                <th class="pb-2 pr-3 w-24">{{ $t('calculator.cost') }}</th>
-                <th class="pb-2 pr-3 w-16">{{ $t('calculator.quantity') }}</th>
+                <th class="pb-2 pr-3 w-20">{{ $t('calculator.cost') }}</th>
+                <th class="pb-2 pr-3 w-20">{{ $t('calculator.quantity') }}</th>
                 <th class="pb-2 pr-3 w-36 text-right">{{ $t('calculator.amount') }}</th>
                 <th class="pb-2 w-8" />
               </tr>
@@ -354,7 +363,16 @@
                   />
                 </td>
                 <td class="py-2 pr-3">
-                  <BaseMoney v-model="item.unit_price" />
+                  <BaseMoney
+                    v-model="item.unit_price"
+                    :currency="{
+                      decimal: '.',
+                      thousands: ',',
+                      prefix: '',
+                      precision: 2,
+                      masked: false,
+                    }"
+                  />
                 </td>
                 <td class="py-2 pr-3">
                   <BaseInput v-model.number="item.quantity" type="number" step="0.5" min="0" />
@@ -605,8 +623,11 @@ function updateDonutChart() {
       },
       tooltips: {
         callbacks: {
-          label: (tooltipItem) =>
-            `${t(`calculator.categories.${categories[tooltipItem.index].key}`)} : ${Math.round(tooltipItem.yLabel * 100)}`,
+          label: (tooltipItem) => {
+            const value = donutChart.data.datasets[0].data[tooltipItem.index]
+
+            return `${t(`calculator.categories.${categories[tooltipItem.index].key}`)} : ${value.toFixed(2)} $`
+          },
         },
       },
     },

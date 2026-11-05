@@ -1,5 +1,5 @@
 <template>
-  <div class="graph-container h-[300px]">
+  <div class="graph-container h-[320px]">
     <canvas id="graph" ref="graph" />
   </div>
 </template>
@@ -7,17 +7,14 @@
 <script setup>
 import Chart from 'chart.js'
 import { ref, reactive, computed, onMounted, watchEffect, inject } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useCompanyStore } from '@/scripts/admin/stores/company'
 
 const utils = inject('utils')
+const { t } = useI18n()
 
 const props = defineProps({
   labels: {
-    type: Array,
-    require: true,
-    default: Array,
-  },
-  values: {
     type: Array,
     require: true,
     default: Array,
@@ -39,10 +36,14 @@ const props = defineProps({
   },
   income: {
     type: Array,
-    require: true,
-    default: Array,
+    default: () => [],
   },
 })
+
+const COLOR_SALES = '#7C8DF5'
+const COLOR_RECEIPTS = '#3FAE8C'
+const COLOR_EXPENSES = '#E0785C'
+const COLOR_INCOME = '#4B5563'
 
 let myLineChart = null
 const graph = ref(null)
@@ -51,11 +52,52 @@ const defaultCurrency = computed(() => {
   return companyStore.selectedCompanyCurrency
 })
 
+function makeDataset(label, color, values) {
+  return {
+    label,
+    fill: false,
+    lineTension: 0.4,
+    borderColor: color,
+    borderWidth: 2,
+    borderCapStyle: 'round',
+    borderJoinStyle: 'round',
+    pointBorderColor: color,
+    pointBackgroundColor: '#fff',
+    pointBorderWidth: 2,
+    pointHoverRadius: 6,
+    pointHoverBackgroundColor: color,
+    pointHoverBorderColor: '#fff',
+    pointHoverBorderWidth: 2,
+    pointRadius: 3.5,
+    pointHitRadius: 12,
+    data: values.map((value) => value / 100),
+  }
+}
+
+function buildDatasets() {
+  let datasets = [
+    makeDataset(t('dashboard.chart_info.total_sales'), COLOR_SALES, props.invoices),
+    makeDataset(t('dashboard.chart_info.total_receipts'), COLOR_RECEIPTS, props.receipts),
+    makeDataset(t('dashboard.chart_info.total_expense'), COLOR_EXPENSES, props.expenses),
+  ]
+
+  if (props.income && props.income.length) {
+    datasets.push(
+      makeDataset(t('dashboard.chart_info.net_income'), COLOR_INCOME, props.income)
+    )
+  }
+
+  return datasets
+}
+
 watchEffect(() => {
   if (props.labels) {
     if (myLineChart) {
-      myLineChart.reset()
-      update()
+      myLineChart.data.labels = props.labels
+      myLineChart.data.datasets = buildDatasets()
+      myLineChart.update({
+        lazy: true,
+      })
     }
   }
 })
@@ -67,131 +109,75 @@ onMounted(() => {
     maintainAspectRatio: false,
     tooltips: {
       enabled: true,
+      mode: 'index',
+      intersect: false,
+      backgroundColor: '#ffffff',
+      titleFontColor: '#111827',
+      titleFontSize: 13,
+      titleFontStyle: '600',
+      bodyFontColor: '#4b5563',
+      bodyFontSize: 13,
+      bodySpacing: 6,
+      xPadding: 14,
+      yPadding: 12,
+      cornerRadius: 10,
+      displayColors: true,
+      boxWidth: 8,
+      boxHeight: 8,
+      borderWidth: 1,
+      borderColor: '#f3f4f6',
       callbacks: {
         label: function (tooltipItem, data) {
-          return utils.formatMoney(
+          return ` ${utils.formatMoney(
             Math.round(tooltipItem.value * 100),
             defaultCurrency.value
-          )
+          )}`
         },
       },
     },
     legend: {
       display: false,
     },
-  })
-
-  let data = reactive({
-    labels: props.labels,
-    datasets: [
-      {
-        label: 'Sales',
-        fill: false,
-        lineTension: 0.3,
-        backgroundColor: 'rgba(230, 254, 249)',
-        borderColor: '#040405',
-        borderCapStyle: 'butt',
-        borderDash: [],
-        borderDashOffset: 0.0,
-        borderJoinStyle: 'miter',
-        pointBorderColor: '#040405',
-        pointBackgroundColor: '#fff',
-        pointBorderWidth: 1,
-        pointHoverRadius: 5,
-        pointHoverBackgroundColor: '#040405',
-        pointHoverBorderColor: 'rgba(220,220,220,1)',
-        pointHoverBorderWidth: 2,
-        pointRadius: 4,
-        pointHitRadius: 10,
-        data: props.invoices.map((invoice) => invoice / 100),
-      },
-      {
-        label: 'Receipts',
-        fill: false,
-        lineTension: 0.3,
-        backgroundColor: 'rgba(230, 254, 249)',
-        borderColor: 'rgb(2, 201, 156)',
-        borderCapStyle: 'butt',
-        borderDash: [],
-        borderDashOffset: 0.0,
-        borderJoinStyle: 'miter',
-        pointBorderColor: 'rgb(2, 201, 156)',
-        pointBackgroundColor: '#fff',
-        pointBorderWidth: 1,
-        pointHoverRadius: 5,
-        pointHoverBackgroundColor: 'rgb(2, 201, 156)',
-        pointHoverBorderColor: 'rgba(220,220,220,1)',
-        pointHoverBorderWidth: 2,
-        pointRadius: 4,
-        pointHitRadius: 10,
-        data: props.receipts.map((receipt) => receipt / 100),
-      },
-      {
-        label: 'Expenses',
-        fill: false,
-        lineTension: 0.3,
-        backgroundColor: 'rgba(245, 235, 242)',
-        borderColor: 'rgb(255,0,0)',
-        borderCapStyle: 'butt',
-        borderDash: [],
-        borderDashOffset: 0.0,
-        borderJoinStyle: 'miter',
-        pointBorderColor: 'rgb(255,0,0)',
-        pointBackgroundColor: '#fff',
-        pointBorderWidth: 1,
-        pointHoverRadius: 5,
-        pointHoverBackgroundColor: 'rgb(255,0,0)',
-        pointHoverBorderColor: 'rgba(220,220,220,1)',
-        pointHoverBorderWidth: 2,
-        pointRadius: 4,
-        pointHitRadius: 10,
-        data: props.expenses.map((expense) => expense / 100),
-      },
-      {
-        label: 'Net Income',
-        fill: false,
-        lineTension: 0.3,
-        backgroundColor: 'rgba(236, 235, 249)',
-        borderColor: 'rgba(88, 81, 216, 1)',
-        borderCapStyle: 'butt',
-        borderDash: [],
-        borderDashOffset: 0.0,
-        borderJoinStyle: 'miter',
-        pointBorderColor: 'rgba(88, 81, 216, 1)',
-        pointBackgroundColor: '#fff',
-        pointBorderWidth: 1,
-        pointHoverRadius: 5,
-        pointHoverBackgroundColor: 'rgba(88, 81, 216, 1)',
-        pointHoverBorderColor: 'rgba(220,220,220,1)',
-        pointHoverBorderWidth: 2,
-        pointRadius: 4,
-        pointHitRadius: 10,
-        data: props.income.map((_i) => _i / 100),
-      },
-    ],
+    scales: {
+      xAxes: [
+        {
+          gridLines: {
+            display: false,
+          },
+          ticks: {
+            fontColor: '#9ca3af',
+            fontSize: 12,
+            padding: 8,
+          },
+        },
+      ],
+      yAxes: [
+        {
+          gridLines: {
+            color: '#f3f4f6',
+            drawBorder: false,
+            borderDash: [4, 4],
+            zeroLineColor: '#f3f4f6',
+            zeroLineBorderDash: [4, 4],
+          },
+          ticks: {
+            fontColor: '#9ca3af',
+            fontSize: 12,
+            padding: 8,
+            maxTicksLimit: 6,
+          },
+        },
+      ],
+    },
   })
 
   myLineChart = new Chart(context, {
     type: 'line',
-    data: data,
+    data: {
+      labels: props.labels,
+      datasets: buildDatasets(),
+    },
     options: options,
   })
 })
-
-function update() {
-  myLineChart.data.labels = props.labels
-  myLineChart.data.datasets[0].data = props.invoices.map(
-    (invoice) => invoice / 100
-  )
-  myLineChart.data.datasets[1].data = props.receipts.map(
-    (receipt) => receipt / 100
-  )
-  myLineChart.data.datasets[2].data = props.expenses.map(
-    (expense) => expense / 100
-  )
-  myLineChart.data.datasets[3].data = props.income.map((_i) => _i / 100)
-  myLineChart.update({
-    lazy: true,
-  })
-}
 </script>

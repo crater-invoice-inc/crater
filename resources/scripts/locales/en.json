@@ -120,7 +120,8 @@
       "year": "Select year"
     },
     "monthly_chart": {
-      "title": "Sales & Expenses"
+      "title": "Sales & Expenses",
+      "subtitle": "{year} overview"
     },
     "recent_invoices_card": {
       "title": "Due Invoices",
@@ -137,6 +138,14 @@
       "amount_due": "Amount Due",
       "actions": "Actions",
       "view_all": "View All"
+    },
+    "stats": {
+      "sales": "Sales",
+      "expenses": "Expenses",
+      "net_income": "Net Income",
+      "vs_last_year": "vs last year",
+      "stable": "Stable vs last year",
+      "no_last_year_data": "No data last year"
     }
   },
   "tax_types": {
@@ -266,14 +275,10 @@
   },
   "estimates": {
     "mark_as": "Mark as",
-
     "mark_as_draft": "Mark as draft",
-
     "marked_as_draft_message": "Estimate marked as draft",
-
     "confirm_mark_as_draft": "Are you sure you want to mark this estimate as draft?",
     "confirm_change_status": "Change the status of the selected estimates?",
-
     "status_updated_message": "Estimates status updated successfully",
     "title": "Estimates",
     "accept_estimate": "Accept Estimate",
@@ -375,13 +380,9 @@
     "paid_invoice_selected": "A paid invoice is selected",
     "viewed_invoice_selected": "A viewed invoice is selected",
     "draft": "Draft",
-
     "sent": "Sent",
-
     "mark_as": "Mark as",
-
     "status_updated_message": "Invoices status updated successfully",
-
     "confirm_change_status": "Change the status of the selected invoices?",
     "title": "Invoices",
     "download": "Download",
@@ -586,11 +587,8 @@
   },
   "payments": {
     "record_payments": "Record payments",
-
     "confirm_bulk_payment": "Record a payment for the full due amount of each selected invoice?",
-
     "confirm_single_bulk_payment": "Record a payment for the full due amount of the selected invoice?",
-
     "bulk_created_message": "Payments recorded successfully",
     "title": "Payments",
     "payments_list": "Payments List",

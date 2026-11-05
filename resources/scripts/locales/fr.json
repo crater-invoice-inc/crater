@@ -120,7 +120,8 @@
       "year": "Sélectionnez l'année"
     },
     "monthly_chart": {
-      "title": "Recettes et dépenses"
+      "title": "Recettes et dépenses",
+      "subtitle": "Vue de l'année {year}"
     },
     "recent_invoices_card": {
       "title": "Factures en cours",
@@ -137,6 +138,14 @@
       "amount_due": "Montant",
       "actions": "Actions",
       "view_all": "Tout afficher"
+    },
+    "stats": {
+      "sales": "Ventes",
+      "expenses": "Dépenses",
+      "net_income": "Résultat",
+      "vs_last_year": "vs année dernière",
+      "stable": "Stable vs année dernière",
+      "no_last_year_data": "Pas de données l'année dernière"
     }
   },
   "tax_types": {
@@ -266,14 +275,10 @@
   },
   "estimates": {
     "mark_as": "Marquer comme",
-
     "mark_as_draft": "Marquer comme brouillon",
-
     "marked_as_draft_message": "Devis marqué comme brouillon",
-
     "confirm_mark_as_draft": "Voulez-vous vraiment marquer ce devis comme brouillon ?",
     "confirm_change_status": "Changer le statut des devis sélectionnés ?",
-
     "status_updated_message": "Statut des devis mis à jour avec succès",
     "title": "Devis",
     "accept_estimate": "Accepter devis",
@@ -375,13 +380,9 @@
     "paid_invoice_selected": "Une facture payée est sélectionnée",
     "viewed_invoice_selected": "Une facture consultée est sélectionnée",
     "draft": "Brouillon",
-
     "sent": "Envoyée",
-
     "mark_as": "Marquer comme",
-
     "status_updated_message": "Statut des factures mis à jour avec succès",
-
     "confirm_change_status": "Changer le statut des factures sélectionnées ?",
     "title": "Factures",
     "download": "Télécharger",
@@ -586,11 +587,8 @@
   },
   "payments": {
     "record_payments": "Enregistrer des paiements",
-
     "confirm_bulk_payment": "Enregistrer un paiement du montant total dû pour chaque facture sélectionnée ?",
-
     "confirm_single_bulk_payment": "Enregistrer un paiement du montant total dû pour la facture sélectionnée ?",
-
     "bulk_created_message": "Paiements enregistrés avec succès",
     "title": "Paiements",
     "payments_list": "Liste de paiements",

@@ -31,6 +31,15 @@ export const useDashboardStore = (useWindow = false) => {
       totalExpenses: null,
       totalNetIncome: null,
 
+      previousYear: {
+        sales: 0,
+        receipts: 0,
+        expenses: 0,
+        netIncome: 0,
+      },
+
+      availableYears: [],
+
       recentDueInvoices: [],
       recentEstimates: [],
 
@@ -67,6 +76,14 @@ export const useDashboardStore = (useWindow = false) => {
               this.totalReceipts = response.data.total_receipts
               this.totalExpenses = response.data.total_expenses
               this.totalNetIncome = response.data.total_net_income
+
+              this.previousYear.sales = response.data.previous_year_sales
+              this.previousYear.receipts = response.data.previous_year_receipts
+              this.previousYear.expenses = response.data.previous_year_expenses
+              this.previousYear.netIncome =
+                response.data.previous_year_net_income
+
+              this.availableYears = response.data.available_years
 
               // Dashboard Table Data
               this.recentDueInvoices = response.data.recent_due_invoices

@@ -37,9 +37,11 @@ class DashboardController extends Controller
         $months = [];
         $monthCounter = 0;
         $fiscalYear = CompanySetting::getSetting('fiscal_year', $request->header('company'));
-        $startDate = Carbon::now();
-        $start = Carbon::now();
-        $end = Carbon::now();
+        $startDate = $request->has('year')
+            ? Carbon::createFromDate((int)$request->year, 1, 1)
+            : Carbon::now();
+        $start = clone $startDate;
+        $end = clone $startDate;
         $terms = explode('-', $fiscalYear);
 
         if ($terms[0] <= $start->month) {
@@ -50,12 +52,6 @@ class DashboardController extends Controller
             $startDate->subYear()->month($terms[0])->startOfMonth();
             $start->subYear()->month($terms[0])->startOfMonth();
             $end->subYear()->month($terms[0])->endOfMonth();
-        }
-
-        if ($request->has('previous_year')) {
-            $startDate->subYear()->startOfMonth();
-            $start->subYear()->startOfMonth();
-            $end->subYear()->endOfMonth();
         }
 
         while ($monthCounter < 12) {
@@ -100,28 +96,73 @@ class DashboardController extends Controller
 
         $start->subMonth()->endOfMonth();
 
+        $periodStart = $startDate->format('Y-m-d');
+        $periodEnd = $start->format('Y-m-d');
+
         $total_sales = Invoice::whereBetween(
             'invoice_date',
-            [$startDate->format('Y-m-d'), $start->format('Y-m-d')]
+            [$periodStart, $periodEnd]
         )
             ->whereCompany()
             ->sum('base_total');
 
         $total_receipts = Payment::whereBetween(
             'payment_date',
-            [$startDate->format('Y-m-d'), $start->format('Y-m-d')]
+            [$periodStart, $periodEnd]
         )
             ->whereCompany()
             ->sum('base_amount');
 
         $total_expenses = Expense::whereBetween(
             'expense_date',
-            [$startDate->format('Y-m-d'), $start->format('Y-m-d')]
+            [$periodStart, $periodEnd]
         )
             ->whereCompany()
             ->sum('base_amount');
 
         $total_net_income = (int)$total_receipts - (int)$total_expenses;
+
+        $previousStart = $startDate->copy()->subYear();
+        $previousEnd = $start->copy()->subYear();
+
+        $previous_year_sales = Invoice::whereBetween(
+            'invoice_date',
+            [$previousStart->format('Y-m-d'), $previousEnd->format('Y-m-d')]
+        )
+            ->whereCompany()
+            ->sum('base_total');
+
+        $previous_year_receipts = Payment::whereBetween(
+            'payment_date',
+            [$previousStart->format('Y-m-d'), $previousEnd->format('Y-m-d')]
+        )
+            ->whereCompany()
+            ->sum('base_amount');
+
+        $previous_year_expenses = Expense::whereBetween(
+            'expense_date',
+            [$previousStart->format('Y-m-d'), $previousEnd->format('Y-m-d')]
+        )
+            ->whereCompany()
+            ->sum('base_amount');
+
+        $previous_year_net_income = (int)$previous_year_receipts - (int)$previous_year_expenses;
+
+        $invoice_years = Invoice::whereCompany()
+            ->selectRaw('DISTINCT YEAR(invoice_date) as year')
+            ->pluck('year');
+        $expense_years = Expense::whereCompany()
+            ->selectRaw('DISTINCT YEAR(expense_date) as year')
+            ->pluck('year');
+        $payment_years = Payment::whereCompany()
+            ->selectRaw('DISTINCT YEAR(payment_date) as year')
+            ->pluck('year');
+
+        $available_years = collect([$invoice_years, $expense_years, $payment_years])
+            ->flatten()
+            ->unique()
+            ->sortDesc()
+            ->values();
 
         $chart_data = [
             'months' => $months,
@@ -161,6 +202,13 @@ class DashboardController extends Controller
             'total_receipts' => $total_receipts,
             'total_expenses' => $total_expenses,
             'total_net_income' => $total_net_income,
+
+            'available_years' => $available_years,
+
+            'previous_year_sales' => $previous_year_sales,
+            'previous_year_receipts' => $previous_year_receipts,
+            'previous_year_expenses' => $previous_year_expenses,
+            'previous_year_net_income' => $previous_year_net_income,
         ]);
     }
 }

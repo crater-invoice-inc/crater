@@ -1,23 +1,21 @@
 <template>
-  <div class="graph-container h-[300px]">
+  <div class="graph-container relative h-[320px]">
     <canvas id="graph" ref="graph" />
+    <div ref="tooltip" class="chart-tooltip" />
   </div>
 </template>
 
 <script setup>
 import Chart from 'chart.js'
 import { ref, reactive, computed, onMounted, watchEffect, inject } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useCompanyStore } from '@/scripts/admin/stores/company'
 
 const utils = inject('utils')
+const { t } = useI18n()
 
 const props = defineProps({
   labels: {
-    type: Array,
-    require: true,
-    default: Array,
-  },
-  values: {
     type: Array,
     require: true,
     default: Array,
@@ -39,23 +37,120 @@ const props = defineProps({
   },
   income: {
     type: Array,
-    require: true,
-    default: Array,
+    default: () => [],
+  },
+  year: {
+    type: [Number, String],
+    default: null,
   },
 })
 
+const COLOR_SALES = '#5851D8'
+const COLOR_RECEIPTS = '#3FAE8C'
+const COLOR_EXPENSES = '#E0785C'
+const COLOR_INCOME = '#4B5563'
+
 let myLineChart = null
 const graph = ref(null)
+const tooltip = ref(null)
 const companyStore = useCompanyStore()
 const defaultCurrency = computed(() => {
   return companyStore.selectedCompanyCurrency
 })
 
+function makeDataset(label, color, values) {
+  return {
+    label,
+    fill: false,
+    lineTension: 0.4,
+    borderColor: color,
+    borderWidth: 3,
+    borderCapStyle: 'round',
+    borderJoinStyle: 'round',
+    pointBorderColor: color,
+    pointBackgroundColor: '#fff',
+    pointBorderWidth: 2,
+    pointHoverRadius: 6,
+    pointHoverBackgroundColor: color,
+    pointHoverBorderColor: '#fff',
+    pointHoverBorderWidth: 2,
+    pointRadius: 3.5,
+    pointHitRadius: 12,
+    data: values.map((value) => value / 100),
+  }
+}
+
+function buildDatasets() {
+  let datasets = [
+    makeDataset(t('dashboard.chart_info.total_sales'), COLOR_SALES, props.invoices),
+    makeDataset(t('dashboard.chart_info.total_receipts'), COLOR_RECEIPTS, props.receipts),
+    makeDataset(t('dashboard.chart_info.total_expense'), COLOR_EXPENSES, props.expenses),
+  ]
+
+  if (props.income && props.income.length) {
+    datasets.push(
+      makeDataset(t('dashboard.chart_info.net_income'), COLOR_INCOME, props.income)
+    )
+  }
+
+  return datasets
+}
+
+function formatValue(value) {
+  return utils.formatMoney(Math.round(value * 100), defaultCurrency.value)
+}
+
+function renderTooltip(model) {
+  const el = tooltip.value
+
+  if (!el) {
+    return
+  }
+
+  if (model.opacity === 0 || !model.dataPoints || !model.dataPoints.length) {
+    el.style.opacity = 0
+    return
+  }
+
+  let html = `<div class="chart-tooltip-title">${model.title[0]} ${props.year || ''}</div>`
+
+  model.dataPoints.forEach((point) => {
+    let dataset = myLineChart.data.datasets[point.datasetIndex]
+    html += `
+      <div class="chart-tooltip-row">
+        <span class="chart-tooltip-bar" style="background:${dataset.borderColor}"></span>
+        <span class="chart-tooltip-label">${dataset.label}</span>
+        <span class="chart-tooltip-value">${formatValue(point.value)}</span>
+      </div>
+    `
+  })
+
+  el.innerHTML = html
+  el.style.opacity = 1
+
+  const canvas = graph.value
+  let left = canvas.offsetLeft + model.caretX + 16
+  let top = canvas.offsetTop + model.caretY - el.offsetHeight - 16
+
+  if (left + el.offsetWidth > canvas.offsetLeft + canvas.offsetWidth) {
+    left = canvas.offsetLeft + model.caretX - el.offsetWidth - 16
+  }
+  if (top < 0) {
+    top = canvas.offsetTop + model.caretY + 16
+  }
+
+  el.style.left = `${left}px`
+  el.style.top = `${top}px`
+}
+
 watchEffect(() => {
   if (props.labels) {
     if (myLineChart) {
-      myLineChart.reset()
-      update()
+      myLineChart.data.labels = props.labels
+      myLineChart.data.datasets = buildDatasets()
+      myLineChart.update({
+        lazy: true,
+      })
     }
   }
 })
@@ -66,132 +161,104 @@ onMounted(() => {
     responsive: true,
     maintainAspectRatio: false,
     tooltips: {
-      enabled: true,
-      callbacks: {
-        label: function (tooltipItem, data) {
-          return utils.formatMoney(
-            Math.round(tooltipItem.value * 100),
-            defaultCurrency.value
-          )
-        },
-      },
+      enabled: false,
+      mode: 'index',
+      intersect: false,
+      custom: renderTooltip,
     },
     legend: {
       display: false,
     },
-  })
-
-  let data = reactive({
-    labels: props.labels,
-    datasets: [
-      {
-        label: 'Sales',
-        fill: false,
-        lineTension: 0.3,
-        backgroundColor: 'rgba(230, 254, 249)',
-        borderColor: '#040405',
-        borderCapStyle: 'butt',
-        borderDash: [],
-        borderDashOffset: 0.0,
-        borderJoinStyle: 'miter',
-        pointBorderColor: '#040405',
-        pointBackgroundColor: '#fff',
-        pointBorderWidth: 1,
-        pointHoverRadius: 5,
-        pointHoverBackgroundColor: '#040405',
-        pointHoverBorderColor: 'rgba(220,220,220,1)',
-        pointHoverBorderWidth: 2,
-        pointRadius: 4,
-        pointHitRadius: 10,
-        data: props.invoices.map((invoice) => invoice / 100),
-      },
-      {
-        label: 'Receipts',
-        fill: false,
-        lineTension: 0.3,
-        backgroundColor: 'rgba(230, 254, 249)',
-        borderColor: 'rgb(2, 201, 156)',
-        borderCapStyle: 'butt',
-        borderDash: [],
-        borderDashOffset: 0.0,
-        borderJoinStyle: 'miter',
-        pointBorderColor: 'rgb(2, 201, 156)',
-        pointBackgroundColor: '#fff',
-        pointBorderWidth: 1,
-        pointHoverRadius: 5,
-        pointHoverBackgroundColor: 'rgb(2, 201, 156)',
-        pointHoverBorderColor: 'rgba(220,220,220,1)',
-        pointHoverBorderWidth: 2,
-        pointRadius: 4,
-        pointHitRadius: 10,
-        data: props.receipts.map((receipt) => receipt / 100),
-      },
-      {
-        label: 'Expenses',
-        fill: false,
-        lineTension: 0.3,
-        backgroundColor: 'rgba(245, 235, 242)',
-        borderColor: 'rgb(255,0,0)',
-        borderCapStyle: 'butt',
-        borderDash: [],
-        borderDashOffset: 0.0,
-        borderJoinStyle: 'miter',
-        pointBorderColor: 'rgb(255,0,0)',
-        pointBackgroundColor: '#fff',
-        pointBorderWidth: 1,
-        pointHoverRadius: 5,
-        pointHoverBackgroundColor: 'rgb(255,0,0)',
-        pointHoverBorderColor: 'rgba(220,220,220,1)',
-        pointHoverBorderWidth: 2,
-        pointRadius: 4,
-        pointHitRadius: 10,
-        data: props.expenses.map((expense) => expense / 100),
-      },
-      {
-        label: 'Net Income',
-        fill: false,
-        lineTension: 0.3,
-        backgroundColor: 'rgba(236, 235, 249)',
-        borderColor: 'rgba(88, 81, 216, 1)',
-        borderCapStyle: 'butt',
-        borderDash: [],
-        borderDashOffset: 0.0,
-        borderJoinStyle: 'miter',
-        pointBorderColor: 'rgba(88, 81, 216, 1)',
-        pointBackgroundColor: '#fff',
-        pointBorderWidth: 1,
-        pointHoverRadius: 5,
-        pointHoverBackgroundColor: 'rgba(88, 81, 216, 1)',
-        pointHoverBorderColor: 'rgba(220,220,220,1)',
-        pointHoverBorderWidth: 2,
-        pointRadius: 4,
-        pointHitRadius: 10,
-        data: props.income.map((_i) => _i / 100),
-      },
-    ],
+    scales: {
+      xAxes: [
+        {
+          gridLines: {
+            display: false,
+          },
+          ticks: {
+            fontColor: '#9ca3af',
+            fontSize: 12,
+            padding: 8,
+          },
+        },
+      ],
+      yAxes: [
+        {
+          gridLines: {
+            color: '#f3f4f6',
+            drawBorder: false,
+            borderDash: [4, 4],
+            zeroLineColor: '#f3f4f6',
+            zeroLineBorderDash: [4, 4],
+          },
+          ticks: {
+            fontColor: '#9ca3af',
+            fontSize: 12,
+            padding: 8,
+            maxTicksLimit: 6,
+          },
+        },
+      ],
+    },
   })
 
   myLineChart = new Chart(context, {
     type: 'line',
-    data: data,
+    data: {
+      labels: props.labels,
+      datasets: buildDatasets(),
+    },
     options: options,
   })
 })
-
-function update() {
-  myLineChart.data.labels = props.labels
-  myLineChart.data.datasets[0].data = props.invoices.map(
-    (invoice) => invoice / 100
-  )
-  myLineChart.data.datasets[1].data = props.receipts.map(
-    (receipt) => receipt / 100
-  )
-  myLineChart.data.datasets[2].data = props.expenses.map(
-    (expense) => expense / 100
-  )
-  myLineChart.data.datasets[3].data = props.income.map((_i) => _i / 100)
-  myLineChart.update({
-    lazy: true,
-  })
-}
 </script>
+
+<style>
+/* Not scoped: the tooltip markup is injected via innerHTML, so it never
+   receives the scoped-style data attribute. Classes are prefixed instead. */
+.chart-tooltip {
+  position: absolute;
+  min-width: 190px;
+  background: #fff;
+  border: 1px solid #f3f4f6;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  padding: 12px 14px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.12s ease;
+  z-index: 20;
+}
+
+.chart-tooltip-title {
+  font-weight: 600;
+  font-size: 13px;
+  color: #111827;
+  margin-bottom: 8px;
+}
+
+.chart-tooltip-row {
+  display: flex;
+  align-items: center;
+  font-size: 13px;
+  color: #4b5563;
+  margin-top: 4px;
+}
+
+.chart-tooltip-bar {
+  width: 3px;
+  height: 14px;
+  border-radius: 2px;
+  margin-right: 8px;
+}
+
+.chart-tooltip-label {
+  flex: 1;
+}
+
+.chart-tooltip-value {
+  font-weight: 500;
+  color: #111827;
+  margin-left: 24px;
+}
+</style>

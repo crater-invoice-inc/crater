@@ -240,7 +240,7 @@
           </h5>
         </div>
 
-        <div class="px-5 py-4 overflow-hidden calc-table">
+        <div class="px-5 py-4 calc-table">
           <table class="min-w-full table-fixed">
             <thead>
               <tr class="text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -284,6 +284,7 @@
                   <BaseMoney
                     v-model="item.unit_price"
                     :currency="{
+                      symbol: '',
                       decimal: '.',
                       thousands: ',',
                       prefix: '',
@@ -303,6 +304,7 @@
                 </td>
                 <td class="py-2 text-right">
                   <BaseIcon
+                    v-if="!isEmptyItem(item)"
                     name="TrashIcon"
                     class="h-5 text-gray-400 cursor-pointer hover:text-red-500"
                     @click="removeItem(item)"
@@ -322,7 +324,7 @@
           </h5>
         </div>
 
-        <div class="px-5 py-4 overflow-hidden calc-table">
+        <div class="px-5 py-4 calc-table">
           <table class="min-w-full table-fixed">
             <thead>
               <tr class="text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -366,6 +368,7 @@
                   <BaseMoney
                     v-model="item.unit_price"
                     :currency="{
+                      symbol: '',
                       decimal: '.',
                       thousands: ',',
                       prefix: '',
@@ -385,6 +388,7 @@
                 </td>
                 <td class="py-2 text-right">
                   <BaseIcon
+                    v-if="!isEmptyItem(item)"
                     name="TrashIcon"
                     class="h-5 text-gray-400 cursor-pointer hover:text-red-500"
                     @click="removeItem(item)"
@@ -530,7 +534,7 @@ function makeItem(category, type) {
     item_name: '',
     description: '',
     unit_price: 0,
-    quantity: 1,
+    quantity: 0,
   }
 }
 
@@ -588,6 +592,58 @@ function onTemplateSelected(item, templateId) {
   }
 }
 
+// chart.js v2 n'a pas de borderRadius sur les arcs : on masque les arcs
+// natifs (transparent) et on redessine chaque portion avec des extrémités
+// arrondies (lineCap round) après le rendu.
+const roundedDonutPlugin = {
+  afterDraw(chart) {
+    const meta = chart.getDatasetMeta(0)
+
+    if (!meta.data.length) {
+      return
+    }
+
+    const view = meta.data[0]._view
+    const ctx = chart.ctx
+    const data = chart.data.datasets[0].data
+    const colors = chart.data.datasets[0].backgroundColor
+    const total = data.reduce((sum, value) => sum + value, 0)
+
+    if (total <= 0) {
+      return
+    }
+
+    const thickness = view.outerRadius - view.innerRadius
+    const radius = (view.outerRadius + view.innerRadius) / 2
+    const gap = 0.045
+
+    ctx.save()
+    ctx.lineWidth = thickness
+    ctx.lineCap = 'round'
+
+    let angle = -Math.PI / 2
+
+    data.forEach((value, index) => {
+      if (value <= 0) {
+        return
+      }
+
+      const slice = (value / total) * Math.PI * 2
+      const start = angle + Math.min(gap / 2, slice / 4)
+      const end = angle + slice - Math.min(gap / 2, slice / 4)
+
+      ctx.beginPath()
+      ctx.strokeStyle = colors[index]
+      ctx.arc(view.x, view.y, radius, start, end)
+      ctx.stroke()
+
+      angle += slice
+    })
+
+    ctx.restore()
+  },
+}
+
 function updateDonutChart() {
   if (!donutCanvas.value) {
     return
@@ -603,14 +659,15 @@ function updateDonutChart() {
 
   donutChart = new Chart(donutCanvas.value.getContext('2d'), {
     type: 'doughnut',
+    plugins: [roundedDonutPlugin],
     data: {
       labels: categories.map((category) => category.key),
       datasets: [
         {
           data,
           backgroundColor: categories.map((category) => category.color),
-          borderWidth: 2,
-          hoverBorderColor: '#fff',
+          borderWidth: 0,
+          hoverBorderColor: 'transparent',
         },
       ],
     },

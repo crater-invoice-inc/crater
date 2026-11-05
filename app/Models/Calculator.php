@@ -150,7 +150,7 @@ class Calculator extends Model
                 'type' => in_array($template->category, ['pre_production', 'production', 'post_production']) ? 'role' : 'cost',
                 'item_name' => $template->name,
                 'unit_price' => $template->unit_price,
-                'quantity' => 1,
+                'quantity' => 0,
             ]);
         }
     }

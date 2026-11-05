@@ -120,7 +120,7 @@ function renderTooltip(model) {
       <div class="chart-tooltip-row">
         <span class="chart-tooltip-bar" style="background:${dataset.borderColor}"></span>
         <span class="chart-tooltip-label">${dataset.label}</span>
-        <span class="chart-tooltip-value">${formatValue(point.y)}</span>
+        <span class="chart-tooltip-value">${formatValue(point.value)}</span>
       </div>
     `
   })

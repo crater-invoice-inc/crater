@@ -2,14 +2,18 @@
   <div class="flex flex-col h-full">
     <div class="relative">
       <svg viewBox="0 0 220 128" class="w-full">
-        <path
+        <rect
           v-for="(segment, i) in segments"
           :key="'seg-' + i"
-          :d="segment.path"
+          :x="-PILL_LENGTH / 2"
+          :y="-PILL_WIDTH / 2"
+          :width="PILL_LENGTH"
+          :height="PILL_WIDTH"
+          :rx="PILL_WIDTH / 2"
           fill="none"
           :stroke="segment.color"
-          stroke-width="18"
-          stroke-linecap="round"
+          :stroke-width="PILL_WIDTH"
+          :transform="segment.transform"
         />
       </svg>
 
@@ -75,11 +79,12 @@ const COLOR_PAID = '#C9C7F2'
 const COLOR_DUE = '#5851D8'
 const COLOR_EMPTY = '#EEF0F4'
 
-const SEGMENTS = 14
+const SEGMENTS = 12
 const CX = 110
 const CY = 112
 const RADIUS = 86
-const GAP_DEG = 7
+const PILL_LENGTH = 16
+const PILL_WIDTH = 14
 
 const companyStore = useCompanyStore()
 
@@ -89,12 +94,6 @@ function polar(angleDeg, radius) {
     x: CX + radius * Math.cos(rad),
     y: CY + radius * Math.sin(rad),
   }
-}
-
-function arcPath(startDeg, endDeg) {
-  let start = polar(startDeg, RADIUS)
-  let end = polar(endDeg, RADIUS)
-  return `M ${start.x.toFixed(2)} ${start.y.toFixed(2)} A ${RADIUS} ${RADIUS} 0 0 1 ${end.x.toFixed(2)} ${end.y.toFixed(2)}`
 }
 
 const paidRatio = computed(() => {
@@ -112,12 +111,12 @@ const dueRatio = computed(() => {
 })
 
 const segments = computed(() => {
-  let paths = []
+  let pills = []
   let step = 180 / SEGMENTS
 
   for (let i = 0; i < SEGMENTS; i++) {
-    let start = 180 + i * step + GAP_DEG / 2
-    let end = 180 + (i + 1) * step - GAP_DEG / 2
+    let midAngle = 180 + (i + 0.5) * step
+    let center = polar(midAngle, RADIUS)
     let boundary = (i + 1) / SEGMENTS
     let color = COLOR_EMPTY
 
@@ -127,10 +126,13 @@ const segments = computed(() => {
       color = COLOR_DUE
     }
 
-    paths.push({ path: arcPath(start, end), color })
+    pills.push({
+      color,
+      transform: `translate(${center.x.toFixed(2)} ${center.y.toFixed(2)}) rotate(${midAngle + 90})`,
+    })
   }
 
-  return paths
+  return pills
 })
 
 const rows = computed(() => [

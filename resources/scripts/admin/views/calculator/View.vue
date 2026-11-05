@@ -244,8 +244,8 @@
           <table class="min-w-full table-fixed">
             <thead>
               <tr class="text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                <th class="pb-2 pr-3 w-64">{{ $t('calculator.category') }}</th>
-                <th class="pb-2 pr-3">{{ $t('calculator.role') }}</th>
+                <th class="pb-2 pr-3" style="width: 10.5rem">{{ $t('calculator.category') }}</th>
+                <th class="pb-2 pr-3" style="width: 15rem">{{ $t('calculator.role') }}</th>
                 <th class="pb-2 pr-3 w-24">{{ $t('calculator.rate_per_hour') }}</th>
                 <th class="pb-2 pr-3 w-16">{{ $t('calculator.hours') }}</th>
                 <th class="pb-2 pr-3 w-36 text-right">{{ $t('calculator.amount') }}</th>
@@ -317,8 +317,8 @@
           <table class="min-w-full table-fixed">
             <thead>
               <tr class="text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                <th class="pb-2 pr-3 w-64">{{ $t('calculator.category') }}</th>
-                <th class="pb-2 pr-3">{{ $t('calculator.expense') }}</th>
+                <th class="pb-2 pr-3" style="width: 10.5rem">{{ $t('calculator.category') }}</th>
+                <th class="pb-2 pr-3" style="width: 15rem">{{ $t('calculator.expense') }}</th>
                 <th class="pb-2 pr-3 w-24">{{ $t('calculator.cost') }}</th>
                 <th class="pb-2 pr-3 w-16">{{ $t('calculator.quantity') }}</th>
                 <th class="pb-2 pr-3 w-36 text-right">{{ $t('calculator.amount') }}</th>

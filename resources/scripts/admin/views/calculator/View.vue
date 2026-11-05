@@ -12,10 +12,10 @@
       ml-56
       bg-white
       xl:ml-64
-      w-88
       xl:block
       overflow-y-auto
     "
+    style="width: 18rem"
   >
     <div class="px-4 pt-8 pb-4">
       <div class="flex items-center justify-between mb-4">
@@ -79,7 +79,7 @@
   </div>
 
   <!-- right content -->
-  <BasePage v-if="isReady" class="xl:pl-96 xl:ml-8">
+  <BasePage v-if="isReady" class="xl:pl-[19rem] xl:ml-8">
     <BasePageHeader :title="pageTitle">
       <BaseBreadcrumb>
         <BaseBreadcrumbItem :title="$t('general.home')" to="dashboard" />
@@ -263,6 +263,7 @@
                     track-by="value"
                     :can-deselect="false"
                     :searchable="false"
+                    :placeholder="$t('calculator.select_category')"
                     class="w-full"
                     @update:model-value="onRoleCategoryChanged(item)"
                   />
@@ -347,6 +348,7 @@
                     track-by="value"
                     :can-deselect="false"
                     :searchable="false"
+                    :placeholder="$t('calculator.select_category')"
                     class="w-full"
                     @update:model-value="onCostCategoryChanged(item)"
                   />
@@ -524,17 +526,17 @@ function hasActiveUrl(id) {
   return route.params.id == id
 }
 
-function makeItem(category, type) {
+function makeItem(type) {
   return {
     __key: ++itemKeySeed,
     id: null,
-    category,
+    category: null,
     type,
     template_id: null,
     item_name: '',
     description: '',
-    unit_price: 0,
-    quantity: 0,
+    unit_price: '',
+    quantity: '',
   }
 }
 
@@ -545,22 +547,30 @@ function isEmptyItem(item) {
 function ensureTrailingEmptyRows() {
   const items = calculatorStore.currentCalculator.calculator_items
 
-  // never two consecutive empty rows
-  for (let i = items.length - 2; i >= 0; i--) {
-    if (isEmptyItem(items[i]) && isEmptyItem(items[i + 1])) {
-      items.splice(i, 1)
-    }
-  }
-
-  // keep one empty row in last position of each table
   ;[
     { type: 'role', category: 'production' },
     { type: 'cost', category: 'travel' },
   ].forEach(({ type, category }) => {
-    const last = [...items].reverse().find((item) => item.type === type)
+    const ofType = items.filter((item) => item.type === type)
+    const emptyIndexes = []
+
+    ofType.forEach((item, index) => {
+      if (isEmptyItem(item)) {
+        emptyIndexes.push(items.indexOf(item))
+      }
+    })
+
+    // keep only the last empty row of this type, remove the others
+    emptyIndexes
+      .slice(0, -1)
+      .sort((a, b) => b - a)
+      .forEach((index) => items.splice(index, 1))
+
+    // a new empty row appears in last position once the previous one is filled
+    const last = ofType[ofType.length - 1]
 
     if (!last || !isEmptyItem(last)) {
-      items.push(makeItem(category, type))
+      items.push(makeItem(type))
     }
   })
 }

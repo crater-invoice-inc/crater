@@ -76,7 +76,8 @@
     },
     "overview": "Aperçu du budget",
     "duplicate": "Dupliquer",
-    "duplicated_message": "Budget dupliqué avec succès"
+    "duplicated_message": "Budget dupliqué avec succès",
+    "select_category": "Choisir une catégorie"
   },
   "general": {
     "add_company": "Ajouter une entreprise",

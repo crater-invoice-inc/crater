@@ -337,7 +337,7 @@ return [
             'title' => 'navigation.items',
             'group' => 1,
             'link' => '/admin/items',
-            'icon' => 'TagIcon',
+            'icon' => 'ColorSwatchIcon',
             'name' => 'Items',
             'owner_only' => false,
             'ability' => 'view-item',

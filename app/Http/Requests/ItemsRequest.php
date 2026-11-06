@@ -36,6 +36,24 @@ class ItemsRequest extends FormRequest
             'description' => [
                 'nullable',
             ],
+            'deliverables' => [
+                'nullable',
+                'string',
+            ],
+            'delivery_delay' => [
+                'nullable',
+                'string',
+                'max:255',
+            ],
+            'terms' => [
+                'nullable',
+                'string',
+            ],
+            'default_quantity' => [
+                'nullable',
+                'numeric',
+                'min:0',
+            ],
         ];
     }
 }

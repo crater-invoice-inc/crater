@@ -45,6 +45,9 @@
         <BaseMultiselect
           v-model="selectedType"
           :options="reportTypes"
+          value-prop="value"
+          track-by="value"
+          label="label"
           :placeholder="$t('reports.sales.report_type')"
           class="mt-1"
           @update:modelValue="getInitialReport"
@@ -156,7 +159,16 @@ const dateRange = reactive([
 ])
 
 const selectedRange = ref(dateRange[2])
-const reportTypes = ref(['By Customer', 'By Item'])
+const reportTypes = ref([
+  {
+    label: t('reports.sales.by_customer'),
+    value: 'By Customer',
+  },
+  {
+    label: t('reports.sales.by_item'),
+    value: 'By Item',
+  },
+])
 const selectedType = ref('By Customer')
 let range = ref(new Date())
 let url = ref(null)

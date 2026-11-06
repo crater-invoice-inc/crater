@@ -13,9 +13,11 @@ class AddIsDefaultToCalculatorTemplatesTable extends Migration
      */
     public function up()
     {
-        Schema::table('calculator_templates', function (Blueprint $table) {
-            $table->boolean('is_default')->default(false)->after('unit_price');
-        });
+        if (Schema::hasTable('calculator_templates') && ! Schema::hasColumn('calculator_templates', 'is_default')) {
+            Schema::table('calculator_templates', function (Blueprint $table) {
+                $table->boolean('is_default')->default(false)->after('unit_price');
+            });
+        }
     }
 
     /**
@@ -25,8 +27,10 @@ class AddIsDefaultToCalculatorTemplatesTable extends Migration
      */
     public function down()
     {
-        Schema::table('calculator_templates', function (Blueprint $table) {
-            $table->dropColumn('is_default');
-        });
+        if (Schema::hasColumn('calculator_templates', 'is_default')) {
+            Schema::table('calculator_templates', function (Blueprint $table) {
+                $table->dropColumn('is_default');
+            });
+        }
     }
 }

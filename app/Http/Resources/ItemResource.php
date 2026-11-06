@@ -30,6 +30,7 @@ class ItemResource extends JsonResource
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
             'tax_per_item' => $this->tax_per_item,
+            'is_active' => $this->is_active,
             'formatted_created_at' => $this->formattedCreatedAt,
             'unit' => $this->when($this->unit()->exists(), function () {
                 return new UnitResource($this->unit);

@@ -35,6 +35,17 @@
           </BaseInputGroup>
 
           <BaseInputGroup
+            :label="$t('items.active_service')"
+            :content-loading="isFetchingInitialData"
+          >
+            <BaseSwitch
+              v-model="itemStore.currentItem.is_active"
+              :label-right="$t('items.active_service_help')"
+              class="mt-2"
+            />
+          </BaseInputGroup>
+
+          <BaseInputGroup
             :label="$t('items.description')"
             :content-loading="isFetchingInitialData"
             :error="

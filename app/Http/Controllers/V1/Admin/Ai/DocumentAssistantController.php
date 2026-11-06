@@ -157,14 +157,17 @@ class DocumentAssistantController extends Controller
     }
 
     /**
-     * Services used as model context.
+     * Services used as model context. Inactive services are never exposed:
+     * a selected-but-inactive id is treated as unknown.
      *
      * add_existing_services: the selected services only (every id must
      * belong to the company). Other actions: the whole catalog, capped.
      */
     private function resolveServices(DocumentAssistantRequest $request, int $companyId, string $action): Collection
     {
-        $query = Item::where('items.company_id', $companyId)->with('unit');
+        $query = Item::where('items.company_id', $companyId)
+            ->where('items.is_active', true)
+            ->with('unit');
 
         if ($action === DocumentAssistantRequest::ACTION_ADD_EXISTING_SERVICES) {
             $serviceIds = array_map('intval', (array) $request->input('service_ids'));
@@ -172,7 +175,7 @@ class DocumentAssistantController extends Controller
             $items = $query->whereIn('items.id', $serviceIds)->get();
 
             if ($items->count() !== count(array_unique($serviceIds))) {
-                abort(422, 'Un des services sélectionnés est introuvable.');
+                abort(422, 'Un des services sélectionnés est introuvable ou désactivé.');
             }
 
             return $items->map(function (Item $item) {

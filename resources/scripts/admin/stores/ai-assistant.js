@@ -256,7 +256,9 @@ export const useAiAssistantStore = (useWindow = false) => {
         this.loadingServices = true
 
         try {
-          const response = await itemStore.fetchItems({ limit: 'all' })
+          // Inactive services are never offered: the backend must only
+          // see the services the user explicitly activated.
+          const response = await itemStore.fetchItems({ limit: 'all', active: 1 })
 
           this.services = response.data.data
         } catch {

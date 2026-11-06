@@ -116,7 +116,7 @@
           v-else-if="!aiStore.services.length"
           class="text-sm text-gray-500"
         >
-          {{ $t('ai_assistant.empty_catalog') }}
+          {{ $t('ai_assistant.no_active_services') }}
         </p>
 
         <div
@@ -159,7 +159,7 @@
           type="button"
           variant="primary"
           class="mt-3 w-full"
-          :disabled="aiStore.selectedServicesCount === 0"
+          :disabled="!aiStore.services.length || aiStore.selectedServicesCount === 0"
           @click="aiStore.step = 'brief_input'"
         >
           {{ $t('ai_assistant.continue') }}

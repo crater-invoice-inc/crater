@@ -352,7 +352,13 @@
     "save_service": "Enregistrer le service",
     "update_service": "Mettre à jour le service",
     "new_service": "Nouveau service",
-    "edit_service": "Modifier le service"
+    "edit_service": "Modifier le service",
+    "service_status": "Statut",
+    "active": "Actif",
+    "inactive": "Inactif",
+    "all_statuses": "Tous les statuts",
+    "active_service": "Service actif",
+    "active_service_help": "Les services actifs sont proposés dans l’assistant IA."
   },
   "estimates": {
     "mark_as": "Marquer comme",
@@ -1716,6 +1722,7 @@
       "quantity": "Quantité",
       "price": "Prix",
       "total": "Total"
-    }
+    },
+    "no_active_services": "Aucun service actif disponible. Activez un service dans la section Services."
   }
 }

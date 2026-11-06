@@ -31,6 +31,7 @@ export const useItemStore = (useWindow = false) => {
         unit: null,
         taxes: [],
         tax_per_item: false,
+        is_active: false,
       },
     }),
     getters: {
@@ -49,6 +50,7 @@ export const useItemStore = (useWindow = false) => {
           unit_id: '',
           unit: null,
           taxes: [],
+          is_active: false,
         }
       },
       fetchItems(params) {

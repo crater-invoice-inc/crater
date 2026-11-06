@@ -352,7 +352,13 @@
     "save_service": "Save Service",
     "update_service": "Update Service",
     "new_service": "New Service",
-    "edit_service": "Edit Service"
+    "edit_service": "Edit Service",
+    "service_status": "Status",
+    "active": "Active",
+    "inactive": "Inactive",
+    "all_statuses": "All statuses",
+    "active_service": "Active service",
+    "active_service_help": "Active services are offered in the AI assistant."
   },
   "estimates": {
     "mark_as": "Mark as",
@@ -1716,6 +1722,7 @@
       "quantity": "Quantity",
       "price": "Price",
       "total": "Total"
-    }
+    },
+    "no_active_services": "No active service available. Enable a service in the Services section."
   }
 }

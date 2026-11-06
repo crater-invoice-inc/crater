@@ -32,7 +32,7 @@ beforeEach(function () {
     $this->services = Item::factory()->count(2)->sequence(
         ['name' => 'Production vidéo', 'price' => 106500, 'deliverables' => '- 10 clips finaux'],
         ['name' => 'Production photo', 'price' => 41500, 'deliverables' => '- 10 photos retouchées'],
-    )->create();
+    )->create(['is_active' => true]);
 
     $this->estimateA = Estimate::factory()->create();
     $this->estimateB = Estimate::factory()->create();
@@ -667,4 +667,56 @@ test('unknown service ids are rejected before calling the model', function () {
 
     // The model was never called for an invalid catalog request.
     Http::assertNothingSent();
+});
+
+test('inactive service ids are rejected before calling the model', function () {
+    Http::fake([
+        '*/chat/completions' => Http::response(['choices' => []]),
+    ]);
+
+    $inactiveService = Item::factory()->create([
+        'name' => 'Service désactivé',
+        'is_active' => false,
+    ]);
+
+    postJson('api/v1/ai/document-assistant', [
+        'document_type' => 'estimate',
+        'document_id' => $this->estimateA->id,
+        'action' => 'add_existing_services',
+        'service_ids' => [$inactiveService->id],
+        'brief' => 'Un service désactivé.',
+    ])->assertStatus(422);
+
+    Http::assertNothingSent();
+});
+
+test('inactive services never reach the model catalog context', function () {
+    Item::factory()->create([
+        'name' => 'Service désactivé secret',
+        'is_active' => false,
+    ]);
+
+    fakePerplexityProposal(proposalPayload($this->services));
+
+    postJson('api/v1/ai/document-assistant', [
+        'document_type' => 'estimate',
+        'document_id' => $this->estimateA->id,
+        'action' => 'create_custom_line',
+        'brief' => 'Un forfait sur mesure.',
+    ])->assertOk();
+
+    Http::assertSent(function (Request $request) {
+        if (! str_contains($request->url(), 'chat/completions')) {
+            return false;
+        }
+
+        // No message (system, history or context) may carry an inactive service.
+        foreach ($request->data()['messages'] as $message) {
+            if (str_contains($message['content'], 'Service désactivé secret')) {
+                return false;
+            }
+        }
+
+        return true;
+    });
 });

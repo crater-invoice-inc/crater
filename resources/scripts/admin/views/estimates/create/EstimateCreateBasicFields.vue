@@ -1,14 +1,28 @@
 <template>
-  <div class="md:grid-cols-12 grid-cols-1 md:gap-x-6 mt-6 mb-8 grid gap-y-5">
+  <div
+    class="
+      grid grid-cols-1 gap-y-5 gap-x-4
+      mt-6 mb-8
+      lg:grid-cols-12 lg:gap-x-6 lg:gap-y-0
+    "
+  >
     <BaseCustomerSelectPopup
       v-model="estimateStore.newEstimate.customer"
       :valid="v.customer_id"
       :content-loading="isLoading"
       type="estimate"
-      class="col-span-5 pr-0"
+      :show-shipping="false"
+      class="lg:col-span-4"
     />
 
-    <BaseInputGrid class="col-span-7">
+    <div
+      class="
+        grid grid-cols-1 gap-y-5 gap-x-4
+        sm:grid-cols-2
+        lg:col-span-8
+        lg:grid-cols-3 lg:self-start
+      "
+    >
       <BaseInputGroup
         :label="$t('reports.estimates.estimate_date')"
         :content-loading="isLoading"
@@ -75,7 +89,7 @@
         :is-edit="isEdit"
         :customer-currency="estimateStore.newEstimate.currency_id"
       />
-    </BaseInputGrid>
+    </div>
   </div>
 </template>
 

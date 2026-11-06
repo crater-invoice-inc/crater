@@ -348,6 +348,8 @@
     "default_quantity": "Quantité par défaut",
     "delivery_delay": "Délai de livraison",
     "terms": "Conditions / exclusions",
+    "deselect_service": "Désélectionner le service",
+    "remove_line": "Supprimer la ligne",
     "add_service": "Nouveau service",
     "save_service": "Enregistrer le service",
     "update_service": "Mettre à jour le service",

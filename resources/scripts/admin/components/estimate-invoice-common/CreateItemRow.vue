@@ -1,20 +1,22 @@
 <template>
   <tr class="box-border bg-white border border-gray-200 border-solid rounded-b">
     <td colspan="5" class="p-0 text-left align-top">
-      <table class="w-full">
+      <!-- Stacks vertically on mobile (cells become blocks) and keeps the
+           billing columns on md+ screens. -->
+      <table class="w-full block md:table">
         <colgroup>
-          <col style="width: 40%; min-width: 280px" />
+          <col style="width: 42%; min-width: 280px" />
           <col style="width: 10%; min-width: 120px" />
-          <col style="width: 15%; min-width: 120px" />
+          <col style="width: 14%; min-width: 120px" />
           <col
             v-if="store[storeProp].discount_per_item === 'YES'"
-            style="width: 15%; min-width: 160px"
+            style="width: 14%; min-width: 160px"
           />
-          <col style="width: 15%; min-width: 120px" />
+          <col style="width: 16%; min-width: 120px" />
         </colgroup>
         <tbody>
-          <tr>
-            <td class="px-5 py-4 text-left align-top">
+          <tr class="block md:table-row">
+            <td class="px-5 py-2 md:py-4 text-left align-top block md:table-cell">
               <div class="flex justify-start">
                 <div
                   class="flex items-center justify-center w-5 h-5 mt-2 mr-2 text-gray-300 cursor-move  handle"
@@ -36,32 +38,72 @@
                 />
               </div>
             </td>
-            <td class="px-5 py-4 text-right align-top">
-              <div class="flex flex-col items-end">
-                <BaseInput
-                  v-model="quantity"
-                  :invalid="v$.quantity.$error"
-                  :content-loading="loading"
-                  type="number"
-                  small
-                  min="0"
-                  step="any"
-                  @change="syncItemToStore()"
-                  @input="v$.quantity.$touch()"
-                />
+            <td class="px-5 py-2 md:py-4 text-left md:text-right align-top block md:table-cell">
+              <div class="grid grid-cols-2 gap-2 md:flex md:flex-col md:items-end">
+                <div>
+                  <span
+                    class="
+                      block
+                      mb-1
+                      text-xs
+                      font-medium
+                      text-left text-gray-500
+                      md:hidden
+                    "
+                  >
+                    {{ $t('invoices.item.quantity') }}
+                  </span>
+                  <BaseInput
+                    v-model="quantity"
+                    :invalid="v$.quantity.$error"
+                    :content-loading="loading"
+                    type="number"
+                    small
+                    min="0"
+                    step="any"
+                    @change="syncItemToStore()"
+                    @input="v$.quantity.$touch()"
+                  />
+                </div>
 
-                <BaseInput
-                  v-model="unitName"
-                  :content-loading="loading"
-                  type="text"
-                  small
-                  class="mt-1"
-                  :placeholder="$t('items.unit')"
-                  @change="syncItemToStore()"
-                />
+                <div>
+                  <span
+                    class="
+                      block
+                      mb-1
+                      text-xs
+                      font-medium
+                      text-left text-gray-500
+                      md:hidden
+                    "
+                  >
+                    {{ $t('items.unit') }}
+                  </span>
+                  <BaseInput
+                    v-model="unitName"
+                    :content-loading="loading"
+                    type="text"
+                    small
+                    class="md:mt-1"
+                    :placeholder="$t('items.unit')"
+                    @change="syncItemToStore()"
+                  />
+                </div>
               </div>
             </td>
-            <td class="px-5 py-4 text-left align-top">
+            <td class="px-5 py-2 md:py-4 text-left align-top block md:table-cell">
+              <span
+                class="
+                  block
+                  mb-1
+                  text-xs
+                  font-medium
+                  text-left text-gray-500
+                  md:hidden
+                "
+              >
+                {{ $t('invoices.item.price') }}
+              </span>
               <div class="flex flex-col">
                 <div class="flex-auto flex-fill bd-highlight">
                   <div class="relative w-full">
@@ -78,8 +120,20 @@
             </td>
             <td
               v-if="store[storeProp].discount_per_item === 'YES'"
-              class="px-5 py-4 text-left align-top"
+              class="px-5 py-2 md:py-4 text-left align-top block md:table-cell"
             >
+              <span
+                class="
+                  block
+                  mb-1
+                  text-xs
+                  font-medium
+                  text-left text-gray-500
+                  md:hidden
+                "
+              >
+                {{ $t('invoices.item.discount') }}
+              </span>
               <div class="flex flex-col">
                 <div class="flex" style="width: 120px" role="group">
                   <BaseInput
@@ -127,8 +181,28 @@
                 </div>
               </div>
             </td>
-            <td class="px-5 py-4 text-right align-top">
-              <div class="flex items-center justify-end text-sm">
+            <td class="px-5 py-2 md:py-4 text-right align-top block md:table-cell">
+              <span
+                class="
+                  block
+                  mb-1
+                  text-xs
+                  font-medium
+                  text-left text-gray-500
+                  md:hidden
+                "
+              >
+                {{ $t('invoices.item.amount') }}
+              </span>
+              <div
+                class="
+                  flex
+                  items-center
+                  justify-between
+                  md:justify-end
+                  text-sm
+                "
+              >
                 <span>
                   <BaseContentPlaceholders v-if="loading">
                     <BaseContentPlaceholdersText :lines="1" class="w-16 h-5" />
@@ -140,20 +214,44 @@
                     :currency="selectedCurrency"
                   />
                 </span>
-                <div class="flex items-center justify-center w-6 h-10 mx-2">
-                  <BaseIcon
-                    v-if="showRemoveButton"
-                    class="h-5 text-gray-700 cursor-pointer"
-                    name="TrashIcon"
-                    @click="store.removeItem(index)"
-                  />
-                </div>
+                <!-- Deletes the whole line: distinct from the small cross
+                     that only unlinks the selected service. -->
+                <button
+                  v-if="showRemoveButton"
+                  v-tooltip="{ content: $t('items.remove_line') }"
+                  type="button"
+                  class="
+                    flex
+                    items-center
+                    justify-center
+                    w-8
+                    h-8
+                    ml-2
+                    text-gray-700
+                    rounded-md
+                    cursor-pointer
+                    hover:text-red-500
+                    focus:outline-none
+                    focus:ring-2
+                    focus:ring-primary-400
+                  "
+                  :aria-label="$t('items.remove_line')"
+                  @click="store.removeItem(index)"
+                >
+                  <BaseIcon name="TrashIcon" class="h-5" />
+                </button>
               </div>
             </td>
           </tr>
-          <tr v-if="store[storeProp].tax_per_item === 'YES'">
-            <td class="px-5 py-4 text-left align-top" />
-            <td colspan="4" class="px-5 py-4 text-left align-top">
+          <tr
+            v-if="store[storeProp].tax_per_item === 'YES'"
+            class="block md:table-row"
+          >
+            <td class="px-5 py-2 md:py-4 text-left align-top block md:table-cell" />
+            <td
+              colspan="4"
+              class="px-5 py-2 md:py-4 text-left align-top block md:table-cell"
+            >
               <BaseContentPlaceholders v-if="loading">
                 <BaseContentPlaceholdersText
                   :lines="1"

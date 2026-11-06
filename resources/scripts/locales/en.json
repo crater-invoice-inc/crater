@@ -348,6 +348,8 @@
     "default_quantity": "Default Quantity",
     "delivery_delay": "Delivery Time",
     "terms": "Terms / Exclusions",
+    "deselect_service": "Deselect service",
+    "remove_line": "Remove line",
     "add_service": "New Service",
     "save_service": "Save Service",
     "update_service": "Update Service",

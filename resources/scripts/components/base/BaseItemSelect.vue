@@ -1,20 +1,39 @@
 <template>
   <div class="flex-1 text-sm">
     <!-- Selected Item Field  -->
-    <div v-if="item.item_id" class="relative flex items-center w-full">
+    <div v-if="item.item_id" class="flex items-center w-full gap-2">
       <BaseInput
         v-model="name"
         :invalid="invalid"
         :content-loading="contentLoading"
-        class="w-full pr-7"
+        class="w-full"
       />
 
-      <span
-        class="absolute text-gray-400 cursor-pointer top-[9px] right-[10px]"
+      <!-- Dedicated zone next to the field: unlinks the service without
+           touching the row (deletion lives in the amount column). -->
+      <button
+        v-tooltip="{ content: $t('items.deselect_service') }"
+        type="button"
+        class="
+          flex
+          items-center
+          justify-center
+          w-7
+          h-7
+          shrink-0
+          text-gray-400
+          rounded-md
+          hover:text-gray-600
+          hover:bg-gray-100
+          focus:outline-none
+          focus:ring-2
+          focus:ring-primary-400
+        "
+        :aria-label="$t('items.deselect_service')"
         @click="deselectItem(index)"
       >
-        <BaseIcon name="XCircleIcon" />
-      </span>
+        <BaseIcon name="XCircleIcon" class="w-5 h-5" />
+      </button>
     </div>
 
     <!-- Select Item Field -->
@@ -52,64 +71,86 @@
       </template>
     </BaseMultiselect>
 
-    <!-- Item Description  -->
-    <div class="w-full pt-1 text-xs text-light">
-      <BaseTextarea
-        v-model="description"
-        :content-loading="contentLoading"
-        :autosize="true"
-        class="text-xs"
-        :borderless="true"
-        :placeholder="$t('estimates.item.type_item_description')"
-        :invalid="invalidDescription"
-      />
-      <div v-if="invalidDescription">
-        <span class="text-red-600">
-          {{ $tc('validation.description_maxlength') }}
-        </span>
+    <div class="mt-3 space-y-3">
+      <!-- Item Description  -->
+      <div>
+        <label
+          class="block mb-1 text-xs font-medium text-gray-600"
+          :for="`${fieldIdPrefix}-description`"
+        >
+          {{ $t('items.description') }}
+        </label>
+        <BaseTextarea
+          :id="`${fieldIdPrefix}-description`"
+          v-model="description"
+          :content-loading="contentLoading"
+          :autosize="true"
+          :placeholder="$t('estimates.item.type_item_description')"
+          :invalid="invalidDescription"
+        />
+        <div v-if="invalidDescription">
+          <span class="text-red-600">
+            {{ $tc('validation.description_maxlength') }}
+          </span>
+        </div>
       </div>
-    </div>
 
-    <!-- Service Deliverables -->
-    <div class="w-full pt-1 text-xs text-light">
-      <BaseTextarea
-        v-model="deliverables"
-        :content-loading="contentLoading"
-        :autosize="true"
-        class="text-xs"
-        :borderless="true"
-        :placeholder="$t('items.deliverables')"
-      />
-    </div>
-
-    <!-- Service Delivery Delay -->
-    <div class="w-full pt-1 text-xs text-light">
-      <BaseTextarea
-        v-model="deliveryDelay"
-        :content-loading="contentLoading"
-        :autosize="true"
-        class="text-xs"
-        :borderless="true"
-        :placeholder="$t('items.delivery_delay')"
-        :invalid="invalidDeliveryDelay"
-      />
-      <div v-if="invalidDeliveryDelay">
-        <span class="text-red-600">
-          {{ $t('validation.delivery_delay_maxlength') }}
-        </span>
+      <!-- Service Deliverables -->
+      <div>
+        <label
+          class="block mb-1 text-xs font-medium text-gray-600"
+          :for="`${fieldIdPrefix}-deliverables`"
+        >
+          {{ $t('items.deliverables') }}
+        </label>
+        <BaseTextarea
+          :id="`${fieldIdPrefix}-deliverables`"
+          v-model="deliverables"
+          :content-loading="contentLoading"
+          :autosize="true"
+          :placeholder="$t('items.deliverables')"
+        />
       </div>
-    </div>
 
-    <!-- Service Terms / Exclusions -->
-    <div class="w-full pt-1 text-xs text-light">
-      <BaseTextarea
-        v-model="terms"
-        :content-loading="contentLoading"
-        :autosize="true"
-        class="text-xs"
-        :borderless="true"
-        :placeholder="$t('items.terms')"
-      />
+      <!-- Service Delivery Delay -->
+      <div>
+        <label
+          class="block mb-1 text-xs font-medium text-gray-600"
+          :for="`${fieldIdPrefix}-delivery-delay`"
+        >
+          {{ $t('items.delivery_delay') }}
+        </label>
+        <BaseTextarea
+          :id="`${fieldIdPrefix}-delivery-delay`"
+          v-model="deliveryDelay"
+          :content-loading="contentLoading"
+          :autosize="true"
+          :placeholder="$t('items.delivery_delay')"
+          :invalid="invalidDeliveryDelay"
+        />
+        <div v-if="invalidDeliveryDelay">
+          <span class="text-red-600">
+            {{ $t('validation.delivery_delay_maxlength') }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Service Terms / Exclusions -->
+      <div>
+        <label
+          class="block mb-1 text-xs font-medium text-gray-600"
+          :for="`${fieldIdPrefix}-terms`"
+        >
+          {{ $t('items.terms') }}
+        </label>
+        <BaseTextarea
+          :id="`${fieldIdPrefix}-terms`"
+          v-model="terms"
+          :content-loading="contentLoading"
+          :autosize="true"
+          :placeholder="$t('items.terms')"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -190,6 +231,9 @@ const itemSelect = ref(null)
 const loading = ref(false)
 let itemData = reactive({ ...props.item })
 Object.assign(itemData, props.item)
+
+// Per-instance prefix wiring each permanent label to its textarea.
+const fieldIdPrefix = `item-select-${Math.random().toString(36).slice(2, 10)}`
 
 const taxAmount = computed(() => {
   return 0

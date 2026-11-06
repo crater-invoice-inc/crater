@@ -12,6 +12,7 @@
     v-bind="$attrs"
     ref="textarea"
     :value="modelValue"
+    :rows="computedRows"
     :class="[defaultInputClass, inputBorderClass]"
     :disabled="disabled"
     @input="onInput"
@@ -19,7 +20,8 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from 'vue'
+import { computed, nextTick, onMounted, ref, watch } from 'vue'
+import { useEventListener, useResizeObserver } from '@vueuse/core'
 
 const props = defineProps({
   contentLoading: {
@@ -59,6 +61,16 @@ const props = defineProps({
 
 const textarea = ref(null)
 
+// In autosize mode the height is fully driven by the content, so the
+// textarea starts at a single compact line and grows/shrinks from there.
+const computedRows = computed(() => {
+  if (props.autosize) {
+    return 1
+  }
+
+  return props.row
+})
+
 const inputBorderClass = computed(() => {
   if (props.invalid && !props.borderless) {
     return 'border-red-400 ring-red-400 focus:ring-red-400 focus:border-red-400'
@@ -82,24 +94,63 @@ const loadingPlaceholderSize = computed(() => {
 
 const emit = defineEmits(['update:modelValue'])
 
+function resize() {
+  const el = textarea.value
+
+  if (!el || !props.autosize) {
+    return
+  }
+
+  // Resetting to auto first lets scrollHeight shrink back when text is
+  // removed; scrollHeight never reports less than the content box.
+  el.style.height = 'auto'
+  el.style.height = `${el.scrollHeight}px`
+}
+
 function onInput(e) {
   emit('update:modelValue', e.target.value)
 
   if (props.autosize) {
-    e.target.style.height = 'auto'
-    e.target.style.height = `${e.target.scrollHeight}px`
+    resize()
   }
 }
 
+// Programmatic updates (pre-filled service values, AI proposals, document
+// hydration) bypass the input event, so recompute once the DOM has updated.
+watch(
+  () => props.modelValue,
+  () => {
+    if (props.autosize) {
+      nextTick(resize)
+    }
+  }
+)
+
+// Keep the whole text visible when the available width changes (window
+// resize, responsive layout, side panels). Only width changes trigger a
+// recompute so the height we set ourselves does not loop the observer.
+let observedWidth = 0
+
+useResizeObserver(textarea, (entries) => {
+  if (!props.autosize) {
+    return
+  }
+
+  const width = entries[0].contentRect.width
+
+  if (width && width !== observedWidth) {
+    observedWidth = width
+    resize()
+  }
+})
+
+useEventListener(window, 'resize', resize)
+
 onMounted(() => {
   if (textarea.value && props.autosize) {
-    textarea.value.style.height = textarea.value.scrollHeight + 'px'
-
-    if (textarea.value.style.overflow && textarea.value.style.overflow.y) {
-      textarea.value.style.overflow.y = 'hidden'
-    }
-
+    textarea.value.style.overflowY = 'hidden'
     textarea.value.style.resize = 'none'
+    resize()
   }
 })
 </script>

@@ -84,7 +84,7 @@ class UnitsController extends Controller
         $this->authorize('delete', $unit);
 
         if ($unit->items()->exists()) {
-            return respondJson('items_attached', 'Items Attached');
+            return respondJson('items_attached', 'This unit is used by one or more services and cannot be deleted.');
         }
 
         $unit->delete();

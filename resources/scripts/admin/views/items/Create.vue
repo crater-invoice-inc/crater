@@ -3,7 +3,7 @@
     <BasePageHeader :title="pageTitle">
       <BaseBreadcrumb>
         <BaseBreadcrumbItem :title="$t('general.home')" to="dashboard" />
-        <BaseBreadcrumbItem :title="$tc('items.item', 2)" to="/admin/items" />
+        <BaseBreadcrumbItem :title="$t('items.services')" to="/admin/items" />
         <BaseBreadcrumbItem :title="pageTitle" to="#" active />
       </BaseBreadcrumb>
     </BasePageHeader>
@@ -18,7 +18,7 @@
       <BaseCard class="w-full">
         <BaseInputGrid layout="one-column">
           <BaseInputGroup
-            :label="$t('items.name')"
+            :label="$t('items.service_name')"
             :content-loading="isFetchingInitialData"
             required
             :error="
@@ -35,12 +35,31 @@
           </BaseInputGroup>
 
           <BaseInputGroup
-            :label="$t('items.price')"
+            :label="$t('items.description')"
+            :content-loading="isFetchingInitialData"
+            :error="
+              v$.currentItem.description.$error &&
+              v$.currentItem.description.$errors[0].$message
+            "
+          >
+            <BaseTextarea
+              v-model="itemStore.currentItem.description"
+              :content-loading="isFetchingInitialData"
+              name="description"
+              rows="2"
+              @input="v$.currentItem.description.$touch()"
+            />
+          </BaseInputGroup>
+
+          <BaseInputGroup
+            :label="$t('items.deliverables')"
             :content-loading="isFetchingInitialData"
           >
-            <BaseMoney
-              v-model="price"
+            <BaseTextarea
+              v-model="itemStore.currentItem.deliverables"
               :content-loading="isFetchingInitialData"
+              name="deliverables"
+              rows="2"
             />
           </BaseInputGroup>
 
@@ -71,6 +90,16 @@
           </BaseInputGroup>
 
           <BaseInputGroup
+            :label="$t('items.unit_price')"
+            :content-loading="isFetchingInitialData"
+          >
+            <BaseMoney
+              v-model="price"
+              :content-loading="isFetchingInitialData"
+            />
+          </BaseInputGroup>
+
+          <BaseInputGroup
             v-if="isTaxPerItem"
             :label="$t('items.taxes')"
             :content-loading="isFetchingInitialData"
@@ -92,20 +121,50 @@
           </BaseInputGroup>
 
           <BaseInputGroup
-            :label="$t('items.description')"
+            :label="$t('items.default_quantity')"
             :content-loading="isFetchingInitialData"
             :error="
-              v$.currentItem.description.$error &&
-              v$.currentItem.description.$errors[0].$message
+              v$.currentItem.default_quantity.$error &&
+              v$.currentItem.default_quantity.$errors[0].$message
+            "
+          >
+            <BaseInput
+              v-model="defaultQuantity"
+              type="number"
+              min="0"
+              step="any"
+              :content-loading="isFetchingInitialData"
+              :invalid="v$.currentItem.default_quantity.$error"
+              @input="v$.currentItem.default_quantity.$touch()"
+            />
+          </BaseInputGroup>
+
+          <BaseInputGroup
+            :label="$t('items.delivery_delay')"
+            :content-loading="isFetchingInitialData"
+            :error="
+              v$.currentItem.delivery_delay.$error &&
+              v$.currentItem.delivery_delay.$errors[0].$message
             "
           >
             <BaseTextarea
-              v-model="itemStore.currentItem.description"
+              v-model="itemStore.currentItem.delivery_delay"
               :content-loading="isFetchingInitialData"
-              name="description"
-              :row="2"
+              name="delivery_delay"
               rows="2"
-              @input="v$.currentItem.description.$touch()"
+              @input="v$.currentItem.delivery_delay.$touch()"
+            />
+          </BaseInputGroup>
+
+          <BaseInputGroup
+            :label="$t('items.terms')"
+            :content-loading="isFetchingInitialData"
+          >
+            <BaseTextarea
+              v-model="itemStore.currentItem.terms"
+              :content-loading="isFetchingInitialData"
+              name="terms"
+              rows="2"
             />
           </BaseInputGroup>
 
@@ -123,7 +182,7 @@
                 />
               </template>
 
-              {{ isEdit ? $t('items.update_item') : $t('items.save_item') }}
+              {{ isEdit ? $t('items.update_service') : $t('items.save_service') }}
             </BaseButton>
           </div>
         </BaseInputGrid>
@@ -177,6 +236,14 @@ const price = computed({
   },
 })
 
+const defaultQuantity = computed({
+  get: () => itemStore.currentItem.default_quantity,
+  set: (value) => {
+    itemStore.currentItem.default_quantity =
+      value === '' || value === null ? null : Number(value)
+  },
+})
+
 const taxes = computed({
   get: () =>
     itemStore?.currentItem?.taxes?.map((tax) => {
@@ -196,7 +263,7 @@ const taxes = computed({
 const isEdit = computed(() => route.name === 'items.edit')
 
 const pageTitle = computed(() =>
-  isEdit.value ? t('items.edit_item') : t('items.new_item')
+  isEdit.value ? t('items.edit_service') : t('items.new_service')
 )
 
 const getTaxTypes = computed(() => {
@@ -226,6 +293,23 @@ const rules = computed(() => {
         maxLength: helpers.withMessage(
           t('validation.description_maxlength'),
           maxLength(65000)
+        ),
+      },
+
+      delivery_delay: {
+        maxLength: helpers.withMessage(
+          t('validation.delivery_delay_maxlength'),
+          maxLength(255)
+        ),
+      },
+
+      default_quantity: {
+        positiveNumber: helpers.withMessage(
+          t('validation.numbers_only'),
+          (value) =>
+            value === null ||
+            value === '' ||
+            (!isNaN(Number(value)) && Number(value) >= 0)
         ),
       },
     },

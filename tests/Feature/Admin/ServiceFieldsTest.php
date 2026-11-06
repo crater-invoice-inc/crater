@@ -27,6 +27,7 @@ test('create item with service fields', function () {
         'deliverables' => 'Full shooting day and edited rushes',
         'delivery_delay' => '2 weeks',
         'terms' => '50% deposit upfront',
+        'default_quantity' => 2.5,
     ]);
 
     $response = postJson('api/v1/items', $item)
@@ -37,12 +38,14 @@ test('create item with service fields', function () {
         'deliverables' => 'Full shooting day and edited rushes',
         'delivery_delay' => '2 weeks',
         'terms' => '50% deposit upfront',
+        'default_quantity' => 2.5,
     ]);
 
     $data = $response->getData()->data;
     expect($data->deliverables)->toBe('Full shooting day and edited rushes')
         ->and($data->delivery_delay)->toBe('2 weeks')
-        ->and($data->terms)->toBe('50% deposit upfront');
+        ->and($data->terms)->toBe('50% deposit upfront')
+        ->and($data->default_quantity)->toEqual(2.5);
 });
 
 test('update item with service fields', function () {
@@ -52,6 +55,7 @@ test('update item with service fields', function () {
         'deliverables' => 'Updated deliverables',
         'delivery_delay' => '3 days',
         'terms' => 'Updated terms',
+        'default_quantity' => 4,
     ]);
 
     putJson("api/v1/items/{$item->id}", $payload)
@@ -62,6 +66,7 @@ test('update item with service fields', function () {
         'deliverables' => 'Updated deliverables',
         'delivery_delay' => '3 days',
         'terms' => 'Updated terms',
+        'default_quantity' => 4,
     ]);
 });
 

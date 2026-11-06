@@ -22,7 +22,11 @@ export const useItemStore = (useWindow = false) => {
       currentItem: {
         name: '',
         description: '',
+        deliverables: '',
+        delivery_delay: '',
+        terms: '',
         price: 0,
+        default_quantity: null,
         unit_id: '',
         unit: null,
         taxes: [],
@@ -37,7 +41,11 @@ export const useItemStore = (useWindow = false) => {
         this.currentItem = {
           name: '',
           description: '',
+          deliverables: '',
+          delivery_delay: '',
+          terms: '',
           price: 0,
+          default_quantity: null,
           unit_id: '',
           unit: null,
           taxes: [],
@@ -67,6 +75,14 @@ export const useItemStore = (useWindow = false) => {
             .then((response) => {
               if (response.data) {
                 Object.assign(this.currentItem, response.data.data)
+
+                // Keep the form inputs usable when a service has no service
+                // fields set yet (API returns null for those columns).
+                ;['deliverables', 'delivery_delay', 'terms'].forEach((field) => {
+                  this.currentItem[field] = this.currentItem[field] ?? ''
+                })
+                this.currentItem.default_quantity =
+                  this.currentItem.default_quantity ?? null
               }
               resolve(response)
             })

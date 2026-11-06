@@ -49,6 +49,11 @@ class ItemsRequest extends FormRequest
                 'nullable',
                 'string',
             ],
+            'default_quantity' => [
+                'nullable',
+                'numeric',
+                'min:0',
+            ],
         ];
     }
 }

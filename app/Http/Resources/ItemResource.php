@@ -21,6 +21,7 @@ class ItemResource extends JsonResource
             'deliverables' => $this->deliverables,
             'delivery_delay' => $this->delivery_delay,
             'terms' => $this->terms,
+            'default_quantity' => $this->default_quantity,
             'price' => $this->price,
             'unit_id' => $this->unit_id,
             'company_id' => $this->company_id,

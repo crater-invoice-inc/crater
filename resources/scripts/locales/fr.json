@@ -1,5 +1,6 @@
 {
   "navigation": {
+    "calculator": "Calculateur",
     "dashboard": "Tableau de bord",
     "customers": "Clients",
     "items": "Articles",
@@ -14,6 +15,69 @@
     "users": "Utilisateurs",
     "modules": "Modules",
     "profile": "Profil"
+  },
+  "calculator": {
+    "title": "Calculateur",
+    "name": "Nom du budget",
+    "customer": "Client",
+    "notes": "Notes",
+    "budget_total": "Total du budget",
+    "new_calculator": "Nouveau budget",
+    "edit_calculator": "Modifier le budget",
+    "save_calculator": "Enregistrer le budget",
+    "update_calculator": "Mettre à jour le budget",
+    "default_name": "Nouveau budget",
+    "no_calculators": "Aucun budget",
+    "list_of_calculators": "Créez vos budgets de mandat pour estimer vos coûts et préparer vos devis",
+    "items_count": "Lignes",
+    "total": "Coût total",
+    "added_on": "Ajouté le",
+    "confirm_delete": "Voulez-vous vraiment supprimer ce budget ?",
+    "created_message": "Budget enregistré avec succès",
+    "updated_message": "Budget mis à jour avec succès",
+    "deleted_message": "Budget supprimé avec succès",
+    "roles_table": "Production",
+    "expenses_table": "Frais et dépenses",
+    "category": "Catégorie",
+    "role": "Rôle",
+    "rate_per_hour": "$/h",
+    "hours": "Heures",
+    "amount": "Montant",
+    "expense": "Dépense",
+    "cost": "Coûts",
+    "quantity": "Quantité",
+    "add_role": "Ajouter un rôle",
+    "add_task": "Ajouter une tâche",
+    "add_cost": "Ajouter une dépense",
+    "add_expense": "Ajouter une ligne",
+    "select_role": "Choisir un rôle",
+    "select_expense": "Choisir une dépense",
+    "no_rows": "Aucune ligne",
+    "categories": {
+      "pre_production": "Pré-production",
+      "production": "Production",
+      "post_production": "Post-production",
+      "travel": "Frais de déplacement",
+      "production_expenses": "Dépenses de production"
+    },
+    "templates": {
+      "name": "Nom",
+      "category": "Catégorie",
+      "default_price": "Prix par défaut",
+      "add_new": "Nouveau rôle / dépense",
+      "edit": "Modifier le rôle / la dépense",
+      "select_category": "Choisir une catégorie",
+      "none_in_category": "Aucune entrée prédéfinie dans cette catégorie.",
+      "confirm_delete": "Voulez-vous vraiment supprimer cette entrée ?",
+      "created_message": "Entrée enregistrée avec succès",
+      "updated_message": "Entrée mise à jour avec succès",
+      "deleted_message": "Entrée supprimée avec succès",
+      "is_default": "Par défaut"
+    },
+    "overview": "Aperçu du budget",
+    "duplicate": "Dupliquer",
+    "duplicated_message": "Budget dupliqué avec succès",
+    "select_category": "Choisir une catégorie"
   },
   "general": {
     "add_company": "Ajouter une entreprise",
@@ -841,6 +905,7 @@
       "custom_fields": "Champs personnalisés",
       "payment_modes": "Modes de paiement",
       "notes": "Notes de bas de page",
+      "calculator": "Calculateur",
       "exchange_rate": "Taux de change",
       "address_information": "Information d'adresse",
       "modules": "Modules"
@@ -1351,6 +1416,10 @@
       "state_placeholder": "Exemple: CA",
       "zip_placeholder": "Exemple: 90024",
       "invalid_address": "Veuillez fournir une adresse valide."
+    },
+    "calculator": {
+      "title": "Calculateur",
+      "description": "Gérez les rôles et dépenses prédéfinis utilisés par le calculateur de budget."
     }
   },
   "wizard": {

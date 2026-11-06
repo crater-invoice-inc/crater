@@ -226,6 +226,16 @@ return [
             'model' => CustomField::class
         ],
         [
+            'title' => 'settings.menu_title.calculator',
+            'group' => '',
+            'name' => 'Calculator',
+            'link' => '/admin/settings/calculator',
+            'icon' => 'CalculatorIcon',
+            'owner_only' => false,
+            'ability' => 'view-calculator',
+            'model' => Crater\Models\Calculator::class
+        ],
+        [
             'title' => 'settings.menu_title.notes',
             'group' => '',
             'name' => 'Notes',
@@ -332,6 +342,16 @@ return [
             'owner_only' => false,
             'ability' => 'view-item',
             'model' => Item::class
+        ],
+        [
+            'title' => 'navigation.calculator',
+            'group' => 1,
+            'link' => '/admin/calculators',
+            'icon' => 'CalculatorIcon',
+            'name' => 'Calculator',
+            'owner_only' => false,
+            'ability' => 'view-calculator',
+            'model' => Crater\Models\Calculator::class
         ],
         [
             'title' => 'navigation.estimates',

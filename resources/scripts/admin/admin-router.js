@@ -62,6 +62,8 @@ const ModulesSetting = () =>
 // Items
 const ItemsIndex = () => import('@/scripts/admin/views/items/Index.vue')
 const ItemCreate = () => import('@/scripts/admin/views/items/Create.vue')
+const CalculatorView = () => import('@/scripts/admin/views/calculator/View.vue')
+const CalculatorSetting = () => import('@/scripts/admin/views/settings/CalculatorSetting.vue')
 
 // Expenses
 const ExpensesIndex = () => import('@/scripts/admin/views/expenses/Index.vue')
@@ -288,6 +290,12 @@ export default [
             component: TaxTypes,
           },
           {
+            path: 'calculator',
+            name: 'settings.calculator',
+            meta: { ability: abilities.VIEW_CALCULATOR },
+            component: CalculatorSetting,
+          },
+          {
             path: 'notes',
             name: 'notes',
             meta: { ability: abilities.VIEW_ALL_NOTES },
@@ -355,6 +363,20 @@ export default [
         name: 'items.edit',
         meta: { ability: abilities.EDIT_ITEM },
         component: ItemCreate,
+      },
+
+      // Calculators
+      {
+        path: 'calculators',
+        name: 'calculators.index',
+        meta: { ability: abilities.VIEW_CALCULATOR },
+        component: CalculatorView,
+      },
+      {
+        path: 'calculators/:id/view',
+        name: 'calculators.view',
+        meta: { ability: abilities.VIEW_CALCULATOR },
+        component: CalculatorView,
       },
 
       // Expenses

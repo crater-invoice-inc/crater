@@ -1,5 +1,6 @@
 {
   "navigation": {
+    "calculator": "Calculator",
     "dashboard": "Dashboard",
     "customers": "Customers",
     "items": "Items",
@@ -14,6 +15,69 @@
     "users": "Users",
     "modules": "Modules",
     "profile": "Profile"
+  },
+  "calculator": {
+    "title": "Calculator",
+    "name": "Budget name",
+    "customer": "Customer",
+    "notes": "Notes",
+    "budget_total": "Budget total",
+    "new_calculator": "New budget",
+    "edit_calculator": "Edit budget",
+    "save_calculator": "Save budget",
+    "update_calculator": "Update budget",
+    "default_name": "New budget",
+    "no_calculators": "No budget yet",
+    "list_of_calculators": "Create your mandate budgets to estimate costs and prepare quotes",
+    "items_count": "Lines",
+    "total": "Total cost",
+    "added_on": "Added on",
+    "confirm_delete": "Are you sure you want to delete this budget?",
+    "created_message": "Budget saved successfully",
+    "updated_message": "Budget updated successfully",
+    "deleted_message": "Budget deleted successfully",
+    "roles_table": "Production",
+    "expenses_table": "Travel & expenses",
+    "category": "Category",
+    "role": "Role",
+    "rate_per_hour": "$/h",
+    "hours": "Hours",
+    "amount": "Amount",
+    "expense": "Expense",
+    "cost": "Cost",
+    "quantity": "Quantity",
+    "add_role": "Add role",
+    "add_task": "Add task",
+    "add_cost": "Add expense",
+    "add_expense": "Add line",
+    "select_role": "Select a role",
+    "select_expense": "Select an expense",
+    "no_rows": "No lines yet",
+    "categories": {
+      "pre_production": "Pre-production",
+      "production": "Production",
+      "post_production": "Post-production",
+      "travel": "Travel expenses",
+      "production_expenses": "Production expenses"
+    },
+    "templates": {
+      "name": "Name",
+      "category": "Category",
+      "default_price": "Default price",
+      "add_new": "New role / expense",
+      "edit": "Edit role / expense",
+      "select_category": "Select a category",
+      "none_in_category": "No predefined entries in this category yet.",
+      "confirm_delete": "Are you sure you want to delete this entry?",
+      "created_message": "Entry saved successfully",
+      "updated_message": "Entry updated successfully",
+      "deleted_message": "Entry deleted successfully",
+      "is_default": "Set as default"
+    },
+    "overview": "Budget overview",
+    "duplicate": "Duplicate",
+    "duplicated_message": "Budget duplicated successfully",
+    "select_category": "Select a category"
   },
   "general": {
     "add_company": "Add Company",
@@ -840,6 +904,7 @@
       "file_disk": "File Disk",
       "custom_fields": "Custom Fields",
       "payment_modes": "Payment Modes",
+      "calculator": "Calculator",
       "notes": "Notes",
       "exchange_rate": "Exchange Rate",
       "address_information": "Address Information",
@@ -1351,6 +1416,10 @@
       "state_placeholder": "Example: CA",
       "zip_placeholder": "Example: 90024",
       "invalid_address": "Please provide valid address details."
+    },
+    "calculator": {
+      "title": "Calculator",
+      "description": "Manage the predefined roles and expenses used by the budget calculator."
     }
   },
   "wizard": {

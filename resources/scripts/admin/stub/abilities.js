@@ -19,6 +19,12 @@ export default {
   EDIT_TAX_TYPE: 'edit-tax-type',
   VIEW_TAX_TYPE: 'view-tax-type',
 
+  // Calculators
+  CREATE_CALCULATOR: 'create-calculator',
+  DELETE_CALCULATOR: 'delete-calculator',
+  EDIT_CALCULATOR: 'edit-calculator',
+  VIEW_CALCULATOR: 'view-calculator',
+
   // Estimates
   CREATE_ESTIMATE: 'create-estimate',
   DELETE_ESTIMATE: 'delete-estimate',

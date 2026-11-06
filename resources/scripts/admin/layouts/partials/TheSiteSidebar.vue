@@ -77,55 +77,22 @@
             </div>
 
             <nav class="flex-1 px-2 space-y-1">
-              <router-link
+              <SidebarMenuItem
                 v-for="item in mainMenuItems"
                 :key="item.name"
-                :to="item.link"
-                :class="[
-                  hasActiveUrl(item.link)
-                    ? 'text-primary-600 bg-primary-50'
-                    : 'text-gray-700',
-                  'cursor-pointer px-3 py-2.5 rounded-lg flex items-center text-sm not-italic font-medium hover:bg-gray-50',
-                ]"
+                :item="item"
+                :gap="item.gap"
                 @click="globalStore.setSidebarVisibility(false)"
-              >
-                <BaseIcon
-                  :name="item.icon"
-                  :class="[
-                    hasActiveUrl(item.link)
-                      ? 'text-primary-500 '
-                      : 'text-gray-400',
-                    'mr-3.5 shrink-0 h-5 w-5',
-                  ]"
-                />
-                {{ $t(item.title) }}
-              </router-link>
+              />
             </nav>
 
             <nav class="px-2 mt-4 space-y-1">
-              <router-link
+              <SidebarMenuItem
                 v-for="item in bottomMenuItems"
                 :key="item.name"
-                :to="item.link"
-                :class="[
-                  hasActiveUrl(item.link)
-                    ? 'text-primary-600 bg-primary-50'
-                    : 'text-gray-700',
-                  'cursor-pointer px-3 py-2.5 rounded-lg flex items-center text-sm not-italic font-medium hover:bg-gray-50',
-                ]"
+                :item="item"
                 @click="globalStore.setSidebarVisibility(false)"
-              >
-                <BaseIcon
-                  :name="item.icon"
-                  :class="[
-                    hasActiveUrl(item.link)
-                      ? 'text-primary-500 '
-                      : 'text-gray-400',
-                    'mr-3.5 shrink-0 h-5 w-5',
-                  ]"
-                />
-                {{ $t(item.title) }}
-              </router-link>
+              />
             </nav>
 
             <div class="px-4 mt-4">
@@ -158,55 +125,20 @@
       <CompanySwitcher />
 
       <nav class="flex-1 mt-6 space-y-1">
-        <router-link
+        <SidebarMenuItem
           v-for="item in mainMenuItems"
-          :key="item"
-          :to="item.link"
-          :class="[
-            hasActiveUrl(item.link)
-              ? 'text-primary-600 bg-primary-50'
-              : 'text-gray-700',
-            'cursor-pointer px-3 py-2.5 rounded-lg hover:bg-gray-50 group flex items-center text-sm not-italic font-medium',
-          ]"
-        >
-          <BaseIcon
-            :name="item.icon"
-            :class="[
-              hasActiveUrl(item.link)
-                ? 'text-primary-500 group-hover:text-primary-500 '
-                : 'text-gray-400 group-hover:text-gray-600',
-              'mr-3.5 shrink-0 h-5 w-5',
-            ]"
-          />
-
-          {{ $t(item.title) }}
-        </router-link>
+          :key="item.name"
+          :item="item"
+          :gap="item.gap"
+        />
       </nav>
 
       <nav class="mt-6 space-y-1">
-        <router-link
+        <SidebarMenuItem
           v-for="item in bottomMenuItems"
-          :key="item"
-          :to="item.link"
-          :class="[
-            hasActiveUrl(item.link)
-              ? 'text-primary-600 bg-primary-50'
-              : 'text-gray-700',
-            'cursor-pointer px-3 py-2.5 rounded-lg hover:bg-gray-50 group flex items-center text-sm not-italic font-medium',
-          ]"
-        >
-          <BaseIcon
-            :name="item.icon"
-            :class="[
-              hasActiveUrl(item.link)
-                ? 'text-primary-500 group-hover:text-primary-500 '
-                : 'text-gray-400 group-hover:text-gray-600',
-              'mr-3.5 shrink-0 h-5 w-5',
-            ]"
-          />
-
-          {{ $t(item.title) }}
-        </router-link>
+          :key="item.name"
+          :item="item"
+        />
       </nav>
 
       <div class="pt-4 mt-4 border-t border-gray-100">
@@ -220,6 +152,7 @@
 import { computed } from 'vue'
 import MainLogo from '@/scripts/components/icons/MainLogo.vue'
 import CompanySwitcher from '@/scripts/components/CompanySwitcher.vue'
+import SidebarMenuItem from '@/scripts/admin/layouts/partials/SidebarMenuItem.vue'
 import SidebarUserCard from '@/scripts/admin/layouts/partials/SidebarUserCard.vue'
 
 import {
@@ -238,9 +171,16 @@ const globalStore = useGlobalStore()
 const BOTTOM_MENU_NAMES = ['Users', 'Reports', 'Settings']
 
 const mainMenuItems = computed(() => {
-  return globalStore.mainMenu.filter(
-    (item) => !BOTTOM_MENU_NAMES.includes(item.name)
-  )
+  let previousGroup = null
+
+  return globalStore.mainMenu
+    .filter((item) => !BOTTOM_MENU_NAMES.includes(item.name))
+    .map((item) => {
+      const gap = previousGroup !== null && item.group > previousGroup
+      previousGroup = item.group
+
+      return { ...item, gap }
+    })
 })
 
 const bottomMenuItems = computed(() => {

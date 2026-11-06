@@ -1,5 +1,6 @@
 <?php
 
+use Crater\Models\Calculator;
 use Crater\Models\Customer;
 use Crater\Models\CustomField;
 use Crater\Models\Estimate;
@@ -414,6 +415,37 @@ return [
             "model" => Note::class,
             "depends_on" => [
                 'view-all-notes'
+            ]
+        ],
+
+        // Calculator
+        [
+            "name" => "view calculator",
+            "ability" => "view-calculator",
+            "model" => Calculator::class,
+        ],
+        [
+            "name" => "create calculator",
+            "ability" => "create-calculator",
+            "model" => Calculator::class,
+            "depends_on" => [
+                'view-calculator',
+            ]
+        ],
+        [
+            "name" => "edit calculator",
+            "ability" => "edit-calculator",
+            "model" => Calculator::class,
+            "depends_on" => [
+                'view-calculator',
+            ]
+        ],
+        [
+            "name" => "delete calculator",
+            "ability" => "delete-calculator",
+            "model" => Calculator::class,
+            "depends_on" => [
+                'view-calculator',
             ]
         ]
     ]

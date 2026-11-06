@@ -47,6 +47,27 @@ export const useDashboardStore = (useWindow = false) => {
     }),
 
     actions: {
+      // Lightweight counts for the sidebar badges; does not touch
+      // chart data or isDashboardDataLoaded like loadData does.
+      loadCounts() {
+        return new Promise((resolve, reject) => {
+          axios
+            .get('/api/v1/sidebar/counts')
+            .then((response) => {
+              this.stats.totalCustomerCount =
+                response.data.total_customer_count
+              this.stats.totalInvoiceCount = response.data.total_invoice_count
+              this.stats.totalEstimateCount =
+                response.data.total_estimate_count
+
+              resolve(response)
+            })
+            .catch((err) => {
+              reject(err)
+            })
+        })
+      },
+
       loadData(params) {
         return new Promise((resolve, reject) => {
           axios

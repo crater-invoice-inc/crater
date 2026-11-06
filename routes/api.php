@@ -31,6 +31,7 @@ use Crater\Http\Controllers\V1\Admin\Expense\ExpensesController;
 use Crater\Http\Controllers\V1\Admin\Expense\ShowReceiptController;
 use Crater\Http\Controllers\V1\Admin\Expense\UploadReceiptController;
 use Crater\Http\Controllers\V1\Admin\General\BootstrapController;
+use Crater\Http\Controllers\V1\Admin\General\SidebarCountsController;
 use Crater\Http\Controllers\V1\Admin\General\BulkExchangeRateController;
 use Crater\Http\Controllers\V1\Admin\General\ConfigController;
 use Crater\Http\Controllers\V1\Admin\General\CountriesController;
@@ -214,6 +215,12 @@ Route::prefix('/v1')->group(function () {
             //----------------------------------
 
             Route::get('/dashboard', DashboardController::class);
+
+
+            // Sidebar badge counts
+            //----------------------------------
+
+            Route::get('/sidebar/counts', SidebarCountsController::class);
 
 
             // Auth check

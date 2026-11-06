@@ -149,7 +149,8 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, onMounted, watch } from 'vue'
+import { useDebounceFn } from '@vueuse/core'
 import MainLogo from '@/scripts/components/icons/MainLogo.vue'
 import CompanySwitcher from '@/scripts/components/CompanySwitcher.vue'
 import SidebarMenuItem from '@/scripts/admin/layouts/partials/SidebarMenuItem.vue'
@@ -164,9 +165,13 @@ import {
 
 import { useRoute } from 'vue-router'
 import { useGlobalStore } from '@/scripts/admin/stores/global'
+import { useDashboardStore } from '@/scripts/admin/stores/dashboard'
+import { useNotificationStore } from '@/scripts/stores/notification'
 
 const route = useRoute()
 const globalStore = useGlobalStore()
+const dashboardStore = useDashboardStore()
+const notificationStore = useNotificationStore()
 
 const BOTTOM_MENU_NAMES = ['Users', 'Reports', 'Settings']
 
@@ -192,4 +197,35 @@ const bottomMenuItems = computed(() => {
 function hasActiveUrl(url) {
   return route.path.indexOf(url) > -1
 }
+
+// Sidebar badge counts: loaded once (the dashboard page loads the full
+// data itself) and refreshed live when items are created or removed —
+// any such action raises a success notification.
+let isRefreshingCounts = false
+
+const refreshCounts = useDebounceFn(async () => {
+  if (isRefreshingCounts || !globalStore.isAppLoaded) return
+  isRefreshingCounts = true
+  try {
+    await dashboardStore.loadCounts()
+  } finally {
+    isRefreshingCounts = false
+  }
+}, 500)
+
+watch(
+  () => notificationStore.notifications.length,
+  () => refreshCounts()
+)
+
+watch(
+  () => route.path,
+  () => refreshCounts()
+)
+
+onMounted(() => {
+  if (!dashboardStore.isDashboardDataLoaded) {
+    refreshCounts()
+  }
+})
 </script>

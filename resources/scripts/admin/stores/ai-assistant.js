@@ -156,7 +156,7 @@ export const useAiAssistantStore = (useWindow = false) => {
         }
       },
 
-      // Route watcher entry point (see AiAssistantPanel): the store is a
+      // Route watcher entry point (see AiAssistantBubble): the store is a
       // singleton living for the whole admin session, so without this a
       // conversation loaded on one document would still be in memory (and
       // displayed) on the next one.

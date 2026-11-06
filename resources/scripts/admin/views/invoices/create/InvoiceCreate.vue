@@ -152,6 +152,7 @@ import { useInvoiceStore } from '@/scripts/admin/stores/invoice'
 import { useModuleStore } from '@/scripts/admin/stores/module'
 import { useCompanyStore } from '@/scripts/admin/stores/company'
 import { useCustomFieldStore } from '@/scripts/admin/stores/custom-field'
+import { useAiAssistantStore } from '@/scripts/admin/stores/ai-assistant'
 
 import InvoiceItems from '@/scripts/admin/components/estimate-invoice-common/CreateItems.vue'
 import InvoiceTotal from '@/scripts/admin/components/estimate-invoice-common/CreateTotal.vue'
@@ -167,6 +168,7 @@ import SalesTax from '@/scripts/admin/components/estimate-invoice-common/SalesTa
 const invoiceStore = useInvoiceStore()
 const companyStore = useCompanyStore()
 const customFieldStore = useCustomFieldStore()
+const aiAssistantStore = useAiAssistantStore()
 const moduleStore = useModuleStore()
 const { t } = useI18n()
 let route = useRoute()
@@ -271,6 +273,9 @@ async function submitForm() {
       : invoiceStore.addInvoice
 
     const response = await action(data)
+
+    // Attach the AI draft conversation (if any) to the saved document.
+    aiAssistantStore.bindAfterSave(response.data.data.id)
 
     router.push(`/admin/invoices/${response.data.data.id}/view`)
   } catch (err) {

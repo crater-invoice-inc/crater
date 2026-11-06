@@ -152,6 +152,7 @@ import { useModuleStore } from '@/scripts/admin/stores/module'
 import { useEstimateStore } from '@/scripts/admin/stores/estimate'
 import { useCompanyStore } from '@/scripts/admin/stores/company'
 import { useCustomFieldStore } from '@/scripts/admin/stores/custom-field'
+import { useAiAssistantStore } from '@/scripts/admin/stores/ai-assistant'
 
 import Items from '@/scripts/admin/components/estimate-invoice-common/CreateItems.vue'
 import Total from '@/scripts/admin/components/estimate-invoice-common/CreateTotal.vue'
@@ -168,6 +169,7 @@ const estimateStore = useEstimateStore()
 const moduleStore = useModuleStore()
 const companyStore = useCompanyStore()
 const customFieldStore = useCustomFieldStore()
+const aiAssistantStore = useAiAssistantStore()
 const { t } = useI18n()
 
 const estimateValidationScope = 'newEstimate'
@@ -272,6 +274,9 @@ async function submitForm() {
     let res = await action(data)
 
     if (res.data.data) {
+      // Attach the AI draft conversation (if any) to the saved document.
+      aiAssistantStore.bindAfterSave(res.data.data.id)
+
       router.push(`/admin/estimates/${res.data.data.id}/view`)
     }
   } catch (err) {

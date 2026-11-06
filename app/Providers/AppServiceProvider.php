@@ -2,7 +2,10 @@
 
 namespace Crater\Providers;
 
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Http\Request;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 
@@ -18,9 +21,29 @@ class AppServiceProvider extends ServiceProvider
         Paginator::useBootstrapThree();
         $this->loadJsonTranslationsFrom(resource_path('scripts/locales'));
 
+        $this->configureRateLimiting();
+
         if (\Storage::disk('local')->has('database_created') && Schema::hasTable('abilities')) {
             $this->addMenus();
         }
+    }
+
+    /**
+     * Rate limiter for the AI document assistant: each call hits the paid
+     * Perplexity API, so it is capped per user, well below the global API
+     * throttle.
+     */
+    protected function configureRateLimiting()
+    {
+        RateLimiter::for('ai-assistant', function (Request $request) {
+            return Limit::perMinute((int) config('ai-assistant.rate_limit.per_minute', 10))
+                ->by($request->user()->id)
+                ->response(function () {
+                    return response()->json([
+                        'error' => 'Trop de demandes à l’assistant IA. Veuillez patienter une minute.',
+                    ], 429);
+                });
+        });
     }
 
     /**

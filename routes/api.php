@@ -1,6 +1,9 @@
 <?php
 
 use Crater\Http\Controllers\AppVersionController;
+use Crater\Http\Controllers\V1\Admin\Ai\AiConversationsController;
+use Crater\Http\Controllers\V1\Admin\Ai\AiSettingsController;
+use Crater\Http\Controllers\V1\Admin\Ai\DocumentAssistantController;
 use Crater\Http\Controllers\V1\Admin\Auth\ForgotPasswordController;
 use Crater\Http\Controllers\V1\Admin\Auth\ResetPasswordController;
 use Crater\Http\Controllers\V1\Admin\Backup\BackupsController;
@@ -271,6 +274,21 @@ Route::prefix('/v1')->group(function () {
             Route::post('/items/delete', [ItemsController::class, 'delete']);
 
             Route::resource('items', ItemsController::class);
+
+
+            // AI document assistant (owner / super admin only)
+            //----------------------------------
+
+            Route::get('/ai/settings', [AiSettingsController::class, 'show']);
+
+            Route::post('/ai/settings', [AiSettingsController::class, 'update']);
+
+            Route::get('/ai/conversations', [AiConversationsController::class, 'show']);
+
+            Route::post('/ai/conversations/bind', [AiConversationsController::class, 'bind']);
+
+            Route::post('/ai/document-assistant', DocumentAssistantController::class)
+                ->middleware('throttle:ai-assistant');
 
             // Calculators
             //----------------------------------

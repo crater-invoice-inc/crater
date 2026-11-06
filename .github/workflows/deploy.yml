@@ -98,6 +98,7 @@ jobs:
             mv public/build public/build-old
             mv public/build-new public/build
 
+            docker compose exec -T app php artisan migrate --force
             docker compose exec -T app php artisan config:clear
             docker compose exec -T app php artisan route:clear
 

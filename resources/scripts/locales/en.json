@@ -907,6 +907,7 @@
   "settings": {
     "menu_title": {
       "account_settings": "Account Settings",
+      "ai_assistant": "AI Assistant",
       "company_information": "Company Information",
       "customization": "Customization",
       "preferences": "Preferences",
@@ -923,6 +924,25 @@
       "exchange_rate": "Exchange Rate",
       "address_information": "Address Information",
       "modules": "Modules"
+    },
+    "ai_assistant": {
+      "title": "AI Assistant",
+      "description": "Configure the Perplexity connection used to generate and edit estimate and invoice lines from a customer brief.",
+      "key_configured": "API key configured",
+      "replace_key": "Replace key",
+      "api_key": "Perplexity API Key",
+      "api_key_help": "The key is stored securely on the server and is never displayed. Leave the field empty to keep the existing key.",
+      "api_key_placeholder": "Paste your API key here",
+      "model": "Perplexity Model",
+      "model_help": "For example: sonar, sonar-pro, sonar-reasoning.",
+      "base_url": "Base URL",
+      "base_url_help": "Optional. If empty, the default Perplexity URL is used.",
+      "system_instruction": "Custom System Instruction",
+      "system_instruction_help": "Additional instructions passed to the AI assistant.",
+      "save": "Save",
+      "saved": "AI assistant settings saved.",
+      "load_error_title": "Could not load the configuration",
+      "load_error_generic": "Something went wrong while loading the settings."
     },
     "modules": {
       "description": "Choose which modules are available for this company.",

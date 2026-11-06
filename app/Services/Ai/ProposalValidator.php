@@ -155,7 +155,8 @@ class ProposalValidator
 
         $quantity = $line['quantity'] ?? null;
 
-        if (! is_numeric($quantity) || (float) $quantity < 0) {
+        // A quoted line always carries a strictly positive quantity.
+        if (! is_numeric($quantity) || (float) $quantity <= 0) {
             throw $this->invalid();
         }
 

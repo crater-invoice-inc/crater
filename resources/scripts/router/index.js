@@ -31,6 +31,15 @@ router.beforeEach((to, from, next) => {
     if (userStore.currentUser.is_owner) {
       next()
     } else next({ name: 'dashboard' })
+  } else if (to.meta.isOwnerOrSuperAdmin && isAppLoaded) {
+    // Matches the AI assistant backend rule: company owner or Crater
+    // super admin role.
+    if (
+      userStore.currentUser.is_owner ||
+      userStore.currentUser.role === 'super admin'
+    ) {
+      next()
+    } else next({ name: 'dashboard' })
   } else {
     next()
   }

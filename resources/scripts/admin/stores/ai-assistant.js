@@ -438,8 +438,21 @@ export const useAiAssistantStore = (useWindow = false) => {
           }
         } else {
           checked.forEach((line) => {
-            store.addItem()
-            const documentLine = store[prop].items[store[prop].items.length - 1]
+            // A brand new document starts with one pristine empty line:
+            // fill the first empty line instead of stacking the proposal
+            // after it (which would leave a blank line on the document).
+            const emptyIndex = store[prop].items.findIndex((item) =>
+              this.isLineEmpty(item)
+            )
+
+            let documentLine
+
+            if (emptyIndex !== -1) {
+              documentLine = store[prop].items[emptyIndex]
+            } else {
+              store.addItem()
+              documentLine = store[prop].items[store[prop].items.length - 1]
+            }
 
             this.assignProposalToLine(documentLine, line)
           })
@@ -447,6 +460,16 @@ export const useAiAssistantStore = (useWindow = false) => {
 
         this.appliedCount = checked.length
         this.step = 'applied'
+      },
+
+      // A pristine document line (default stub): no linked service, no
+      // name and no price. Filling it beats appending a new row.
+      isLineEmpty(line) {
+        return (
+          !line.item_id &&
+          (!line.name || !String(line.name).trim()) &&
+          !(Number(line.price) > 0)
+        )
       },
 
       cancelConfirm() {

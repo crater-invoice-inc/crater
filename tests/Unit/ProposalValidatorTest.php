@@ -151,3 +151,17 @@ test('truncates an oversized summary', function () {
 
     expect(mb_strlen($proposal['summary']))->toBe(1000);
 });
+
+test('rejects a zero quantity', function () {
+    $payload = json_decode(validProposalJson(), true);
+    $payload['lines'][0]['quantity'] = 0;
+
+    $this->validator->validate(json_encode($payload), 'add_existing_services');
+})->throws(AiAssistantException::class);
+
+test('rejects a negative quantity', function () {
+    $payload = json_decode(validProposalJson(), true);
+    $payload['lines'][0]['quantity'] = -1;
+
+    $this->validator->validate(json_encode($payload), 'add_existing_services');
+})->throws(AiAssistantException::class);

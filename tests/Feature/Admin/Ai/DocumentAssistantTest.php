@@ -459,3 +459,85 @@ test('assistant calls are rate limited per user', function () {
     expect($response->status())->toBe(429)
         ->and($response->json('error'))->toBe('Trop de demandes à l’assistant IA. Veuillez patienter une minute.');
 });
+
+test('system prompt carries the studio context, pricing rule and few-shot examples', function () {
+    fakePerplexityProposal(proposalPayload($this->services));
+
+    postJson('api/v1/ai/document-assistant', [
+        'document_type' => 'estimate',
+        'document_id' => $this->estimateA->id,
+        'action' => 'add_existing_services',
+        'service_ids' => $this->services->pluck('id')->all(),
+        'brief' => 'Un clip et des photos svp.',
+    ])->assertOk();
+
+    Http::assertSent(function (Request $request) {
+        if (! str_contains($request->url(), 'chat/completions')) {
+            return false;
+        }
+
+        $system = collect($request->data()['messages'])->firstWhere('role', 'system')['content'];
+
+        return str_contains($system, 'Saguenay')
+            && str_contains($system, 'ONE valid JSON object')
+            && str_contains($system, 'NEVER invent a price')
+            && str_contains($system, 'SEPARATE')
+            && str_contains($system, 'Example 1')
+            && str_contains($system, 'Example 2')
+            && str_contains($system, 'Example 3')
+            && str_contains($system, 'Example 4')
+            && str_contains($system, 'Hypothèse:');
+    });
+});
+
+test('incomplete brief surfaces model warnings without an invented price', function () {
+    // The model follows the contract: no reference price exists, so it
+    // returns price 0 and explains it in warnings instead of inventing.
+    fakePerplexityProposal([
+        'summary' => 'Ajout d’une ligne personnalisée pour la location de drone.',
+        'lines' => [[
+            'line_index' => null,
+            'item_id' => null,
+            'name' => 'Prise de vues aériennes par drone – Chantier',
+            'description' => 'Opération d’un drone avec pilote certifié pendant une journée.',
+            'deliverables' => '- Séquences aériennes brutes',
+            'delivery_delay' => 'Livraison sous 7 jours ouvrables.',
+            'terms' => '- Vol soumis aux conditions météo.',
+            'unit' => 'journée',
+            'quantity' => 1,
+            'price' => 0,
+        ]],
+        'warnings' => [
+            'Aucun prix de référence disponible; le prix doit être saisi manuellement.',
+        ],
+    ]);
+
+    $response = postJson('api/v1/ai/document-assistant', [
+        'document_type' => 'estimate',
+        'document_id' => $this->estimateA->id,
+        'action' => 'create_custom_line',
+        'brief' => 'Il nous faudrait de la location de drone sur le chantier.',
+    ])->assertOk();
+
+    expect($response->json('lines.0.price'))->toBe(0)
+        ->and($response->json('lines.0.quantity'))->toBe(1)
+        ->and($response->json('warnings'))->toHaveCount(1)
+        ->and($response->json('warnings.0'))->toContain('saisi manuellement');
+});
+
+test('unknown service ids are rejected before calling the model', function () {
+    Http::fake([
+        '*/chat/completions' => Http::response(['choices' => []]),
+    ]);
+
+    postJson('api/v1/ai/document-assistant', [
+        'document_type' => 'estimate',
+        'document_id' => $this->estimateA->id,
+        'action' => 'add_existing_services',
+        'service_ids' => [999999],
+        'brief' => 'Un service inexistant.',
+    ])->assertStatus(422);
+
+    // The model was never called for an invalid catalog request.
+    Http::assertNothingSent();
+});

@@ -156,6 +156,16 @@ return [
             'model' => ''
         ],
         [
+            'title' => 'settings.menu_title.ai_assistant',
+            'group' => '',
+            'name' => 'AI Assistant',
+            'link' => '/admin/settings/ai-assistant',
+            'icon' => 'SparklesIcon',
+            'owner_only' => true,
+            'ability' => '',
+            'model' => ''
+        ],
+        [
             'title' => 'settings.menu_title.modules',
             'group' => '',
             'name' => 'Modules',

@@ -907,6 +907,7 @@
   "settings": {
     "menu_title": {
       "account_settings": "Profil",
+      "ai_assistant": "Assistant IA",
       "company_information": "Coordonnées de la société",
       "customization": "Personnalisation",
       "preferences": "Préférences",
@@ -923,6 +924,25 @@
       "exchange_rate": "Taux de change",
       "address_information": "Information d'adresse",
       "modules": "Modules"
+    },
+    "ai_assistant": {
+      "title": "Assistant IA",
+      "description": "Configurez la connexion à Perplexity pour générer et modifier des lignes de devis et de factures à partir d’un brief client.",
+      "key_configured": "Clé API configurée",
+      "replace_key": "Remplacer la clé",
+      "api_key": "Clé API Perplexity",
+      "api_key_help": "La clé est stockée de façon sécurisée côté serveur et n’est jamais affichée. Laissez le champ vide pour conserver la clé existante.",
+      "api_key_placeholder": "Collez votre clé API ici",
+      "model": "Modèle Perplexity",
+      "model_help": "Par exemple : sonar, sonar-pro, sonar-reasoning.",
+      "base_url": "URL de base",
+      "base_url_help": "Facultatif. Si vide, l’URL par défaut de Perplexity est utilisée.",
+      "system_instruction": "Instruction système personnalisée",
+      "system_instruction_help": "Instructions supplémentaires transmises à l’assistant IA.",
+      "save": "Enregistrer",
+      "saved": "Paramètres de l’assistant IA enregistrés.",
+      "load_error_title": "Impossible de charger la configuration",
+      "load_error_generic": "Une erreur est survenue lors du chargement des réglages."
     },
     "modules": {
       "description": "Choisissez les modules disponibles pour cette entreprise.",

@@ -60,6 +60,14 @@ onMounted(() => {
       router.push({ name: 'account.settings' })
     } else if (route.meta.isOwner && !userStore.currentUser.is_owner) {
       router.push({ name: 'account.settings' })
+    } else if (
+      route.meta.isOwnerOrSuperAdmin &&
+      !(
+        userStore.currentUser.is_owner ||
+        userStore.currentUser.role === 'super admin'
+      )
+    ) {
+      router.push({ name: 'dashboard' })
     }
 
     if (

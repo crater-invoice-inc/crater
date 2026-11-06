@@ -16,6 +16,14 @@ class ItemsRequest extends FormRequest
         return true;
     }
 
+    public function prepareForValidation()
+    {
+        // A service is inactive unless the request explicitly activates it.
+        $this->merge([
+            'is_active' => $this->boolean('is_active'),
+        ]);
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -53,6 +61,10 @@ class ItemsRequest extends FormRequest
                 'nullable',
                 'numeric',
                 'min:0',
+            ],
+            'is_active' => [
+                'nullable',
+                'boolean',
             ],
         ];
     }

@@ -66,6 +66,19 @@
       <BaseInputGroup class="text-left" :label="$t('items.unit_price')">
         <BaseMoney v-model="filters.price" />
       </BaseInputGroup>
+
+      <BaseInputGroup class="text-left" :label="$t('items.service_status')">
+        <BaseMultiselect
+          v-model="filters.active"
+          value-prop="value"
+          track-by="label"
+          label="label"
+          :filter-results="false"
+          :options="statusOptions"
+          :placeholder="$t('items.all_statuses')"
+          class="w-full"
+        />
+      </BaseInputGroup>
     </BaseFilterWrapper>
 
     <BaseEmptyPlaceholder
@@ -159,6 +172,19 @@
           </router-link>
         </template>
 
+        <template #cell-is_active="{ row }">
+          <span
+            class="inline-block px-2.5 py-0.5 text-xs font-medium rounded-full"
+            :class="
+              row.data.is_active
+                ? 'bg-teal-100 text-teal-800'
+                : 'bg-gray-100 text-gray-600'
+            "
+          >
+            {{ row.data.is_active ? $t('items.active') : $t('items.inactive') }}
+          </span>
+        </template>
+
         <template #cell-unit_name="{ row }">
           <span>
             {{ row.data.unit ? row.data.unit.name : '-' }}
@@ -217,9 +243,15 @@ const filters = reactive({
   name: '',
   unit_id: '',
   price: '',
+  active: '',
 })
 
 const table = ref(null)
+
+const statusOptions = [
+  { value: 1, label: t('items.active') },
+  { value: 0, label: t('items.inactive') },
+]
 
 const showEmptyScreen = computed(
   () => !itemStore.totalItems && !isFetchingInitialData.value
@@ -244,6 +276,12 @@ const itemColumns = computed(() => {
     {
       key: 'name',
       label: t('items.service_name'),
+      thClass: 'extra',
+      tdClass: 'font-medium text-gray-900',
+    },
+    {
+      key: 'is_active',
+      label: t('items.service_status'),
       thClass: 'extra',
       tdClass: 'font-medium text-gray-900',
     },
@@ -280,6 +318,7 @@ function clearFilter() {
   filters.name = ''
   filters.unit_id = ''
   filters.price = ''
+  filters.active = ''
 }
 
 function hasAbilities() {
@@ -313,6 +352,7 @@ async function fetchData({ page, filter, sort }) {
     search: filters.name,
     unit_id: filters.unit_id !== null ? filters.unit_id : '',
     price: Math.round(filters.price * 100),
+    active: filters.active !== '' && filters.active !== null && filters.active !== undefined ? filters.active : '',
     orderByField: sort.fieldName || 'created_at',
     orderBy: sort.order || 'desc',
     page,

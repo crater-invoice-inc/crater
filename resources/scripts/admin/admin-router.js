@@ -64,6 +64,8 @@ const ItemsIndex = () => import('@/scripts/admin/views/items/Index.vue')
 const ItemCreate = () => import('@/scripts/admin/views/items/Create.vue')
 const CalculatorView = () => import('@/scripts/admin/views/calculator/View.vue')
 const CalculatorSetting = () => import('@/scripts/admin/views/settings/CalculatorSetting.vue')
+const AiAssistantSetting = () =>
+  import('@/scripts/admin/views/settings/AiAssistantSetting.vue')
 
 // Expenses
 const ExpensesIndex = () => import('@/scripts/admin/views/expenses/Index.vue')
@@ -294,6 +296,12 @@ export default [
             name: 'settings.calculator',
             meta: { ability: abilities.VIEW_CALCULATOR },
             component: CalculatorSetting,
+          },
+          {
+            path: 'ai-assistant',
+            name: 'settings.ai-assistant',
+            meta: { isOwnerOrSuperAdmin: true },
+            component: AiAssistantSetting,
           },
           {
             path: 'notes',

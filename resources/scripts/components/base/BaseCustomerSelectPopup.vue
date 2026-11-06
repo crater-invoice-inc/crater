@@ -3,27 +3,20 @@
     <BaseContentPlaceholdersBox
       :rounded="true"
       class="w-full"
-      style="min-height: 170px"
+      style="min-height: 104px"
     />
   </BaseContentPlaceholders>
 
-  <div v-else class="max-h-[173px]">
+  <div v-else>
     <CustomerModal />
     <!-- <SalesTax :type="type" /> -->
 
     <div
       v-if="selectedCustomer"
-      class="
-        flex flex-col
-        p-4
-        bg-white
-        border border-gray-200 border-solid
-        min-h-[170px]
-        rounded-md
-      "
+      class="flex flex-col p-4 bg-white border border-gray-200 border-solid rounded-md"
       @click.stop
     >
-      <div class="flex relative justify-between mb-2">
+      <div class="flex relative justify-between items-center mb-2">
         <BaseText
           :text="selectedCustomer.name"
           :length="30"
@@ -67,7 +60,13 @@
           </a>
         </div>
       </div>
-      <div class="grid grid-cols-2 gap-8 mt-2">
+      <div
+        class="grid gap-x-8 gap-y-2 mt-1"
+        :class="{
+          'grid-cols-2': showShipping && selectedCustomer.shipping,
+          'grid-cols-1': !(showShipping && selectedCustomer.shipping),
+        }"
+      >
         <div v-if="selectedCustomer.billing" class="flex flex-col">
           <label
             class="
@@ -86,14 +85,7 @@
             v-if="selectedCustomer.billing"
             class="flex flex-col flex-1 p-0 text-left"
           >
-            <label
-              v-if="selectedCustomer.billing.name"
-              class="relative w-11/12 text-sm truncate"
-            >
-              {{ selectedCustomer.billing.name }}
-            </label>
-
-            <label class="relative w-11/12 text-sm truncate">
+            <label class="relative text-sm truncate">
               <span v-if="selectedCustomer.billing.city">
                 {{ selectedCustomer.billing.city }}
               </span>
@@ -111,14 +103,17 @@
             </label>
             <label
               v-if="selectedCustomer.billing.zip"
-              class="relative w-11/12 text-sm truncate"
+              class="relative text-sm truncate"
             >
               {{ selectedCustomer.billing.zip }}
             </label>
           </div>
         </div>
 
-        <div v-if="selectedCustomer.shipping" class="flex flex-col">
+        <div
+          v-if="showShipping && selectedCustomer.shipping"
+          class="flex flex-col"
+        >
           <label
             class="
               mb-1
@@ -136,14 +131,7 @@
             v-if="selectedCustomer.shipping"
             class="flex flex-col flex-1 p-0 text-left"
           >
-            <label
-              v-if="selectedCustomer.shipping.name"
-              class="relative w-11/12 text-sm truncate"
-            >
-              {{ selectedCustomer.shipping.name }}
-            </label>
-
-            <label class="relative w-11/12 text-sm truncate">
+            <label class="relative text-sm truncate">
               <span v-if="selectedCustomer.shipping.city">
                 {{ selectedCustomer.shipping.city }}
               </span>
@@ -161,7 +149,7 @@
             </label>
             <label
               v-if="selectedCustomer.shipping.zip"
-              class="relative w-11/12 text-sm truncate"
+              class="relative text-sm truncate"
             >
               {{ selectedCustomer.shipping.zip }}
             </label>
@@ -184,14 +172,14 @@
           class="
             relative
             flex
+            items-center
             justify-center
             px-0
             p-0
-            py-16
+            py-6
             bg-white
             border border-gray-200 border-solid
             rounded-md
-            min-h-[170px]
           "
         >
           <BaseIcon
@@ -210,7 +198,7 @@
             "
           />
 
-          <div class="mt-1">
+          <div>
             <label class="text-lg font-medium text-gray-900">
               {{ $t('customers.new_customer') }}
               <span class="text-red-500"> * </span>
@@ -416,6 +404,12 @@ const props = defineProps({
   contentLoading: {
     type: Boolean,
     default: false,
+  },
+  // Service-only documents (estimates/invoices) hide the shipping address;
+  // recurring invoices and the calculator keep the previous rendering.
+  showShipping: {
+    type: Boolean,
+    default: true,
   },
 })
 

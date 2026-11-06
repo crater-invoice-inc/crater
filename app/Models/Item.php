@@ -15,6 +15,7 @@ class Item extends Model
 
     protected $casts = [
         'price' => 'integer',
+        'is_active' => 'boolean',
     ];
 
     protected $appends = [
@@ -56,6 +57,11 @@ class Item extends Model
         return $query->where('items.unit_id', $unit_id);
     }
 
+    public function scopeWhereActive($query, $active = true)
+    {
+        return $query->where('items.is_active', $active);
+    }
+
     public function scopeWhereOrder($query, $orderByField, $orderBy)
     {
         $query->orderBy($orderByField, $orderBy);
@@ -80,6 +86,12 @@ class Item extends Model
 
         if ($filters->get('unit_id')) {
             $query->whereUnit($filters->get('unit_id'));
+        }
+
+        // Accepts 1 (active only), 0 (inactive only); absent or empty
+        // keeps the unfiltered behaviour for existing consumers.
+        if ($filters->get('active') !== null && $filters->get('active') !== '') {
+            $query->whereActive((bool) $filters->get('active'));
         }
 
         if ($filters->get('item_id')) {

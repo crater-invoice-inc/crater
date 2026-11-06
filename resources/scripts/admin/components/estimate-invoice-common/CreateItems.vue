@@ -10,7 +10,7 @@
       />
       <col style="width: 15%; min-width: 120px" />
     </colgroup>
-    <thead class="bg-white border border-gray-200 border-solid">
+    <thead class="bg-white border border-gray-200 border-solid hidden md:table-header-group">
       <tr>
         <th
           class="

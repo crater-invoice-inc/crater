@@ -325,10 +325,10 @@
     "date_of_creation": "Date de création",
     "not_selected": "Aucun article sélectionné",
     "action": "Action",
-    "add_item": "Nouvel article",
+    "add_item": "Nouveau service",
     "save_item": "Enregistrer",
     "update_item": "Enregistrer",
-    "item": "Article | Articles",
+    "item": "Service | Services",
     "add_new_item": "Ajouter un service",
     "new_item": "Nouvel article",
     "edit_item": "Modifier cet article",
@@ -453,7 +453,7 @@
       "tax": "Taxe",
       "amount": "Montant",
       "select_an_item": "Sélectionnez un article",
-      "type_item_description": "Taper la description de l'article (facultatif)"
+      "type_item_description": "Saisissez la description du service (facultatif)"
     },
     "mark_as_default_estimate_template_description": "If enabled, the selected template will be automatically selected for new estimates."
   },
@@ -544,7 +544,7 @@
       "tax": "Taxe",
       "amount": "Montant",
       "select_an_item": "Sélectionnez un article",
-      "type_item_description": "Saisissez une description (facultatif)"
+      "type_item_description": "Saisissez la description du service (facultatif)"
     },
     "payment_attached_message": "Un paiement est lié à l'une des factures sélectionnées. Veuillez d'abord les supprimer, puis réessayez",
     "confirm_delete": "Vous ne pourrez pas récupérer cette facture | Vous ne pourrez pas récupérer ces factures",
@@ -646,7 +646,7 @@
       "tax": "Taxe",
       "amount": "Montant",
       "select_an_item": "Tapez ou cliquez pour sélectionner un article",
-      "type_item_description": "Description de l'article (facultatif)"
+      "type_item_description": "Description du service (facultatif)"
     },
     "frequency": {
       "title": "Fréquence",
@@ -1613,7 +1613,7 @@
   "pdf_invoice_date": "Date",
   "pdf_invoice_due_date": "Date d’échéance",
   "pdf_notes": "Notes de bas de page",
-  "pdf_items_label": "Articles",
+  "pdf_items_label": "Services",
   "pdf_quantity_label": "Quantité",
   "pdf_price_label": "Prix",
   "pdf_discount_label": "Remise",

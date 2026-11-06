@@ -1,23 +1,16 @@
 <template>
   <div class="flex-1 text-sm">
     <!-- Selected Item Field  -->
-    <div
-      v-if="item.item_id"
-      class="
-        relative
-        flex
-        items-center
-        h-10
-        pl-2
-        bg-gray-200
-        border border-gray-200 border-solid
-        rounded
-      "
-    >
-      {{ item.name }}
+    <div v-if="item.item_id" class="relative flex items-center w-full">
+      <BaseInput
+        v-model="name"
+        :invalid="invalid"
+        :content-loading="contentLoading"
+        class="w-full pr-7"
+      />
 
       <span
-        class="absolute text-gray-400 cursor-pointer top-[8px] right-[10px]"
+        class="absolute text-gray-400 cursor-pointer top-[9px] right-[10px]"
         @click="deselectItem(index)"
       >
         <BaseIcon name="XCircleIcon" />
@@ -76,6 +69,48 @@
         </span>
       </div>
     </div>
+
+    <!-- Service Deliverables -->
+    <div class="w-full pt-1 text-xs text-light">
+      <BaseTextarea
+        v-model="deliverables"
+        :content-loading="contentLoading"
+        :autosize="true"
+        class="text-xs"
+        :borderless="true"
+        :placeholder="$t('items.deliverables')"
+      />
+    </div>
+
+    <!-- Service Delivery Delay -->
+    <div class="w-full pt-1 text-xs text-light">
+      <BaseTextarea
+        v-model="deliveryDelay"
+        :content-loading="contentLoading"
+        :autosize="true"
+        class="text-xs"
+        :borderless="true"
+        :placeholder="$t('items.delivery_delay')"
+        :invalid="invalidDeliveryDelay"
+      />
+      <div v-if="invalidDeliveryDelay">
+        <span class="text-red-600">
+          {{ $t('validation.delivery_delay_maxlength') }}
+        </span>
+      </div>
+    </div>
+
+    <!-- Service Terms / Exclusions -->
+    <div class="w-full pt-1 text-xs text-light">
+      <BaseTextarea
+        v-model="terms"
+        :content-loading="contentLoading"
+        :autosize="true"
+        class="text-xs"
+        :borderless="true"
+        :placeholder="$t('items.terms')"
+      />
+    </div>
   </div>
 </template>
 
@@ -113,6 +148,11 @@ const props = defineProps({
     default: false,
   },
   invalidDescription: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
+  invalidDeliveryDelay: {
     type: Boolean,
     required: false,
     default: false,
@@ -155,10 +195,48 @@ const taxAmount = computed(() => {
   return 0
 })
 
-const description = computed({
-  get: () => props.item.description,
+const name = computed({
+  get: () => props.item.name,
   set: (value) => {
-    props.store[props.storeProp].items[props.index].description = value
+    props.store.$patch((state) => {
+      state[props.storeProp].items[props.index].name = value
+    })
+  },
+})
+
+const description = computed({
+  get: () => props.item.description ?? '',
+  set: (value) => {
+    props.store.$patch((state) => {
+      state[props.storeProp].items[props.index].description = value
+    })
+  },
+})
+
+const deliverables = computed({
+  get: () => props.item.deliverables ?? '',
+  set: (value) => {
+    props.store.$patch((state) => {
+      state[props.storeProp].items[props.index].deliverables = value
+    })
+  },
+})
+
+const deliveryDelay = computed({
+  get: () => props.item.delivery_delay ?? '',
+  set: (value) => {
+    props.store.$patch((state) => {
+      state[props.storeProp].items[props.index].delivery_delay = value
+    })
+  },
+})
+
+const terms = computed({
+  get: () => props.item.terms ?? '',
+  set: (value) => {
+    props.store.$patch((state) => {
+      state[props.storeProp].items[props.index].terms = value
+    })
   },
 })
 

@@ -26,6 +26,7 @@
                   :item="itemData"
                   :invalid="v$.name.$error"
                   :invalid-description="v$.description.$error"
+                  :invalid-delivery-delay="v$.delivery_delay.$error"
                   :taxes="itemData.taxes"
                   :index="index"
                   :store-prop="storeProp"
@@ -36,17 +37,29 @@
               </div>
             </td>
             <td class="px-5 py-4 text-right align-top">
-              <BaseInput
-                v-model="quantity"
-                :invalid="v$.quantity.$error"
-                :content-loading="loading"
-                type="number"
-                small
-                min="0"
-                step="any"
-                @change="syncItemToStore()"
-                @input="v$.quantity.$touch()"
-              />
+              <div class="flex flex-col items-end">
+                <BaseInput
+                  v-model="quantity"
+                  :invalid="v$.quantity.$error"
+                  :content-loading="loading"
+                  type="number"
+                  small
+                  min="0"
+                  step="any"
+                  @change="syncItemToStore()"
+                  @input="v$.quantity.$touch()"
+                />
+
+                <BaseInput
+                  v-model="unitName"
+                  :content-loading="loading"
+                  type="text"
+                  small
+                  class="mt-1"
+                  :placeholder="$t('items.unit')"
+                  @change="syncItemToStore()"
+                />
+              </div>
             </td>
             <td class="px-5 py-4 text-left align-top">
               <div class="flex flex-col">
@@ -252,6 +265,13 @@ const quantity = computed({
   },
 })
 
+const unitName = computed({
+  get: () => props.itemData.unit_name ?? '',
+  set: (newValue) => {
+    updateItemAttribute('unit_name', newValue)
+  },
+})
+
 const price = computed({
   get: () => {
     const price = props.itemData.price
@@ -375,6 +395,12 @@ const rules = {
       maxLength(65000)
     ),
   },
+  delivery_delay: {
+    maxLength: helpers.withMessage(
+      t('validation.delivery_delay_maxlength'),
+      maxLength(255)
+    ),
+  },
 }
 
 const v$ = useVuelidate(
@@ -422,29 +448,34 @@ function searchVal(val) {
 
 function onSelectItem(itm) {
   props.store.$patch((state) => {
-    state[props.storeProp].items[props.index].name = itm.name
-    state[props.storeProp].items[props.index].price = itm.price
-    state[props.storeProp].items[props.index].item_id = itm.id
-    state[props.storeProp].items[props.index].description = itm.description
+    const line = state[props.storeProp].items[props.index]
 
-    if (itm.unit) {
-      state[props.storeProp].items[props.index].unit_name = itm.unit.name
-    }
+    line.name = itm.name
+    line.price = itm.price
+    line.item_id = itm.id
+    line.description = itm.description
+    line.deliverables = itm.deliverables ?? ''
+    line.delivery_delay = itm.delivery_delay ?? ''
+    line.terms = itm.terms ?? ''
+    line.unit_name = itm.unit ? itm.unit.name : ''
 
-    if (props.store[props.storeProp].tax_per_item === 'YES' && itm.taxes) {
-      let index = 0
-
-      itm.taxes.forEach((tax) => {
-        updateTax({ index, item: { ...tax } })
-        index++
-      })
+    if (itm.default_quantity !== null && itm.default_quantity !== undefined) {
+      line.quantity = itm.default_quantity
     }
 
     if (state[props.storeProp].exchange_rate) {
-      state[props.storeProp].items[props.index].price /=
-        state[props.storeProp].exchange_rate
+      line.price /= state[props.storeProp].exchange_rate
     }
   })
+
+  if (props.store[props.storeProp].tax_per_item === 'YES' && itm.taxes) {
+    let index = 0
+
+    itm.taxes.forEach((tax) => {
+      updateTax({ index, item: { ...tax } })
+      index++
+    })
+  }
 
   itemStore.fetchItems()
   syncItemToStore()

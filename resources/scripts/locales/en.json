@@ -112,7 +112,7 @@
     "delete": "Delete",
     "edit": "Edit",
     "view": "View",
-    "add_new_item": "Add New Item",
+    "add_new_item": "Add New Line",
     "clear_all": "Clear All",
     "showing": "Showing",
     "of": "of",
@@ -325,10 +325,10 @@
     "date_of_creation": "Date Of Creation",
     "not_selected": "No item selected",
     "action": "Action",
-    "add_item": "Add Item",
+    "add_item": "Add Service",
     "save_item": "Save Item",
     "update_item": "Update Item",
-    "item": "Item | Items",
+    "item": "Service | Services",
     "add_new_item": "Add New Service",
     "new_item": "New Item",
     "edit_item": "Edit Item",
@@ -453,7 +453,7 @@
       "tax": "Tax",
       "amount": "Amount",
       "select_an_item": "Type or click to select an item",
-      "type_item_description": "Type Item Description (optional)"
+      "type_item_description": "Type service description (optional)"
     },
     "mark_as_default_estimate_template_description": "If enabled, the selected template will be automatically selected for new estimates."
   },
@@ -544,7 +544,7 @@
       "tax": "Tax",
       "amount": "Amount",
       "select_an_item": "Type or click to select an item",
-      "type_item_description": "Type Item Description (optional)"
+      "type_item_description": "Type service description (optional)"
     },
     "payment_attached_message": "One of the selected invoices already have a payment attached to it. Make sure to delete the attached payments first in order to go ahead with the removal",
     "confirm_delete": "You will not be able to recover this Invoice | You will not be able to recover these Invoices",
@@ -646,7 +646,7 @@
       "tax": "Tax",
       "amount": "Amount",
       "select_an_item": "Type or click to select an item",
-      "type_item_description": "Type Item Description (optional)"
+      "type_item_description": "Type service description (optional)"
     },
     "frequency": {
       "title": "Frequency",
@@ -1613,7 +1613,7 @@
   "pdf_invoice_date": "Invoice Date",
   "pdf_invoice_due_date": "Due date",
   "pdf_notes": "Notes",
-  "pdf_items_label": "Items",
+  "pdf_items_label": "Services",
   "pdf_quantity_label": "Quantity",
   "pdf_price_label": "Price",
   "pdf_discount_label": "Discount",

@@ -76,11 +76,18 @@ export const useAiAssistantStore = (useWindow = false) => {
       // Errors
       error: null,
 
-      // Conversation (history is per document, enforced server side)
+      // Conversation. This store lives for the whole admin session, so the
+      // loaded history is tagged with the document it belongs to
+      // (historyKey): any document switch drops it and reloads, otherwise
+      // the panel could show another document's conversation (enforced
+      // server side too).
       conversationId: null,
       draftKey: null,
       messages: [],
       historyLoaded: false,
+      historyKey: null,
+      loadingHistory: false,
+      historyRequestId: 0,
     }),
 
     getters: {
@@ -129,19 +136,76 @@ export const useAiAssistantStore = (useWindow = false) => {
         return { store: useInvoiceStore(), prop: 'newInvoice' }
       },
 
+      // Identity of the document a conversation belongs to: type + id for
+      // a saved document, type + "draft" for a not-yet-saved one.
+      contextKey(context) {
+        return context.id ? `${context.type}:${context.id}` : `${context.type}:draft`
+      },
+
       async openPanel() {
-        if (!this.documentContext()) {
+        const context = this.documentContext()
+
+        if (!context) {
           return
         }
 
         this.isOpen = true
 
-        if (!this.historyLoaded) {
+        if (!this.historyLoaded || this.historyKey !== this.contextKey(context)) {
           await this.loadHistory()
         }
       },
 
+      // Route watcher entry point (see AiAssistantPanel): the store is a
+      // singleton living for the whole admin session, so without this a
+      // conversation loaded on one document would still be in memory (and
+      // displayed) on the next one.
+      onRouteChange() {
+        const context = this.documentContext()
+
+        if (!context) {
+          // Left the estimate/invoice editors: forget the draft key so a
+          // new document never reuses the previous draft conversation, and
+          // close the panel (the bubble is hidden outside the editors).
+          this.resetConversationState()
+          this.closePanel()
+
+          return
+        }
+
+        const key = this.contextKey(context)
+
+        if (this.historyKey !== key) {
+          // Switched to another document (or from a draft to its saved
+          // id): drop the previous document's conversation and flow so
+          // nothing leaks into the new one.
+          this.resetConversationState()
+          this.historyKey = key
+
+          if (this.isOpen) {
+            this.loadHistory()
+          }
+        }
+      },
+
+      // Drop every trace of the previously edited document: conversation
+      // history, draft key and in-progress flow (a proposal reviewed on
+      // one document must never be appliable onto another one).
+      resetConversationState() {
+        this.resetFlow()
+        this.conversationId = null
+        this.draftKey = null
+        this.messages = []
+        this.historyLoaded = false
+        this.historyKey = null
+        this.loadingHistory = false
+        // Invalidate any in-flight history request.
+        this.historyRequestId += 1
+      },
+
       closePanel() {
+        // Closing keeps the conversation state: reopening on the same
+        // document shows the same history without a reload.
         this.isOpen = false
       },
 
@@ -263,18 +327,41 @@ export const useAiAssistantStore = (useWindow = false) => {
 
         this.loadingHistory = true
 
+        // Token guard: a response arriving after a document switch must
+        // never populate the panel with another document's messages.
+        const requestId = ++this.historyRequestId
+        const requestKey = this.contextKey(context)
+
         try {
           const response = await window.axios.get('/api/v1/ai/conversations', { params })
+
+          if (requestId !== this.historyRequestId) {
+            return
+          }
 
           if (response.data.data) {
             this.conversationId = response.data.data.id
             this.messages = response.data.data.messages
+          } else {
+            // No conversation for this document yet: never keep a
+            // previously displayed one around.
+            this.conversationId = null
+            this.messages = []
           }
+
+          this.historyKey = requestKey
         } catch {
+          if (requestId !== this.historyRequestId) {
+            return
+          }
+
           // History is a nice-to-have: never block the panel on it.
+          this.historyKey = requestKey
         } finally {
-          this.loadingHistory = false
-          this.historyLoaded = true
+          if (requestId === this.historyRequestId) {
+            this.loadingHistory = false
+            this.historyLoaded = true
+          }
         }
       },
 

@@ -43,7 +43,11 @@ class AiConversationsController extends Controller
                 $companyId
             );
         } elseif (! empty($data['draft_key'])) {
-            $conversation = AiConversation::findForDraft($data['draft_key'], $companyId);
+            $conversation = AiConversation::findForDraft(
+                $data['document_type'],
+                $data['draft_key'],
+                $companyId
+            );
         } else {
             abort(422, 'Fournissez document_id ou draft_key.');
         }
@@ -73,7 +77,15 @@ class AiConversationsController extends Controller
 
         $this->assertDocumentExists($documentType, $documentId, $companyId);
 
-        $draft = AiConversation::findForDraft($request->input('draft_key'), $companyId);
+        // The draft conversation is looked up with the document type as
+        // part of the key: a draft key of the wrong type is simply not
+        // found, so a bind can never move an estimate conversation onto
+        // an invoice (or the other way around).
+        $draft = AiConversation::findForDraft(
+            $documentType,
+            (string) $request->input('draft_key'),
+            $companyId
+        );
 
         if (! $draft) {
             abort(404, 'Conversation de brouillon introuvable.');

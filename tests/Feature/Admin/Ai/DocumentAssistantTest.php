@@ -184,6 +184,133 @@ test('conversation history is isolated per document', function () {
         ->json('data'))->toBeNull();
 });
 
+test('estimate and invoice histories are isolated even with the same document id', function () {
+    fakePerplexityProposal(proposalPayload($this->services));
+
+    // Force an estimate and an invoice to share the same numeric id: the
+    // document type must stay the discriminator, never the id alone.
+    $estimate = Estimate::factory()->create();
+    $invoice = Invoice::factory()->create();
+
+    $sharedId = max(Estimate::max('id'), Invoice::max('id')) + 1000;
+    Estimate::where('id', $estimate->id)->update(['id' => $sharedId]);
+    Invoice::where('id', $invoice->id)->update(['id' => $sharedId]);
+
+    postJson('api/v1/ai/document-assistant', [
+        'document_type' => 'estimate',
+        'document_id' => $sharedId,
+        'action' => 'create_custom_line',
+        'brief' => 'Brief sur le devis.',
+    ])->assertOk();
+
+    // The invoice sharing the id sees no estimate history.
+    expect(getJson('api/v1/ai/conversations?document_type=invoice&document_id='.$sharedId)
+        ->assertOk()
+        ->json('data'))->toBeNull();
+
+    postJson('api/v1/ai/document-assistant', [
+        'document_type' => 'invoice',
+        'document_id' => $sharedId,
+        'action' => 'create_custom_line',
+        'brief' => 'Brief sur la facture.',
+    ])->assertOk();
+
+    $estimateHistory = getJson('api/v1/ai/conversations?document_type=estimate&document_id='.$sharedId)
+        ->assertOk()
+        ->json('data');
+
+    $invoiceHistory = getJson('api/v1/ai/conversations?document_type=invoice&document_id='.$sharedId)
+        ->assertOk()
+        ->json('data');
+
+    // Each type only ever loads its own conversation.
+    expect($estimateHistory['messages'])->toHaveCount(2)
+        ->and($estimateHistory['messages'][0]['content'])->toBe('Brief sur le devis.')
+        ->and($invoiceHistory['messages'])->toHaveCount(2)
+        ->and($invoiceHistory['messages'][0]['content'])->toBe('Brief sur la facture.');
+});
+
+test('a draft key never resolves a conversation of another document type', function () {
+    fakePerplexityProposal(proposalPayload($this->services));
+
+    // Draft conversation started on an estimate.
+    postJson('api/v1/ai/document-assistant', [
+        'document_type' => 'estimate',
+        'draft_key' => 'draft-shared-1',
+        'action' => 'create_custom_line',
+        'brief' => 'Brief sur devis brouillon.',
+    ])->assertOk();
+
+    // The same draft key seen from an invoice: no history.
+    expect(getJson('api/v1/ai/conversations?document_type=invoice&draft_key=draft-shared-1')
+        ->assertOk()
+        ->json('data'))->toBeNull();
+
+    // An assistant call on an invoice with that key creates its own
+    // conversation instead of reusing the estimate one.
+    postJson('api/v1/ai/document-assistant', [
+        'document_type' => 'invoice',
+        'draft_key' => 'draft-shared-1',
+        'action' => 'create_custom_line',
+        'brief' => 'Brief sur facture brouillon.',
+    ])->assertOk();
+
+    $conversations = AiConversation::where('draft_key', 'draft-shared-1')->get();
+
+    expect($conversations)->toHaveCount(2)
+        ->and($conversations->pluck('document_type')->sort()->values()->all())->toBe(['estimate', 'invoice']);
+
+    // Each conversation holds only its own messages.
+    $estimateDraft = AiConversation::findForDraft('estimate', 'draft-shared-1', $this->companyId);
+    $invoiceDraft = AiConversation::findForDraft('invoice', 'draft-shared-1', $this->companyId);
+
+    expect($estimateDraft->messages)->toHaveCount(2)
+        ->and($estimateDraft->messages[0]->content)->toBe('Brief sur devis brouillon.')
+        ->and($invoiceDraft->messages)->toHaveCount(2)
+        ->and($invoiceDraft->messages[0]->content)->toBe('Brief sur facture brouillon.');
+});
+
+test('binding never attaches a draft conversation to another document type', function () {
+    fakePerplexityProposal(proposalPayload($this->services));
+
+    // Draft conversation started on an estimate.
+    postJson('api/v1/ai/document-assistant', [
+        'document_type' => 'estimate',
+        'draft_key' => 'draft-xtype-1',
+        'action' => 'create_custom_line',
+        'brief' => 'Brief sur devis brouillon.',
+    ])->assertOk();
+
+    // Trying to bind it onto an invoice: the draft does not exist for
+    // that document type, nothing is bound.
+    postJson('api/v1/ai/conversations/bind', [
+        'draft_key' => 'draft-xtype-1',
+        'document_type' => 'invoice',
+        'document_id' => $this->invoice->id,
+    ])->assertStatus(404);
+
+    $conversation = AiConversation::findForDraft('estimate', 'draft-xtype-1', $this->companyId);
+
+    expect($conversation)->not->toBeNull()
+        ->and($conversation->document_id)->toBeNull()
+        // The invoice still owns no conversation.
+        ->and(AiConversation::findForDocument('invoice', $this->invoice->id, $this->companyId))->toBeNull();
+
+    // Binding with the matching type works and keeps the document type.
+    postJson('api/v1/ai/conversations/bind', [
+        'draft_key' => 'draft-xtype-1',
+        'document_type' => 'estimate',
+        'document_id' => $this->estimateA->id,
+    ])->assertOk();
+
+    $bound = AiConversation::findForDocument('estimate', $this->estimateA->id, $this->companyId);
+
+    expect($bound->document_type)->toBe('estimate')
+        ->and($bound->document_id)->toBe($this->estimateA->id)
+        ->and($bound->draft_key)->toBeNull()
+        ->and($bound->messages)->toHaveCount(2);
+});
+
 test('a saved document can only own one conversation', function () {
     fakePerplexityProposal(proposalPayload($this->services));
 

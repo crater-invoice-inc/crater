@@ -1,12 +1,17 @@
 <template>
-  <div
-    v-if="aiStore.isOpen && !modalStore.active"
-    class="
-      fixed z-30 flex flex-col overflow-hidden bg-white border border-gray-200
-      border-solid rounded-lg shadow-xl inset-x-2 top-16 bottom-2
-      sm:inset-x-auto sm:right-20 sm:top-auto sm:bottom-6 sm:w-[400px] sm:h-[560px]
-    "
-  >
+  <Transition name="ai-assistant-panel">
+    <div
+      v-if="aiStore.isOpen && !modalStore.active"
+      ref="panelRoot"
+      role="dialog"
+      :aria-label="$t('ai_assistant.title')"
+      class="
+        fixed z-30 flex flex-col overflow-hidden bg-white border border-gray-200
+        border-solid rounded-lg shadow-xl inset-x-2 top-16 bottom-2
+        sm:inset-x-auto sm:right-6 sm:top-auto sm:bottom-6 sm:w-[400px] sm:h-[560px]
+        origin-bottom-right
+      "
+    >
     <!-- Header -->
     <div
       class="
@@ -459,10 +464,11 @@
       </div>
     </div>
   </div>
+  </Transition>
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, ref, watch, onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useAiAssistantStore } from '@/scripts/admin/stores/ai-assistant'
@@ -476,6 +482,52 @@ const { t } = useI18n()
 const aiStore = useAiAssistantStore()
 const modalStore = useModalStore()
 const companyStore = useCompanyStore()
+
+const panelRoot = ref(null)
+
+// The conversation store lives for the whole admin session: on every route
+// change it drops the conversation of the previously opened document so
+// another document's history can never leak into the current one.
+watch(
+  [() => route.name, () => route.params.id],
+  () => {
+    aiStore.onRouteChange()
+  }
+)
+
+// Outside tap/click closes the panel. A passive capture listener keeps the
+// page behind fully interactive (no blocking overlay) and pointerdown
+// covers mouse, touch and pen.
+function onPointerDown(event) {
+  if (!aiStore.isOpen) {
+    return
+  }
+
+  const target = event.target
+
+  if (
+    panelRoot.value &&
+    !panelRoot.value.contains(target) &&
+    !(target.closest && target.closest('[data-ai-assistant-bubble]'))
+  ) {
+    aiStore.closePanel()
+  }
+}
+
+watch(
+  () => aiStore.isOpen,
+  (open) => {
+    if (open) {
+      document.addEventListener('pointerdown', onPointerDown, true)
+    } else {
+      document.removeEventListener('pointerdown', onPointerDown, true)
+    }
+  }
+)
+
+onUnmounted(() => {
+  document.removeEventListener('pointerdown', onPointerDown, true)
+})
 
 const options = [
   {
@@ -545,3 +597,33 @@ function messageClass(message) {
     : 'bg-gray-100 text-gray-800'
 }
 </script>
+
+<style scoped>
+/*
+ * Bubble -> panel morph: the panel is anchored on the bubble spot (bottom
+ * right) and grows from the bubble's size and roundness. Content fades in
+ * faster than the frame grows so it stays readable through the motion.
+ */
+.ai-assistant-panel-enter-active {
+  transition:
+    transform 250ms cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 160ms ease-out,
+    border-radius 250ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ai-assistant-panel-leave-active {
+  transition:
+    transform 200ms cubic-bezier(0.7, 0, 0.84, 0),
+    opacity 150ms ease-in,
+    border-radius 200ms ease-in;
+  pointer-events: none;
+}
+
+/* ~48px wide at the panel's 400px desktop width: the bubble itself. */
+.ai-assistant-panel-enter-from,
+.ai-assistant-panel-leave-to {
+  transform: scale(0.12);
+  opacity: 0;
+  border-radius: 9999px;
+}
+</style>

@@ -63,11 +63,13 @@ class AiConversation extends Model
 
     /**
      * Find the conversation attached to a not-yet-saved document, keyed by
-     * a client generated draft key.
+     * a client generated draft key. The document type is part of the key:
+     * a draft key must never resolve a conversation of another type.
      */
-    public static function findForDraft(string $draftKey, int $companyId): ?self
+    public static function findForDraft(string $documentType, string $draftKey, int $companyId): ?self
     {
-        return self::where('draft_key', $draftKey)
+        return self::where('document_type', $documentType)
+            ->where('draft_key', $draftKey)
             ->where('company_id', $companyId)
             ->first();
     }
@@ -86,7 +88,7 @@ class AiConversation extends Model
         if ($documentId !== null) {
             $conversation = self::findForDocument($documentType, $documentId, $companyId);
         } else {
-            $conversation = self::findForDraft($draftKey, $companyId);
+            $conversation = self::findForDraft($documentType, $draftKey, $companyId);
         }
 
         if ($conversation) {

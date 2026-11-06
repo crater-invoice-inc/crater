@@ -40,7 +40,15 @@ class CreateAiConversationsTable extends Migration
                 'ai_conversations_company_document_unique'
             );
 
-            $table->unique('draft_key', 'ai_conversations_draft_key_unique');
+            // A draft conversation is identified by company + document
+            // type + draft key, mirroring the saved document identity:
+            // the same draft key must never resolve a conversation of
+            // another document type, but may exist on both types at once
+            // (client bug recovery) or in two companies.
+            $table->unique(
+                ['company_id', 'document_type', 'draft_key'],
+                'ai_conversations_company_type_draft_unique'
+            );
             $table->index(['document_type', 'document_id']);
         });
     }

@@ -30,8 +30,28 @@
                 class="pl-0 text-left item-cell"
                 style="vertical-align: top;"
             >
-                <span>{{ $item->name }}</span><br>
-                <span class="item-description">{!! nl2br(htmlspecialchars($item->description)) !!}</span>
+                <span><strong>{{ $item->name }}</strong></span><br>
+                @if ($item->description)
+                    <span class="item-description">{!! nl2br(htmlspecialchars($item->description)) !!}</span>
+                @endif
+                @if ($item->deliverables)
+                    <div style="margin-top: 4px;">
+                        <span style="display: block; font-size: 9px; line-height: 12px; font-weight: bold; color: #595959;">@lang('pdf_deliverables_label')</span>
+                        <span style="display: block; color: #595959; font-size: 9px; line-height: 12px; word-wrap: break-word;">{!! nl2br(htmlspecialchars($item->deliverables)) !!}</span>
+                    </div>
+                @endif
+                @if ($item->delivery_delay)
+                    <div style="margin-top: 4px;">
+                        <span style="display: block; font-size: 9px; line-height: 12px; font-weight: bold; color: #595959;">@lang('pdf_delivery_delay_label')</span>
+                        <span style="display: block; color: #595959; font-size: 9px; line-height: 12px; word-wrap: break-word;">{!! nl2br(htmlspecialchars($item->delivery_delay)) !!}</span>
+                    </div>
+                @endif
+                @if ($item->terms)
+                    <div style="margin-top: 4px;">
+                        <span style="display: block; font-size: 9px; line-height: 12px; font-weight: bold; color: #595959;">@lang('pdf_terms_label')</span>
+                        <span style="display: block; color: #595959; font-size: 9px; line-height: 12px; word-wrap: break-word;">{!! nl2br(htmlspecialchars($item->terms)) !!}</span>
+                    </div>
+                @endif
             </td>
             @foreach($customFields as $field)
                 <td class="text-right item-cell" style="vertical-align: top;">

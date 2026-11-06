@@ -69,6 +69,19 @@ class EstimatesRequest extends FormRequest
             'items.*.description' => [
                 'nullable',
             ],
+            'items.*.deliverables' => [
+                'nullable',
+                'string',
+            ],
+            'items.*.delivery_delay' => [
+                'nullable',
+                'string',
+                'max:255',
+            ],
+            'items.*.terms' => [
+                'nullable',
+                'string',
+            ],
             'items.*' => [
                 'required',
                 'max:255',

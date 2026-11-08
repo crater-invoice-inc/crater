@@ -85,8 +85,8 @@ const props = defineProps({
   },
 })
 
-const COLOR_PAID = '#C9C7F2'
-const COLOR_DUE = '#5851D8'
+const COLOR_PAID = '#AFA8F7'
+const COLOR_DUE = '#4C3CD6'
 const COLOR_EMPTY = '#EEF0F4'
 
 const CX = 110

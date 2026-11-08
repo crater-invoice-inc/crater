@@ -45,10 +45,10 @@ const props = defineProps({
   },
 })
 
-const COLOR_SALES = '#5851D8'
-const COLOR_RECEIPTS = '#3FAE8C'
-const COLOR_EXPENSES = '#E0785C'
-const COLOR_INCOME = '#4B5563'
+const COLOR_SALES = '#4C3CD6'
+const COLOR_RECEIPTS = '#1BAF7A'
+const COLOR_EXPENSES = '#EB6834'
+const COLOR_INCOME = '#3C4052'
 
 let myLineChart = null
 const graph = ref(null)

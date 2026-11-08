@@ -7,7 +7,7 @@
     leave-from-class="opacity-100"
     leave-to-class="opacity-0"
   >
-    <div v-show="show" class="relative z-10 p-4 md:p-8 bg-gray-200 rounded">
+    <div v-show="show" class="relative z-10 p-4 md:p-8 bg-surface-secondary rounded-xl border border-line-light">
       <slot name="filter-header" />
 
       <label
@@ -15,9 +15,9 @@
           absolute
           text-sm
           leading-snug
-          text-gray-900
+          text-muted
           cursor-pointer
-          hover:text-gray-700
+          hover:text-heading
           top-2.5
           right-3.5
         "

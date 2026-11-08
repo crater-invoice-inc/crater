@@ -12,15 +12,16 @@
       pr-8
       text-sm
       font-normal
-      text-gray-700
-      bg-white
+      text-muted
+      bg-surface-tertiary
+      border-t border-line-light
     "
   >
     Powered by
     <a
       href="http://bytefury.com/"
       target="_blank"
-      class="pl-1 font-normal text-gray-900"
+      class="pl-1 font-normal text-heading"
       >Bytefury
     </a>
   </footer>

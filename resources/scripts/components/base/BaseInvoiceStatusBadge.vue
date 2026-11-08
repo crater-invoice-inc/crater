@@ -20,25 +20,25 @@ export default {
     const badgeColorClasses = computed(() => {
       switch (props.status) {
         case 'DRAFT':
-          return 'bg-yellow-300 bg-opacity-25 px-2  py-1 text-sm  text-yellow-800 uppercase font-normal text-center'
+          return 'px-2.5 py-1 rounded-full text-xs font-medium text-center text-status-yellow bg-status-yellow-bg uppercase'
         case 'SENT':
-          return ' bg-yellow-500 bg-opacity-25 px-2 py-1 text-sm  text-yellow-900 uppercase font-normal text-center '
+          return 'px-2.5 py-1 rounded-full text-xs font-medium text-center text-status-yellow bg-status-yellow-bg uppercase'
         case 'VIEWED':
-          return 'bg-blue-400 bg-opacity-25 px-2  py-1 text-sm  text-blue-900 uppercase font-normal text-center'
+          return 'px-2.5 py-1 rounded-full text-xs font-medium text-center text-status-blue bg-status-blue-bg uppercase'
         case 'COMPLETED':
-          return 'bg-green-500 bg-opacity-25 px-2  py-1 text-sm  text-green-900 uppercase font-normal text-center'
+          return 'px-2.5 py-1 rounded-full text-xs font-medium text-center text-status-green bg-status-green-bg uppercase'
         case 'DUE':
-          return 'bg-yellow-500 bg-opacity-25 px-2  py-1 text-sm  text-yellow-900 uppercase font-normal text-center'
+          return 'px-2.5 py-1 rounded-full text-xs font-medium text-center text-status-yellow bg-status-yellow-bg uppercase'
         case 'OVERDUE':
-          return 'bg-red-300 bg-opacity-50 px-2  py-1 text-sm  text-red-900 uppercase font-normal text-center'
+          return 'px-2.5 py-1 rounded-full text-xs font-medium text-center text-status-red bg-status-red-bg uppercase'
         case 'UNPAID':
-          return 'bg-yellow-500 bg-opacity-25 px-2 py-1 text-sm  text-yellow-900 uppercase font-normal text-center'
+          return 'px-2.5 py-1 rounded-full text-xs font-medium text-center text-status-yellow bg-status-yellow-bg uppercase'
         case 'PARTIALLY_PAID':
-          return 'bg-blue-400 bg-opacity-25 px-2  py-1 text-sm  text-blue-900 uppercase font-normal text-center'
+          return 'px-2.5 py-1 rounded-full text-xs font-medium text-center text-status-blue bg-status-blue-bg uppercase'
         case 'PAID':
-          return 'bg-green-500 bg-opacity-25 px-2 py-1 text-sm  text-green-900 uppercase font-normal text-center'
+          return 'px-2.5 py-1 rounded-full text-xs font-medium text-center text-status-green bg-status-green-bg uppercase'
         default:
-          return 'bg-gray-500 bg-opacity-25 px-2 py-1 text-sm  text-gray-900 uppercase font-normal text-center'
+          return 'px-2.5 py-1 rounded-full text-xs font-medium text-center text-status-gray bg-status-gray-bg uppercase'
       }
     })
     return { badgeColorClasses }

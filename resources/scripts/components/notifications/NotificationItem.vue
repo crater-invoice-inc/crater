@@ -1,11 +1,12 @@
 <template>
   <div
-    :class="success || info ? 'bg-white' : 'bg-red-50'"
+    :class="success || info ? 'bg-surface' : 'bg-status-red-bg'"
     class="
       max-w-sm
       mb-3
-      rounded-lg
-      shadow-lg
+      rounded-xl
+      border border-line-light
+      shadow-card
       cursor-pointer
       pointer-events-auto
       w-full
@@ -15,7 +16,7 @@
     @mouseenter="clearNotificationTimeOut"
     @mouseleave="setNotificationTimeOut"
   >
-    <div class="overflow-hidden rounded-lg shadow-xs">
+    <div class="overflow-hidden rounded-xl">
       <div class="p-4">
         <div class="flex items-start">
           <div class="shrink-0">
@@ -62,7 +63,7 @@
           <div class="flex-1 w-0 ml-3 text-left">
             <p
               :class="`text-sm leading-5 font-medium ${
-                success || info ? 'text-gray-900' : 'text-red-800'
+                success || info ? 'text-heading' : 'text-status-red'
               }`"
             >
               {{

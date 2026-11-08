@@ -7,7 +7,7 @@
         class="due-invoices"
       >
         <div class="relative z-10 flex items-center justify-between mb-3">
-          <h6 class="mb-0 text-lg font-semibold leading-normal">
+          <h6 class="mb-0 text-lg font-semibold leading-normal text-heading">
             {{ $t('dashboard.recent_invoices_card.title') }}
           </h6>
 
@@ -58,7 +58,7 @@
         class="recent-estimates"
       >
         <div class="relative z-10 flex items-center justify-between mb-3">
-          <h6 class="mb-0 text-lg font-semibold leading-normal">
+          <h6 class="mb-0 text-lg font-semibold leading-normal text-heading">
             {{ $t('dashboard.recent_estimate_card.title') }}
           </h6>
 

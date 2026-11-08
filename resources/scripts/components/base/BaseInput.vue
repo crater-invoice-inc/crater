@@ -10,7 +10,7 @@
   <div
     v-else
     :class="[containerClass, computedContainerClass]"
-    class="relative rounded-md shadow-sm font-base"
+    class="relative rounded-lg shadow-soft font-base"
   >
     <div
       v-if="loading && loadingPosition === 'left'"
@@ -60,10 +60,10 @@
         inline-flex
         items-center
         px-3
-        text-gray-500
-        border border-r-0 border-gray-200
-        rounded-l-md
-        bg-gray-50
+        text-muted
+        border border-r-0 border-line-light
+        rounded-l-lg
+        bg-surface-secondary
         sm:text-sm
       "
     >
@@ -199,7 +199,7 @@ const props = defineProps({
   defaultInputClass: {
     type: String,
     default:
-      'font-base block w-full sm:text-sm border-gray-200 rounded-md text-black',
+      'font-base block w-full sm:text-sm border-line-strong rounded-lg text-heading bg-surface',
   },
   iconLeftClass: {
     type: String,
@@ -240,7 +240,7 @@ const inputPaddingClass = computed(() => {
 
 const inputAddonClass = computed(() => {
   if (props.addon) {
-    return 'flex-1 min-w-0 block w-full px-3 py-2 !rounded-none !rounded-r-md'
+    return 'flex-1 min-w-0 block w-full px-3 py-2 !rounded-none !rounded-r-lg'
   } else if (props.inlineAddon) {
     return 'pl-7'
   }

@@ -1,5 +1,5 @@
 <template>
-  <span :class="[badgeColorClasses, defaultClass]" class="">
+  <span :class="[badgeColorClasses, defaultClass]">
     <slot />
   </span>
 </template>
@@ -16,7 +16,7 @@ export default {
     },
     defaultClass: {
       type: String,
-      default: 'px-1 py-0.5 text-xs',
+      default: 'px-2.5 py-0.5 text-xs font-medium uppercase rounded-full',
     },
   },
 
@@ -24,15 +24,15 @@ export default {
     const badgeColorClasses = computed(() => {
       switch (props.status) {
         case 'PAID':
-          return 'bg-primary-300 bg-opacity-25 text-primary-800 uppercase font-normal text-center'
+          return 'text-status-green bg-status-green-bg uppercase font-medium text-center'
         case 'UNPAID':
-          return ' bg-yellow-500 bg-opacity-25 text-yellow-900 uppercase font-normal text-center '
+          return 'text-status-yellow bg-status-yellow-bg uppercase font-medium text-center'
         case 'PARTIALLY_PAID':
-          return 'bg-blue-400 bg-opacity-25 text-blue-900 uppercase font-normal text-center'
+          return 'text-status-blue bg-status-blue-bg uppercase font-medium text-center'
         case 'OVERDUE':
-          return 'bg-red-300 bg-opacity-50 px-2  py-1 text-sm  text-red-900 uppercase font-normal text-center'
+          return 'text-status-red bg-status-red-bg uppercase font-medium text-center'
         default:
-          return 'bg-gray-500 bg-opacity-25 text-gray-900 uppercase font-normal text-center'
+          return 'text-status-gray bg-status-gray-bg uppercase font-medium text-center'
       }
     })
     return { badgeColorClasses }

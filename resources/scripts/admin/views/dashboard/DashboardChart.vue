@@ -4,13 +4,13 @@
       v-if="dashboardStore.isDashboardDataLoaded"
       class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-8"
     >
-      <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-6 sm:p-8 lg:col-span-2">
+      <div class="bg-surface rounded-2xl border border-line-light shadow-card p-6 sm:p-8 lg:col-span-2">
         <div class="flex justify-between items-center mb-6 flex-col md:flex-row gap-3">
           <div>
-            <h6 class="text-lg font-semibold text-gray-900">
+            <h6 class="text-lg font-semibold text-heading">
               {{ $t('dashboard.monthly_chart.title') }}
             </h6>
-            <p v-if="selectedYear" class="mt-0.5 text-sm text-gray-400">
+            <p v-if="selectedYear" class="mt-0.5 text-sm text-muted">
               {{ $t('dashboard.monthly_chart.subtitle', { year: selectedYear }) }}
             </p>
           </div>
@@ -37,8 +37,8 @@
         />
       </div>
 
-      <div class="flex flex-col bg-white rounded-xl border border-gray-100 shadow-sm p-6 sm:p-8">
-        <h6 class="text-lg font-semibold text-gray-900 mb-6">
+      <div class="flex flex-col bg-surface rounded-2xl border border-line-light shadow-card p-6 sm:p-8">
+        <h6 class="text-lg font-semibold text-heading mb-6">
           {{ $t('dashboard.gauge.title') }}
         </h6>
         <GaugeChart

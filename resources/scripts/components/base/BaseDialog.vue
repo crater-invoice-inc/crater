@@ -59,9 +59,9 @@
               text-left
               align-bottom
               transition-all
-              bg-white
-              rounded-lg
-              shadow-xl
+              bg-surface
+              rounded-2xl
+              shadow-card
               sm:my-8 sm:align-middle sm:w-full sm:p-6
               relative
             "
@@ -76,35 +76,35 @@
                   w-12
                   h-12
                   mx-auto
-                  bg-green-100
+                  bg-status-green-bg
                   rounded-full
                 "
                 :class="{
-                  'bg-green-100': dialogStore.variant === 'primary',
-                  'bg-red-100': dialogStore.variant === 'danger',
+                  'bg-status-green-bg': dialogStore.variant === 'primary',
+                  'bg-status-red-bg': dialogStore.variant === 'danger',
                 }"
               >
                 <BaseIcon
                   v-if="dialogStore.variant === 'primary'"
                   name="CheckIcon"
-                  class="w-6 h-6 text-green-600"
+                  class="w-6 h-6 text-status-green"
                 />
                 <BaseIcon
                   v-else
                   name="ExclamationIcon"
-                  class="w-6 h-6 text-red-600"
+                  class="w-6 h-6 text-status-red"
                   aria-hidden="true"
                 />
               </div>
               <div class="mt-3 text-center sm:mt-5">
                 <DialogTitle
                   as="h3"
-                  class="text-lg font-medium leading-6 text-gray-900"
+                  class="text-lg font-medium leading-6 text-heading"
                 >
                   {{ dialogStore.title }}
                 </DialogTitle>
                 <div class="mt-2">
-                  <p class="text-sm text-gray-500">
+                  <p class="text-sm text-muted">
                     {{ dialogStore.message }}
                   </p>
                 </div>

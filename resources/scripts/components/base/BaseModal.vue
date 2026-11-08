@@ -51,17 +51,16 @@
             <div
               :class="`inline-block
               align-middle
-              bg-white
-              rounded-lg
+              bg-surface
+              rounded-2xl
               text-left
               overflow-hidden
               relative
-              shadow-xl
+              shadow-card
               transition-all
               my-4
               ${modalSize}
-              sm:w-full
-              border-t-8 border-solid rounded shadow-xl  border-primary-500`"
+              sm:w-full`"
             >
               <div
                 v-if="hasHeaderSlot"
@@ -73,8 +72,8 @@
                   py-4
                   text-lg
                   font-medium
-                  text-black
-                  border-b border-gray-200 border-solid
+                  text-heading
+                  border-b border-line-light border-solid
                 "
               >
                 <slot name="header" />

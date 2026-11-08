@@ -2,7 +2,7 @@
   <Disclosure
     v-slot="{ open }"
     as="nav"
-    class="bg-white shadow-sm fixed top-0 left-0 z-20 w-full"
+    class="bg-chrome shadow-sm fixed top-0 left-0 z-20 w-full"
   >
     <div class="mx-auto px-8">
       <div class="flex justify-between h-16 w-full">
@@ -22,7 +22,12 @@
                 font-base
               "
             >
-              <MainLogo v-if="!customerLogo" class="h-6" />
+              <MainLogo
+                v-if="!customerLogo"
+                class="h-6"
+                light-color="white"
+                dark-color="white"
+              />
               <img v-else :src="customerLogo" class="h-6" />
             </a>
           </div>
@@ -33,8 +38,8 @@
               :to="`/${globalStore.companySlug}${item.link}`"
               :class="[
                 hasActiveUrl(item.link)
-                  ? 'border-primary-500 text-primary-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300',
+                  ? 'border-chrome-accent text-chrome-fg'
+                  : 'border-transparent text-chrome-muted hover:text-chrome-fg hover:border-white hover:border-opacity-20',
                 'inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium',
               ]"
             >
@@ -46,11 +51,11 @@
           <button
             type="button"
             class="
-              bg-white
+              bg-transparent
               p-1
               rounded-full
-              text-gray-400
-              hover:text-gray-500
+              text-chrome-muted
+              hover:text-chrome-fg
               focus:outline-none
               focus:ring-2
               focus:ring-offset-2
@@ -65,10 +70,11 @@
               <template #activator>
                 <MenuButton
                   class="
-                    bg-white
+                    bg-transparent
                     flex
                     text-sm
                     rounded-full
+                    ring-1 ring-white ring-opacity-20
                     focus:outline-none
                     focus:ring-2
                     focus:ring-offset-2
@@ -107,13 +113,14 @@
           <DisclosureButton
             class="
               bg-white
+              bg-opacity-10
               inline-flex
               items-center
               justify-center
               p-2
               rounded-md
-              text-gray-400
-              hover:text-gray-500 hover:bg-gray-100
+              text-chrome-fg
+              hover:bg-opacity-20
               focus:outline-none
               focus:ring-2
               focus:ring-offset-2
@@ -128,7 +135,7 @@
       </div>
     </div>
 
-    <DisclosurePanel class="sm:hidden">
+    <DisclosurePanel class="sm:hidden bg-chrome">
       <div class="pt-2 pb-3 space-y-1">
         <router-link
           v-for="item in globalStore.mainMenu"
@@ -136,24 +143,24 @@
           :to="`/${globalStore.companySlug}${item.link}`"
           :class="[
             hasActiveUrl(item.link)
-              ? 'bg-primary-50 border-primary-500 text-primary-700'
-              : 'border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800',
+              ? 'bg-white bg-opacity-[0.13] border-chrome-accent text-chrome-fg'
+              : 'border-transparent text-chrome-muted hover:bg-white hover:bg-opacity-[0.07] hover:text-chrome-fg',
             'block pl-3 pr-4 py-2 border-l-4 text-base font-medium',
           ]"
           :aria-current="item.current ? 'page' : undefined"
           >{{ item.title }}
         </router-link>
       </div>
-      <div class="pt-4 pb-3 border-t border-gray-200">
+      <div class="pt-4 pb-3 border-t border-white border-opacity-10">
         <div class="flex items-center px-4">
           <div class="shrink-0">
             <img class="h-10 w-10 rounded-full" :src="previewAvatar" alt="" />
           </div>
           <div class="ml-3">
-            <div class="text-base font-medium text-gray-800">
+            <div class="text-base font-medium text-chrome-fg">
               {{ globalStore.currentUser.title }}
             </div>
-            <div class="text-sm font-medium text-gray-500">
+            <div class="text-sm font-medium text-chrome-muted">
               {{ globalStore.currentUser.email }}
             </div>
           </div>
@@ -161,12 +168,12 @@
             type="button"
             class="
               ml-auto
-              bg-white
+              bg-transparent
               shrink-0
               p-1
               rounded-full
-              text-gray-400
-              hover:text-gray-500
+              text-chrome-muted
+              hover:text-chrome-fg
               focus:outline-none
               focus:ring-2
               focus:ring-offset-2
@@ -181,8 +188,8 @@
             :to="item.link"
             :class="[
               hasActiveUrl(item.link)
-                ? 'bg-primary-50 border-primary-500 text-primary-700'
-                : 'border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800',
+                ? 'bg-white bg-opacity-[0.13] border-chrome-accent text-chrome-fg'
+                : 'border-transparent text-chrome-muted hover:bg-white hover:bg-opacity-[0.07] hover:text-chrome-fg',
               'block pl-3 pr-4 py-2 border-l-4 text-base font-medium',
             ]"
             >{{ item.title }}</router-link

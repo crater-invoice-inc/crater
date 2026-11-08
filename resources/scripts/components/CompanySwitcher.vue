@@ -5,7 +5,7 @@
     <div
       :title="collapsed && companyStore.selectedCompany ? companyStore.selectedCompany.name : null"
       :class="[
-        'flex items-center w-full px-2.5 py-2 text-sm bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100',
+        'flex items-center w-full px-2.5 py-2 text-sm bg-white bg-opacity-[0.07] rounded-lg cursor-pointer hover:bg-opacity-[0.13] transition-colors',
         collapsed ? 'justify-center' : '',
       ]"
       @click="isShow = !isShow"
@@ -20,11 +20,11 @@
           overflow-hidden
           text-base
           font-semibold
-          bg-gray-200
+          bg-chrome-raised
           rounded-md
           w-9
           h-9
-          text-primary-500
+          text-chrome-accent
         "
       >
         <span v-if="!companyStore.selectedCompany.logo">
@@ -40,7 +40,7 @@
 
       <span
         v-if="companyStore.selectedCompany && !collapsed"
-        class="flex-1 ml-3 font-medium text-gray-900 truncate"
+        class="flex-1 ml-3 font-medium text-chrome-fg truncate"
       >
         {{ companyStore.selectedCompany.name }}
       </span>
@@ -48,7 +48,7 @@
       <BaseIcon
         v-if="!collapsed"
         name="ChevronDownIcon"
-        class="h-5 ml-2 shrink-0 text-gray-400"
+        class="h-5 ml-2 shrink-0 text-chrome-muted"
       />
     </div>
 
@@ -62,7 +62,7 @@
     >
       <div
         v-if="isShow"
-        class="absolute left-0 z-30 mt-2 bg-white rounded-lg shadow-lg"
+        class="absolute left-0 z-30 mt-2 bg-surface rounded-lg border border-line-light shadow-card"
       >
         <div
           class="
@@ -121,7 +121,7 @@
                   hover:bg-gray-100
                 "
                 :class="{
-                  'bg-gray-100':
+                  'bg-surface-secondary':
                     companyStore.selectedCompany.id === company.id,
                 }"
                 @click="changeCompany(company)"

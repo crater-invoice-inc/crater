@@ -27,10 +27,10 @@
           pl-3
           pr-10
           text-left
-          bg-white
-          border border-gray-200
-          rounded-md
-          shadow-sm
+          bg-surface
+          border border-line-strong
+          rounded-lg
+          shadow-soft
           cursor-default
           focus:outline-none
           focus:ring-1
@@ -82,9 +82,9 @@
             mt-1
             overflow-auto
             text-base
-            bg-white
-            rounded-md
-            shadow-lg
+            bg-surface
+            rounded-lg
+            shadow-card
             max-h-60
             ring-1 ring-black ring-opacity-5
             focus:outline-none

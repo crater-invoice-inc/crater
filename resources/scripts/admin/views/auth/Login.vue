@@ -1,5 +1,5 @@
 <template>
-  <form id="loginForm" class="mt-12 text-left" @submit.prevent="onSubmit">
+  <form id="loginForm" class="text-left" @submit.prevent="onSubmit">
     <BaseInputGroup
       :error="v$.email.$error && v$.email.$errors[0].$message"
       :label="$t('login.email')"
@@ -49,13 +49,13 @@
       <div class="mb-4">
         <router-link
           to="forgot-password"
-          class="text-sm text-primary-400 hover:text-gray-700"
+          class="text-sm font-medium text-primary-500 hover:text-primary-600"
         >
           {{ $t('login.forgot_password') }}
         </router-link>
       </div>
     </div>
-    <BaseButton :loading="isLoading" type="submit">
+    <BaseButton :loading="isLoading" type="submit" class="w-full justify-center">
       {{ $t('login.login') }}
     </BaseButton>
   </form>

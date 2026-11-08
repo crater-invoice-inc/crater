@@ -4,11 +4,11 @@
     :title="collapsed ? $t(item.title) : null"
     :class="[
       hasActiveUrl(item.link)
-        ? 'text-primary-600 bg-primary-50'
-        : 'text-gray-700',
+        ? 'text-chrome-fg bg-white bg-opacity-[0.13]'
+        : 'text-chrome-muted',
       collapsed
-        ? 'cursor-pointer mx-2 px-0 py-2.5 rounded-lg hover:bg-gray-50 group flex items-center justify-center text-sm not-italic font-medium'
-        : 'cursor-pointer px-3 py-2.5 rounded-lg hover:bg-gray-50 group flex items-center text-sm not-italic font-medium',
+        ? 'cursor-pointer mx-2 px-0 py-2.5 rounded-lg hover:bg-white hover:bg-opacity-[0.07] group flex items-center justify-center text-sm not-italic font-medium'
+        : 'cursor-pointer px-3 py-2.5 rounded-lg hover:bg-white hover:bg-opacity-[0.07] group flex items-center text-sm not-italic font-medium',
     ]"
     :style="gap && !collapsed ? { marginTop: '24px' } : {}"
   >
@@ -16,8 +16,8 @@
       :name="item.icon"
       :class="[
         hasActiveUrl(item.link)
-          ? 'text-primary-500 group-hover:text-primary-500 '
-          : 'text-gray-400 group-hover:text-gray-600',
+          ? 'text-chrome-accent group-hover:text-chrome-accent '
+          : 'text-chrome-muted group-hover:text-chrome-fg',
         collapsed ? 'shrink-0 h-5 w-5' : 'mr-3.5 shrink-0 h-5 w-5',
       ]"
     />
@@ -32,8 +32,9 @@
         ml-auto
         text-xs
         font-medium
-        text-gray-500
-        bg-gray-100
+        text-chrome-muted
+        bg-white
+        bg-opacity-10
         rounded-full
       "
     >

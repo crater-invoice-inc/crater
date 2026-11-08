@@ -1,13 +1,14 @@
 <template>
   <span
     class="
-      px-2
+      px-2.5
       py-1
-      text-sm
-      font-normal
-      text-center text-green-800
+      text-xs
+      font-medium
+      text-center text-status-green
       uppercase
-      bg-success
+      rounded-full
+      bg-status-green-bg
     "
     :style="{ backgroundColor: bgColor, color }"
   >

@@ -1,12 +1,60 @@
+/*
+ * Design tokens — palette "InvoiceShelf" (branche 3.x).
+ * Les couleurs primaires sont des triplets RGB consommés par Tailwind
+ * (rgba(var(--color-primary-500), alpha)).
+ *
+ * Surfaces : surface (cartes) > secondary (zones internes) > tertiary (fond).
+ * Chrome   : la barre latérale, teinte profonde de l'accent.
+ * Hero     : dégradé de la carte vedette du tableau de bord.
+ * Status   : couleur de texte + fond pastel associé (badges, alertes).
+ */
 :root {
-    --color-primary-50: 247, 246, 253;
-    --color-primary-100: 238, 238, 251;
-    --color-primary-200: 213, 212, 245;
-    --color-primary-300: 188, 185, 239;
-    --color-primary-400: 138, 133, 228;
-    --color-primary-500: 88, 81, 216;
-    --color-primary-600: 79, 73, 194;
-    --color-primary-700: 53, 49, 130;
-    --color-primary-800: 40, 36, 97;
-    --color-primary-900: 26, 24, 65;
+    --color-primary-50: 243, 243, 254;
+    --color-primary-100: 231, 230, 253;
+    --color-primary-200: 209, 206, 251;
+    --color-primary-300: 175, 168, 247;
+    --color-primary-400: 135, 124, 241;
+    --color-primary-500: 95, 80, 232;
+    --color-primary-600: 76, 60, 214;
+    --color-primary-700: 62, 48, 179;
+    --color-primary-800: 52, 42, 144;
+    --color-primary-900: 44, 37, 115;
+    --color-primary-950: 27, 22, 71;
+
+    --color-surface: 255, 255, 255;
+    --color-surface-secondary: 248, 248, 252;
+    --color-surface-tertiary: 242, 242, 248;
+    --color-surface-muted: 232, 232, 240;
+
+    --color-heading: 22, 24, 39;
+    --color-body-text: 60, 64, 82;
+    --color-muted: 100, 106, 126;
+
+    --color-line-light: 230, 232, 238;
+    --color-line-default: 216, 219, 227;
+    --color-line-strong: 191, 195, 207;
+
+    --color-chrome: 28, 24, 69;
+    --color-chrome-raised: 38, 33, 87;
+    --color-chrome-fg: 244, 243, 255;
+    --color-chrome-muted: 170, 166, 214;
+    --color-chrome-accent: 167, 157, 255;
+
+    --color-hero-from: 42, 33, 117;
+    --color-hero-to: 91, 75, 230;
+
+    --color-status-green: 21, 127, 61;
+    --color-status-green-bg: 231, 246, 236;
+    --color-status-yellow: 164, 70, 10;
+    --color-status-yellow-bg: 254, 241, 224;
+    --color-status-red: 180, 35, 24;
+    --color-status-red-bg: 253, 236, 235;
+    --color-status-blue: 31, 95, 209;
+    --color-status-blue-bg: 233, 240, 254;
+    --color-status-purple: 106, 61, 212;
+    --color-status-purple-bg: 241, 235, 254;
+    --color-status-gray: 85, 90, 109;
+    --color-status-gray-bg: 239, 240, 243;
+
+    --color-danger: 212, 42, 30;
 }

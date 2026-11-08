@@ -33,8 +33,8 @@ const classObject = computed(() => {
 </script>
 
 <style lang="scss">
-$base-content-placeholders-primary-color: #ccc !default;
-$base-content-placeholders-secondary-color: #eee !default;
+$base-content-placeholders-primary-color: #dedee8 !default;
+$base-content-placeholders-secondary-color: #f0f0f6 !default;
 $base-content-placeholders-border-radius: 6px !default;
 $base-content-placeholders-line-height: 15px !default;
 $base-content-placeholders-spacing: 10px !default;

@@ -27,7 +27,7 @@
         leave-from="translate-x-0"
         leave-to="-translate-x-full"
       >
-        <div class="relative flex flex-col flex-1 w-full max-w-xs bg-white">
+        <div class="relative flex flex-col flex-1 w-full max-w-xs bg-chrome">
           <TransitionChild
             as="template"
             enter="ease-in-out duration-300"
@@ -57,7 +57,7 @@
                 <span class="sr-only">Close sidebar</span>
                 <BaseIcon
                   name="XIcon"
-                  class="w-6 h-6 text-white"
+                  class="w-6 h-6 text-chrome-fg"
                   aria-hidden="true"
                 />
               </button>
@@ -66,9 +66,18 @@
 
           <div class="flex flex-col flex-1 h-0 pt-5 pb-4 overflow-y-auto">
             <div class="flex items-center shrink-0 px-4 mb-6">
+              <img
+                v-if="adminLogo"
+                :src="adminLogo"
+                class="block h-auto max-w-full w-36"
+                alt="Logo"
+              />
               <MainLogo
-                class="block h-auto max-w-full w-36 text-primary-400"
-                alt="Crater Logo"
+                v-else
+                class="block h-auto max-w-full w-36"
+                light-color="white"
+                dark-color="white"
+                alt="Logo"
               />
             </div>
 
@@ -113,11 +122,9 @@
       site-sidebar
       hidden
       h-screen
-      bg-white
-      border-r border-gray-200 border-solid
+      bg-chrome
       z-10
       md:fixed md:flex md:flex-col md:inset-y-0
-      pt-16
     "
     :class="isCollapsed ? 'w-16' : 'w-56 xl:w-64'"
   >
@@ -138,12 +145,12 @@
         w-7
         h-7
         -right-3.5
-        bg-white
-        border border-gray-200 border-solid
+        bg-chrome-raised
+        border border-white border-opacity-10 border-solid
         rounded-lg
-        shadow-sm
-        text-gray-400
-        hover:text-gray-600
+        shadow-soft
+        text-chrome-muted
+        hover:text-chrome-fg
         focus:outline-none
       "
       @click="globalStore.toggleSidebarCollapsed()"
@@ -173,10 +180,28 @@
     </button>
 
     <div
-      class="flex flex-col flex-1 pt-4 pb-4 min-h-0"
+      class="flex flex-col flex-1 pt-5 pb-4 min-h-0"
       :class="isCollapsed ? 'px-2' : 'px-4'"
     >
-      <CompanySwitcher :collapsed="isCollapsed" />
+      <!-- brand block -->
+      <router-link
+        to="/admin/dashboard"
+        class="flex items-center shrink-0 h-8 overflow-hidden"
+        :class="isCollapsed ? 'justify-center' : 'px-1'"
+      >
+        <img v-if="adminLogo" :src="adminLogo" class="block h-6 max-w-full" alt="Logo" />
+        <MainLogo
+          v-else
+          class="block h-6 max-w-full"
+          light-color="white"
+          dark-color="white"
+          alt="Logo"
+        />
+      </router-link>
+
+      <div class="mt-5">
+        <CompanySwitcher :collapsed="isCollapsed" />
+      </div>
 
       <div class="flex-1 min-h-0 overflow-y-auto mt-6">
         <nav class="space-y-1">
@@ -199,7 +224,7 @@
         />
       </nav>
 
-      <div class="pt-4 mt-4 border-t border-gray-100">
+      <div class="pt-4 mt-4 border-t border-white border-opacity-10 border-solid">
         <SidebarUserCard :collapsed="isCollapsed" />
       </div>
     </div>
@@ -232,6 +257,14 @@ const dashboardStore = useDashboardStore()
 const notificationStore = useNotificationStore()
 
 const isCollapsed = computed(() => globalStore.isSidebarCollapsed)
+
+const adminLogo = computed(() => {
+  if (globalStore.globalSettings.admin_portal_logo) {
+    return '/storage/' + globalStore.globalSettings.admin_portal_logo
+  }
+
+  return false
+})
 
 const BOTTOM_MENU_NAMES = ['Users', 'Reports', 'Settings']
 

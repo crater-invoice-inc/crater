@@ -1,11 +1,11 @@
 <template>
-  <div ref="searchBar" class="hidden rounded md:block relative">
+  <div ref="searchBar" class="relative">
     <div>
       <BaseInput
         v-model="name"
-        placeholder="Search..."
-        container-class="!rounded"
-        class="h-8 md:h-9 !rounded"
+        :placeholder="$t('global_search.search')"
+        container-class="!rounded-lg shadow-soft"
+        class="h-8 md:h-9 !rounded-lg bg-surface"
         @input="onSearch"
       >
         <template #left>
@@ -32,10 +32,11 @@
           scrollbar-thumb-gray-300
           scrollbar-track-gray-100
           overflow-y-auto
-          bg-white
-          rounded-md
+          bg-surface
+          rounded-lg
+          border border-line-light
           mt-2
-          shadow-lg
+          shadow-card
           p-3
           absolute
           w-[300px]
@@ -68,7 +69,7 @@
             <div
               v-for="(customer, index) in usersStore.customerList"
               :key="index"
-              class="p-2 hover:bg-gray-100 cursor-pointer rounded-md"
+              class="p-2 hover:bg-surface-secondary cursor-pointer rounded-md"
             >
               <router-link
                 :to="{ path: `/admin/customers/${customer.id}/view` }"
@@ -116,7 +117,7 @@
             <div
               v-for="(user, index) in usersStore.userList"
               :key="index"
-              class="p-2 hover:bg-gray-100 cursor-pointer rounded-md"
+              class="p-2 hover:bg-surface-secondary cursor-pointer rounded-md"
             >
               <router-link
                 :to="{ path: `/admin/users/${user.id}/edit` }"

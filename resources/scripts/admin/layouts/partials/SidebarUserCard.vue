@@ -3,27 +3,27 @@
     <div
       :title="collapsed ? userStore.currentUser.name : null"
       :class="[
-        'flex items-center w-full px-2.5 py-2 text-sm bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100',
+        'flex items-center w-full px-2.5 py-2 text-sm bg-white bg-opacity-[0.07] rounded-lg cursor-pointer hover:bg-opacity-[0.13] transition-colors',
         collapsed ? 'justify-center' : '',
       ]"
       @click="isShow = !isShow"
     >
       <img
         :src="previewAvatar"
-        class="w-9 h-9 rounded-md object-cover shrink-0"
+        class="w-9 h-9 rounded-md object-cover shrink-0 ring-1 ring-white ring-opacity-10"
       />
       <div v-if="!collapsed" class="flex flex-col flex-1 min-w-0 ml-3">
-        <span class="font-medium text-gray-900 truncate">
+        <span class="font-medium text-chrome-fg truncate">
           {{ userStore.currentUser.name }}
         </span>
-        <span class="text-xs text-gray-400 truncate">
+        <span class="text-xs text-chrome-muted truncate">
           {{ userStore.currentUser.email }}
         </span>
       </div>
       <BaseIcon
         v-if="!collapsed"
         name="ChevronDownIcon"
-        class="h-5 ml-2 shrink-0 text-gray-400"
+        class="h-5 ml-2 shrink-0 text-chrome-muted"
       />
     </div>
 
@@ -44,9 +44,10 @@
           z-30
           mb-2
           w-[220px]
-          bg-white
+          bg-surface
           rounded-lg
-          shadow-lg
+          border border-line-light
+          shadow-card
           py-1.5
         "
       >

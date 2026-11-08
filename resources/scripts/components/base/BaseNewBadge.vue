@@ -1,8 +1,8 @@
 <template>
   <span
     :class="[
-      sucess ? 'bg-green-100 text-green-700 ' : 'bg-red-100 text-red-700',
-      'px-2 py-1 text-sm font-normal text-center uppercase',
+      sucess ? 'bg-status-green-bg text-status-green' : 'bg-status-red-bg text-status-red',
+      'px-2.5 py-1 text-xs font-medium text-center uppercase rounded-full',
     ]"
   >
     <slot />

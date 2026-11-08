@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-wrap justify-between">
     <div>
-      <h3 class="text-2xl font-bold text-left text-black">
+      <h3 class="text-2xl font-bold text-left text-heading">
         {{ title }}
       </h3>
       <slot />

@@ -5,27 +5,36 @@
       relative
       flex
       justify-between
-      p-3
-      bg-white
-      rounded
-      shadow
-      hover:bg-gray-50
-      xl:p-4
+      p-4
+      rounded-2xl
+      xl:p-6
       lg:col-span-2
     "
-    :class="{ 'lg:!col-span-3': large }"
+    :class="large
+      ? 'lg:!col-span-3 bg-gradient-to-br from-hero-from to-hero-to shadow-card hover:from-primary-700 hover:to-primary-500'
+      : 'bg-surface border border-line-light shadow-card hover:bg-surface-secondary'"
     :to="route"
   >
     <div>
-      <span class="text-xl font-semibold leading-tight text-black xl:text-3xl">
+      <span
+        class="text-xl font-semibold leading-tight xl:text-3xl"
+        :class="large ? 'text-white' : 'text-heading'"
+      >
         <slot />
       </span>
-      <span class="block mt-1 text-sm leading-tight text-gray-500 xl:text-lg">
+      <span
+        class="block mt-1 text-sm leading-tight xl:text-lg"
+        :class="large ? 'text-white text-opacity-75' : 'text-muted'"
+      >
         {{ label }}
       </span>
     </div>
     <div class="flex items-center">
-      <component :is="iconComponent" class="w-10 h-10 xl:w-12 xl:h-12" />
+      <component
+        :is="iconComponent"
+        class="w-10 h-10 xl:w-12 xl:h-12"
+        :class="large ? 'text-white text-opacity-90' : 'text-primary-500'"
+      />
     </div>
   </router-link>
 

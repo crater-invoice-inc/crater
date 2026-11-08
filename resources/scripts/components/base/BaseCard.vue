@@ -1,8 +1,8 @@
 <template>
-  <div class="bg-white rounded-lg shadow">
+  <div class="bg-surface rounded-2xl shadow-card">
     <div
       v-if="hasHeaderSlot"
-      class="px-5 py-4 text-black border-b border-gray-100 border-solid"
+      class="px-5 py-4 text-heading border-b border-line-light border-solid"
     >
       <slot name="header" />
     </div>
@@ -11,7 +11,7 @@
     </div>
     <div
       v-if="hasFooterSlot"
-      class="px-5 py-4 border-t border-gray-100 border-solid sm:px-6"
+      class="px-5 py-4 border-t border-line-light border-solid sm:px-6"
     >
       <slot name="footer" />
     </div>

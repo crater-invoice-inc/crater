@@ -38,6 +38,60 @@ module.exports = {
         red: colors.red,
         teal: colors.teal,
         gray: colors.slate,
+        // Token InvoiceShelf : la barre latérale (chrome)
+        chrome: {
+          DEFAULT: withOpacityValue('--color-chrome'),
+          raised: withOpacityValue('--color-chrome-raised'),
+          fg: withOpacityValue('--color-chrome-fg'),
+          muted: withOpacityValue('--color-chrome-muted'),
+          accent: withOpacityValue('--color-chrome-accent'),
+        },
+        // Token InvoiceShelf : surfaces (cartes > zones internes > fond)
+        surface: {
+          DEFAULT: withOpacityValue('--color-surface'),
+          secondary: withOpacityValue('--color-surface-secondary'),
+          tertiary: withOpacityValue('--color-surface-tertiary'),
+          muted: withOpacityValue('--color-surface-muted'),
+        },
+        // Token InvoiceShelf : bordures
+        line: {
+          light: withOpacityValue('--color-line-light'),
+          DEFAULT: withOpacityValue('--color-line-default'),
+          strong: withOpacityValue('--color-line-strong'),
+        },
+        heading: withOpacityValue('--color-heading'),
+        'body-text': withOpacityValue('--color-body-text'),
+        muted: withOpacityValue('--color-muted'),
+        // Token InvoiceShelf : badges de statut (texte + fond pastel)
+        status: {
+          green: {
+            DEFAULT: withOpacityValue('--color-status-green'),
+            bg: withOpacityValue('--color-status-green-bg'),
+          },
+          yellow: {
+            DEFAULT: withOpacityValue('--color-status-yellow'),
+            bg: withOpacityValue('--color-status-yellow-bg'),
+          },
+          red: {
+            DEFAULT: withOpacityValue('--color-status-red'),
+            bg: withOpacityValue('--color-status-red-bg'),
+          },
+          blue: {
+            DEFAULT: withOpacityValue('--color-status-blue'),
+            bg: withOpacityValue('--color-status-blue-bg'),
+          },
+          purple: {
+            DEFAULT: withOpacityValue('--color-status-purple'),
+            bg: withOpacityValue('--color-status-purple-bg'),
+          },
+          gray: {
+            DEFAULT: withOpacityValue('--color-status-gray'),
+            bg: withOpacityValue('--color-status-gray-bg'),
+          },
+        },
+        'hero-from': withOpacityValue('--color-hero-from'),
+        'hero-to': withOpacityValue('--color-hero-to'),
+        danger: withOpacityValue('--color-danger'),
       },
       spacing: {
         88: '22rem',
@@ -62,7 +116,12 @@ module.exports = {
     },
 
     fontFamily: {
-      base: ['Poppins', 'sans-serif'],
+      base: ['Geologica', 'sans-serif'],
+    },
+    boxShadow: {
+      // Ombre discrète teintée indigo, comme les cartes InvoiceShelf
+      soft: '0 1px 3px 0 rgb(28, 24, 69 / 0.07), 0 1px 2px -1px rgb(28, 24, 69 / 0.05)',
+      card: '0 1px 2px 0 rgb(28, 24, 69 / 0.05), 0 4px 16px -4px rgb(28, 24, 69 / 0.08)',
     },
   },
   plugins: [

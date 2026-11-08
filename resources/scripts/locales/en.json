@@ -76,7 +76,11 @@
     },
     "overview": "Budget overview",
     "duplicate": "Duplicate",
-    "duplicated_message": "Budget duplicated successfully"
+    "duplicated_message": "Budget duplicated successfully",
+    "item_name": "Name",
+    "fee": "Expense",
+    "select_equipment": "Select equipment",
+    "select_fee": "Select an expense"
   },
   "general": {
     "add_company": "Add Company",

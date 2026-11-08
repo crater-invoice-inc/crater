@@ -57,7 +57,7 @@
       "production": "Production",
       "post_production": "Post-production",
       "production_expenses": "Dépenses de production",
-      "equipment": "Matériel",
+      "equipment": "Équipements",
       "travel": "Frais de déplacement"
     },
     "templates": {
@@ -76,7 +76,11 @@
     },
     "overview": "Aperçu du budget",
     "duplicate": "Dupliquer",
-    "duplicated_message": "Budget dupliqué avec succès"
+    "duplicated_message": "Budget dupliqué avec succès",
+    "item_name": "Nom",
+    "fee": "Frais",
+    "select_equipment": "Choisir un équipement",
+    "select_fee": "Choisir un frais"
   },
   "general": {
     "add_company": "Ajouter une entreprise",

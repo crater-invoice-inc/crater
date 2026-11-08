@@ -255,7 +255,7 @@
             <thead>
               <tr class="text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 <th class="pb-2 pr-3" style="width: 15rem">
-                  {{ category.type === 'role' ? $t('calculator.role') : $t('calculator.expense') }}
+                  {{ $t(category.itemLabel) }}
                 </th>
                 <th class="pb-2 pr-3" style="width: 7rem">
                   {{ category.type === 'role' ? $t('calculator.rate_per_hour') : $t('calculator.cost') }}
@@ -281,11 +281,7 @@
                     value-prop="id"
                     track-by="name"
                     searchable
-                    :placeholder="
-                      category.type === 'role'
-                        ? $t('calculator.select_role')
-                        : $t('calculator.select_expense')
-                    "
+                    :placeholder="$t(category.selectPlaceholder)"
                     class="w-full"
                     @update:model-value="(value) => onTemplateSelected(item, value)"
                   />
@@ -353,12 +349,42 @@ const notificationStore = useNotificationStore()
 
 // display order of the budget tables, the overview legend and the donut chart
 const BUDGET_CATEGORIES = [
-  { key: 'pre_production', type: 'role' },
-  { key: 'production', type: 'role' },
-  { key: 'post_production', type: 'role' },
-  { key: 'production_expenses', type: 'cost' },
-  { key: 'equipment', type: 'cost' },
-  { key: 'travel', type: 'cost' },
+  {
+    key: 'pre_production',
+    type: 'role',
+    itemLabel: 'calculator.role',
+    selectPlaceholder: 'calculator.select_role',
+  },
+  {
+    key: 'production',
+    type: 'role',
+    itemLabel: 'calculator.role',
+    selectPlaceholder: 'calculator.select_role',
+  },
+  {
+    key: 'post_production',
+    type: 'role',
+    itemLabel: 'calculator.role',
+    selectPlaceholder: 'calculator.select_role',
+  },
+  {
+    key: 'production_expenses',
+    type: 'cost',
+    itemLabel: 'calculator.expense',
+    selectPlaceholder: 'calculator.select_expense',
+  },
+  {
+    key: 'equipment',
+    type: 'cost',
+    itemLabel: 'calculator.item_name',
+    selectPlaceholder: 'calculator.select_equipment',
+  },
+  {
+    key: 'travel',
+    type: 'cost',
+    itemLabel: 'calculator.fee',
+    selectPlaceholder: 'calculator.select_fee',
+  },
 ]
 
 const CATEGORY_COLORS = {

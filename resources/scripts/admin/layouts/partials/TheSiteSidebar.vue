@@ -131,7 +131,7 @@
         sidebar-collapse-toggle
         absolute
         top-36
-        z-40
+        z-20
         flex
         items-center
         justify-center

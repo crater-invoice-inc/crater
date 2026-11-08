@@ -75,7 +75,7 @@ const companyStore = useCompanyStore()
 const modalStore = useModalStore()
 
 const ROLE_CATEGORIES = ['pre_production', 'production', 'post_production']
-const COST_CATEGORIES = ['travel', 'production_expenses']
+const COST_CATEGORIES = ['production_expenses', 'equipment', 'travel']
 
 const groupedTemplates = computed(() => {
   const groups = [...ROLE_CATEGORIES, ...COST_CATEGORIES].map(

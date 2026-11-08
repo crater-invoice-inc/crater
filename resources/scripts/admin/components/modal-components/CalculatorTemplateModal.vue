@@ -113,8 +113,9 @@ const categoryOptions = [
   { value: 'pre_production', label: t('calculator.categories.pre_production') },
   { value: 'production', label: t('calculator.categories.production') },
   { value: 'post_production', label: t('calculator.categories.post_production') },
-  { value: 'travel', label: t('calculator.categories.travel') },
   { value: 'production_expenses', label: t('calculator.categories.production_expenses') },
+  { value: 'equipment', label: t('calculator.categories.equipment') },
+  { value: 'travel', label: t('calculator.categories.travel') },
 ]
 
 const rules = computed(() => {

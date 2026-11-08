@@ -111,38 +111,66 @@
   <div
     class="
       hidden
-      w-56
       h-screen
-      overflow-y-auto
       bg-white
       border-r border-gray-200 border-solid
-      xl:w-64
       md:fixed md:flex md:flex-col md:inset-y-0
       pt-16
     "
+    :class="isCollapsed ? 'w-16' : 'w-56 xl:w-64'"
   >
-    <div class="flex flex-col flex-1 px-4 pt-4 pb-4 overflow-y-auto">
-      <CompanySwitcher />
+    <div
+      class="flex flex-col flex-1 pt-4 pb-4 min-h-0"
+      :class="isCollapsed ? 'px-2' : 'px-4'"
+    >
+      <CompanySwitcher :collapsed="isCollapsed" />
 
-      <nav class="flex-1 mt-6 space-y-1">
-        <SidebarMenuItem
-          v-for="item in mainMenuItems"
-          :key="item.name"
-          :item="item"
-          :gap="item.gap"
-        />
-      </nav>
+      <div class="flex-1 min-h-0 overflow-y-auto mt-6">
+        <nav class="space-y-1">
+          <SidebarMenuItem
+            v-for="item in mainMenuItems"
+            :key="item.name"
+            :item="item"
+            :gap="item.gap"
+            :collapsed="isCollapsed"
+          />
+        </nav>
 
-      <nav class="mt-6 space-y-1">
-        <SidebarMenuItem
-          v-for="item in bottomMenuItems"
-          :key="item.name"
-          :item="item"
-        />
-      </nav>
+        <nav class="mt-6 space-y-1">
+          <SidebarMenuItem
+            v-for="item in bottomMenuItems"
+            :key="item.name"
+            :item="item"
+            :collapsed="isCollapsed"
+          />
+        </nav>
+      </div>
 
       <div class="pt-4 mt-4 border-t border-gray-100">
-        <SidebarUserCard />
+        <button
+          type="button"
+          :title="
+            isCollapsed ? $t('navigation.expand_sidebar') : $t('navigation.collapse_sidebar')
+          "
+          :class="
+            isCollapsed
+              ? 'flex items-center justify-center w-full py-2 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-50'
+              : 'flex items-center w-full px-2.5 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50'
+          "
+          @click="globalStore.toggleSidebarCollapsed()"
+        >
+          <BaseIcon
+            :name="isCollapsed ? 'ChevronDoubleRightIcon' : 'ChevronDoubleLeftIcon'"
+            class="h-5 w-5 shrink-0 text-gray-400"
+          />
+          <span v-if="!isCollapsed" class="ml-3">
+            {{ $t('navigation.collapse_sidebar') }}
+          </span>
+        </button>
+
+        <div class="mt-2">
+          <SidebarUserCard :collapsed="isCollapsed" />
+        </div>
       </div>
     </div>
   </div>
@@ -172,6 +200,8 @@ const route = useRoute()
 const globalStore = useGlobalStore()
 const dashboardStore = useDashboardStore()
 const notificationStore = useNotificationStore()
+
+const isCollapsed = computed(() => globalStore.isSidebarCollapsed)
 
 const BOTTOM_MENU_NAMES = ['Users', 'Reports', 'Settings']
 

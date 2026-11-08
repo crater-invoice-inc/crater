@@ -27,8 +27,9 @@ class Calculator extends Model
         'pre_production',
         'production',
         'post_production',
-        'travel',
         'production_expenses',
+        'equipment',
+        'travel',
     ];
 
     public function company()

@@ -14,7 +14,9 @@
     "logout": "Déconnexion",
     "users": "Utilisateurs",
     "modules": "Modules",
-    "profile": "Profil"
+    "profile": "Profil",
+    "collapse_sidebar": "Réduire",
+    "expand_sidebar": "Développer"
   },
   "calculator": {
     "title": "Calculateur",
@@ -36,9 +38,6 @@
     "created_message": "Budget enregistré avec succès",
     "updated_message": "Budget mis à jour avec succès",
     "deleted_message": "Budget supprimé avec succès",
-    "roles_table": "Production",
-    "expenses_table": "Frais et dépenses",
-    "category": "Catégorie",
     "role": "Rôle",
     "rate_per_hour": "$/h",
     "hours": "Heures",
@@ -57,8 +56,9 @@
       "pre_production": "Pré-production",
       "production": "Production",
       "post_production": "Post-production",
-      "travel": "Frais de déplacement",
-      "production_expenses": "Dépenses de production"
+      "production_expenses": "Dépenses de production",
+      "equipment": "Matériel",
+      "travel": "Frais de déplacement"
     },
     "templates": {
       "name": "Nom",
@@ -76,8 +76,7 @@
     },
     "overview": "Aperçu du budget",
     "duplicate": "Dupliquer",
-    "duplicated_message": "Budget dupliqué avec succès",
-    "select_category": "Choisir une catégorie"
+    "duplicated_message": "Budget dupliqué avec succès"
   },
   "general": {
     "add_company": "Ajouter une entreprise",

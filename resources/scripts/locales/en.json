@@ -14,7 +14,9 @@
     "logout": "Logout",
     "users": "Users",
     "modules": "Modules",
-    "profile": "Profile"
+    "profile": "Profile",
+    "collapse_sidebar": "Collapse",
+    "expand_sidebar": "Expand"
   },
   "calculator": {
     "title": "Calculator",
@@ -36,9 +38,6 @@
     "created_message": "Budget saved successfully",
     "updated_message": "Budget updated successfully",
     "deleted_message": "Budget deleted successfully",
-    "roles_table": "Production",
-    "expenses_table": "Travel & expenses",
-    "category": "Category",
     "role": "Role",
     "rate_per_hour": "$/h",
     "hours": "Hours",
@@ -57,8 +56,9 @@
       "pre_production": "Pre-production",
       "production": "Production",
       "post_production": "Post-production",
-      "travel": "Travel expenses",
-      "production_expenses": "Production expenses"
+      "production_expenses": "Production expenses",
+      "equipment": "Equipment",
+      "travel": "Travel expenses"
     },
     "templates": {
       "name": "Name",
@@ -76,8 +76,7 @@
     },
     "overview": "Budget overview",
     "duplicate": "Duplicate",
-    "duplicated_message": "Budget duplicated successfully",
-    "select_category": "Select a category"
+    "duplicated_message": "Budget duplicated successfully"
   },
   "general": {
     "add_company": "Add Company",

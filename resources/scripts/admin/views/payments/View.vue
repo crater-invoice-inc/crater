@@ -30,12 +30,11 @@
         h-full
         pt-16
         pb-[6rem]
-        ml-56
         bg-white
-        xl:ml-64
         w-88
         xl:block
       "
+      :class="globalStore.isSidebarCollapsed ? 'xl:ml-16' : 'ml-56 xl:ml-64'"
     >
       <div
         class="
@@ -256,6 +255,7 @@ import { useRoute } from 'vue-router'
 import moment from 'moment'
 
 import { useDialogStore } from '@/scripts/stores/dialog'
+import { useGlobalStore } from '@/scripts/admin/stores/global'
 import { usePaymentStore } from '@/scripts/admin/stores/payment'
 import { useModalStore } from '@/scripts/stores/modal'
 import { useUserStore } from '@/scripts/admin/stores/user'
@@ -282,6 +282,7 @@ let isFetching = ref(false)
 const paymentStore = usePaymentStore()
 const modalStore = useModalStore()
 const userStore = useUserStore()
+const globalStore = useGlobalStore()
 
 const paymentList = ref(null)
 const currentPageNumber = ref(1)

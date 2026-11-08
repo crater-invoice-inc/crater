@@ -9,12 +9,11 @@
       h-full
       pt-16
       pb-[6.4rem]
-      ml-56
       bg-white
-      xl:ml-64
       xl:block
       overflow-y-auto
     "
+    :class="globalStore.isSidebarCollapsed ? 'xl:ml-16' : 'xl:ml-64'"
     style="width: 18rem"
   >
     <div class="px-4 pt-8 pb-4">
@@ -146,12 +145,12 @@
             <BaseInput v-model="nameField" />
           </BaseInputGroup>
 
-          <BaseCustomerSelectPopup
-            v-model="selectedCustomer"
-            :valid="customerValid"
-            type="calculator"
-            class="mt-4"
-          />
+          <BaseInputGroup :label="$t('calculator.customer')" class="mt-4">
+            <BaseCustomerSelectInput
+              v-model="calculatorStore.currentCalculator.customer_id"
+              :placeholder="$t('customers.select_a_customer')"
+            />
+          </BaseInputGroup>
         </div>
 
         <div class="lg:w-72 shrink-0 lg:pt-1" style="text-align: center">
@@ -232,136 +231,61 @@
         </div>
       </BaseCard>
 
-      <!-- roles table -->
-      <BaseCard class="mt-6">
+      <!-- one table per category -->
+      <BaseCard
+        v-for="category in categories"
+        :key="category.key"
+        class="mt-6"
+      >
         <div class="flex items-center justify-between px-5 py-4 border-b border-gray-200 border-solid">
           <h5 class="text-lg font-semibold text-gray-900">
-            {{ $t('calculator.roles_table') }}
+            {{ $t(`calculator.categories.${category.key}`) }}
           </h5>
+
+          <span class="text-sm font-medium text-gray-900">
+            <BaseFormatMoney
+              :amount="categoryTotal(category.key) * 100"
+              :currency="companyStore.selectedCompanyCurrency"
+            />
+          </span>
         </div>
 
         <div class="px-5 py-4 calc-table">
           <table class="min-w-full table-fixed">
             <thead>
               <tr class="text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                <th class="pb-2 pr-3" style="width: 13rem">{{ $t('calculator.category') }}</th>
-                <th class="pb-2 pr-3" style="width: 15rem">{{ $t('calculator.role') }}</th>
-                <th class="pb-2 pr-3" style="width: 7rem">{{ $t('calculator.rate_per_hour') }}</th>
-                <th class="pb-2 pr-3 w-20">{{ $t('calculator.hours') }}</th>
+                <th class="pb-2 pr-3" style="width: 15rem">
+                  {{ category.type === 'role' ? $t('calculator.role') : $t('calculator.expense') }}
+                </th>
+                <th class="pb-2 pr-3" style="width: 7rem">
+                  {{ category.type === 'role' ? $t('calculator.rate_per_hour') : $t('calculator.cost') }}
+                </th>
+                <th class="pb-2 pr-3 w-20">
+                  {{ category.type === 'role' ? $t('calculator.hours') : $t('calculator.quantity') }}
+                </th>
                 <th class="pb-2 pr-3 text-right" style="width: 15%">{{ $t('calculator.amount') }}</th>
                 <th class="pb-2 w-8" />
               </tr>
             </thead>
             <tbody>
-              <tr v-for="item in roleItems" :key="item.__key" class="border-t border-gray-100 border-solid">
-                <td class="py-2 pr-3">
-                  <BaseMultiselect
-                    v-model="item.category"
-                    :options="roleCategoryOptions"
-                    label="label"
-                    value-prop="value"
-                    track-by="value"
-                    :can-deselect="false"
-                    :searchable="false"
-                    :placeholder="$t('calculator.select_category')"
-                    class="w-full"
-                    @update:model-value="onRoleCategoryChanged(item)"
-                  />
-                </td>
+              <tr
+                v-for="item in itemsIn(category.key)"
+                :key="item.__key"
+                class="border-t border-gray-100 border-solid"
+              >
                 <td class="py-2 pr-3">
                   <BaseMultiselect
                     v-model="item.template_id"
-                    :options="templatesFor(item.category)"
+                    :options="templatesFor(category.key)"
                     label="name"
                     value-prop="id"
                     track-by="name"
                     searchable
-                    :placeholder="$t('calculator.select_role')"
-                    class="w-full"
-                    @update:model-value="(value) => onTemplateSelected(item, value)"
-                  />
-                </td>
-                <td class="py-2 pr-3">
-                  <BaseMoney
-                    v-model="item.unit_price"
-                    :currency="{
-                      symbol: '',
-                      decimal: '.',
-                      thousands: ',',
-                      prefix: '',
-                      precision: 2,
-                      masked: false,
-                    }"
-                  />
-                </td>
-                <td class="py-2 pr-3">
-                  <BaseInput v-model.number="item.quantity" type="number" step="0.5" min="0" />
-                </td>
-                <td class="py-2 pr-3 text-right font-medium text-gray-900">
-                  <BaseFormatMoney
-                    :amount="itemTotal(item) * 100"
-                    :currency="companyStore.selectedCompanyCurrency"
-                  />
-                </td>
-                <td class="py-2 text-right">
-                  <BaseIcon
-                    v-if="!isEmptyItem(item)"
-                    name="TrashIcon"
-                    class="h-5 text-gray-400 cursor-pointer hover:text-red-500"
-                    @click="removeItem(item)"
-                  />
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </BaseCard>
-
-      <!-- travel / expenses table -->
-      <BaseCard class="mt-6">
-        <div class="flex items-center justify-between px-5 py-4 border-b border-gray-200 border-solid">
-          <h5 class="text-lg font-semibold text-gray-900">
-            {{ $t('calculator.expenses_table') }}
-          </h5>
-        </div>
-
-        <div class="px-5 py-4 calc-table">
-          <table class="min-w-full table-fixed">
-            <thead>
-              <tr class="text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                <th class="pb-2 pr-3" style="width: 13rem">{{ $t('calculator.category') }}</th>
-                <th class="pb-2 pr-3" style="width: 15rem">{{ $t('calculator.expense') }}</th>
-                <th class="pb-2 pr-3" style="width: 7rem">{{ $t('calculator.cost') }}</th>
-                <th class="pb-2 pr-3 w-20">{{ $t('calculator.quantity') }}</th>
-                <th class="pb-2 pr-3 text-right" style="width: 15%">{{ $t('calculator.amount') }}</th>
-                <th class="pb-2 w-8" />
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="item in costItems" :key="item.__key" class="border-t border-gray-100 border-solid">
-                <td class="py-2 pr-3">
-                  <BaseMultiselect
-                    v-model="item.category"
-                    :options="costCategoryOptions"
-                    label="label"
-                    value-prop="value"
-                    track-by="value"
-                    :can-deselect="false"
-                    :searchable="false"
-                    :placeholder="$t('calculator.select_category')"
-                    class="w-full"
-                    @update:model-value="onCostCategoryChanged(item)"
-                  />
-                </td>
-                <td class="py-2 pr-3">
-                  <BaseMultiselect
-                    v-model="item.template_id"
-                    :options="templatesFor(item.category)"
-                    label="name"
-                    value-prop="id"
-                    track-by="name"
-                    searchable
-                    :placeholder="$t('calculator.select_expense')"
+                    :placeholder="
+                      category.type === 'role'
+                        ? $t('calculator.select_role')
+                        : $t('calculator.select_expense')
+                    "
                     class="w-full"
                     @update:model-value="(value) => onTemplateSelected(item, value)"
                   />
@@ -412,6 +336,7 @@ import { useI18n } from 'vue-i18n'
 import Chart from 'chart.js'
 import { useCalculatorStore } from '@/scripts/admin/stores/calculator'
 import { useCompanyStore } from '@/scripts/admin/stores/company'
+import { useGlobalStore } from '@/scripts/admin/stores/global'
 import { useDialogStore } from '@/scripts/stores/dialog'
 import { useNotificationStore } from '@/scripts/stores/notification'
 import LoadingIcon from '@/scripts/components/icons/LoadingIcon.vue'
@@ -422,34 +347,33 @@ const router = useRouter()
 
 const calculatorStore = useCalculatorStore()
 const companyStore = useCompanyStore()
+const globalStore = useGlobalStore()
 const dialogStore = useDialogStore()
 const notificationStore = useNotificationStore()
 
-const ROLE_CATEGORIES = [
-  { value: 'pre_production', label: t('calculator.categories.pre_production') },
-  { value: 'production', label: t('calculator.categories.production') },
-  { value: 'post_production', label: t('calculator.categories.post_production') },
-]
-
-const COST_CATEGORIES = [
-  { value: 'travel', label: t('calculator.categories.travel') },
-  { value: 'production_expenses', label: t('calculator.categories.production_expenses') },
+// display order of the budget tables, the overview legend and the donut chart
+const BUDGET_CATEGORIES = [
+  { key: 'pre_production', type: 'role' },
+  { key: 'production', type: 'role' },
+  { key: 'post_production', type: 'role' },
+  { key: 'production_expenses', type: 'cost' },
+  { key: 'equipment', type: 'cost' },
+  { key: 'travel', type: 'cost' },
 ]
 
 const CATEGORY_COLORS = {
   pre_production: '#8B5CF6',
   production: '#5851D8',
   post_production: '#3FAE8C',
-  travel: '#E0785C',
   production_expenses: '#F5B14C',
+  equipment: '#3B82F6',
+  travel: '#E0785C',
 }
 
-const categories = Object.keys(CATEGORY_COLORS).map((key) => ({
-  key,
-  color: CATEGORY_COLORS[key],
+const categories = BUDGET_CATEGORIES.map((category) => ({
+  ...category,
+  color: CATEGORY_COLORS[category.key],
 }))
-
-const customerValid = { $error: false, $errors: [] }
 
 const isLoadingList = ref(true)
 const isSaving = ref(false)
@@ -473,34 +397,7 @@ const nameField = computed({
   },
 })
 
-const selectedCustomer = computed({
-  get: () => calculatorStore.currentCalculator.customer,
-  set: (value) => {
-    if (value && value.id) {
-      calculatorStore.currentCalculator.customer = value
-      calculatorStore.currentCalculator.customer_id = value.id
-    } else {
-      calculatorStore.resetSelectedCustomer()
-    }
-  },
-})
-
 const filteredCalculators = computed(() => calculatorStore.calculators)
-
-const roleItems = computed(() =>
-  calculatorStore.currentCalculator.calculator_items.filter(
-    (item) => item.type === 'role'
-  )
-)
-
-const costItems = computed(() =>
-  calculatorStore.currentCalculator.calculator_items.filter(
-    (item) => item.type === 'cost'
-  )
-)
-
-const roleCategoryOptions = ROLE_CATEGORIES
-const costCategoryOptions = COST_CATEGORIES
 
 const totalCost = computed(() =>
   categories.reduce((sum, category) => sum + categoryTotal(category.key), 0)
@@ -516,6 +413,12 @@ function categoryTotal(categoryKey) {
     .reduce((sum, item) => sum + itemTotal(item), 0)
 }
 
+function itemsIn(categoryKey) {
+  return calculatorStore.currentCalculator.calculator_items.filter(
+    (item) => item.category === categoryKey
+  )
+}
+
 function templatesFor(categoryKey) {
   return calculatorStore.templates.filter(
     (template) => template.category === categoryKey
@@ -526,12 +429,16 @@ function hasActiveUrl(id) {
   return route.params.id == id
 }
 
-function makeItem(type) {
+function makeItem(categoryKey) {
+  const category = BUDGET_CATEGORIES.find(
+    (candidate) => candidate.key === categoryKey
+  )
+
   return {
     __key: ++itemKeySeed,
     id: null,
-    category: null,
-    type,
+    category: categoryKey,
+    type: category ? category.type : 'cost',
     template_id: null,
     item_name: '',
     description: '',
@@ -547,30 +454,27 @@ function isEmptyItem(item) {
 function ensureTrailingEmptyRows() {
   const items = calculatorStore.currentCalculator.calculator_items
 
-  ;[
-    { type: 'role', category: 'production' },
-    { type: 'cost', category: 'travel' },
-  ].forEach(({ type, category }) => {
-    const ofType = items.filter((item) => item.type === type)
+  BUDGET_CATEGORIES.forEach(({ key }) => {
+    const ofCategory = items.filter((item) => item.category === key)
     const emptyIndexes = []
 
-    ofType.forEach((item, index) => {
+    ofCategory.forEach((item) => {
       if (isEmptyItem(item)) {
         emptyIndexes.push(items.indexOf(item))
       }
     })
 
-    // keep only the last empty row of this type, remove the others
+    // keep only the last empty row of this category, remove the others
     emptyIndexes
       .slice(0, -1)
       .sort((a, b) => b - a)
       .forEach((index) => items.splice(index, 1))
 
     // a new empty row appears in last position once the previous one is filled
-    const last = ofType[ofType.length - 1]
+    const last = ofCategory[ofCategory.length - 1]
 
     if (!last || !isEmptyItem(last)) {
-      items.push(makeItem(type))
+      items.push(makeItem(key))
     }
   })
 }
@@ -582,16 +486,6 @@ function removeItem(item) {
   if (index !== -1) {
     items.splice(index, 1)
   }
-}
-
-function onRoleCategoryChanged(item) {
-  item.template_id = null
-  item.item_name = ''
-}
-
-function onCostCategoryChanged(item) {
-  item.template_id = null
-  item.item_name = ''
 }
 
 function onTemplateSelected(item, templateId) {

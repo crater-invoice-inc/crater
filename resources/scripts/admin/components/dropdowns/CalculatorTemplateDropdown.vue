@@ -57,7 +57,6 @@ function editTemplate(template) {
   }
 
   modalStore.openModal({
-    title: t('calculator.templates.edit'),
     componentName: 'CalculatorTemplateModal',
     size: 'sm',
   })

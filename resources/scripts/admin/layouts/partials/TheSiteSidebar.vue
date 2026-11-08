@@ -109,6 +109,7 @@
 
   <!-- DESKTOP MENU -->
   <div
+    ref="sidebarEl"
     class="
       hidden
       h-screen
@@ -153,7 +154,7 @@
           ? 'opacity-100'
           : 'opacity-0 pointer-events-none'
       "
-      @click="globalStore.toggleSidebarCollapsed()"
+      @click="onToggleClick"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -195,16 +196,16 @@
             :collapsed="isCollapsed"
           />
         </nav>
-
-        <nav class="mt-6 space-y-1">
-          <SidebarMenuItem
-            v-for="item in bottomMenuItems"
-            :key="item.name"
-            :item="item"
-            :collapsed="isCollapsed"
-          />
-        </nav>
       </div>
+
+      <nav class="mt-6 space-y-1">
+        <SidebarMenuItem
+          v-for="item in bottomMenuItems"
+          :key="item.name"
+          :item="item"
+          :collapsed="isCollapsed"
+        />
+      </nav>
 
       <div class="pt-4 mt-4 border-t border-gray-100">
         <SidebarUserCard :collapsed="isCollapsed" />
@@ -214,7 +215,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, nextTick, onMounted, ref, watch } from 'vue'
 import { useDebounceFn } from '@vueuse/core'
 import MainLogo from '@/scripts/components/icons/MainLogo.vue'
 import CompanySwitcher from '@/scripts/components/CompanySwitcher.vue'
@@ -240,6 +241,24 @@ const notificationStore = useNotificationStore()
 
 const isCollapsed = computed(() => globalStore.isSidebarCollapsed)
 const isHovered = ref(false)
+const sidebarEl = ref(null)
+
+// the sidebar resizes under the pointer when toggling: re-evaluate the
+// hover state from the click position, otherwise the toggle button stays
+// visible even though the pointer is no longer over the sidebar
+async function onToggleClick(e) {
+  globalStore.toggleSidebarCollapsed()
+
+  await nextTick()
+
+  const rect = sidebarEl.value.getBoundingClientRect()
+
+  isHovered.value =
+    e.clientX >= rect.left &&
+    e.clientX <= rect.right &&
+    e.clientY >= rect.top &&
+    e.clientY <= rect.bottom
+}
 
 const BOTTOM_MENU_NAMES = ['Users', 'Reports', 'Settings']
 

@@ -7,6 +7,7 @@
       v-model="store[storeProp].payment_information"
       :content-loading="store.isFetchingInitialSettings"
       :fields="fields"
+      :show-fields-button="showFieldsButton"
       class="mt-1"
     />
   </div>
@@ -29,6 +30,10 @@ defineProps({
   label: {
     type: String,
     default: 'invoices.payment_information',
+  },
+  showFieldsButton: {
+    type: Boolean,
+    default: true,
   },
 })
 </script>

@@ -214,6 +214,7 @@ class Company extends Model implements HasMedia
             'invoice_billing_address_format' => $billingAddressFormat,
             'invoice_default_payment_information' => '',
             'invoice_default_terms_and_conditions' => '',
+            'estimate_default_terms_and_conditions' => '',
             'estimate_company_address_format' => $companyAddressFormat,
             'estimate_shipping_address_format' => $shippingAddressFormat,
             'estimate_billing_address_format' => $billingAddressFormat,

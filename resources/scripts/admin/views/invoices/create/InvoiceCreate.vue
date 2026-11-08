@@ -98,7 +98,7 @@
             <PaymentInformationFields
               :store="invoiceStore"
               store-prop="newInvoice"
-              :fields="invoiceNoteFieldList"
+              :show-fields-button="false"
             />
 
             <!-- Invoice Custom Notes -->
@@ -108,6 +108,8 @@
               :fields="invoiceNoteFieldList"
               type="Invoice"
               label="invoices.terms_and_conditions"
+              :show-note-popup="false"
+              :show-fields-button="false"
             />
 
             <!-- Invoice Custom Fields -->

@@ -591,6 +591,8 @@ export const useEstimateStore = (useWindow = false) => {
           this.newEstimate.sales_tax_address_type = companyStore.selectedCompanySettings.sales_tax_address_type
           this.newEstimate.discount_per_item =
             companyStore.selectedCompanySettings.discount_per_item
+          this.newEstimate.notes =
+            companyStore.selectedCompanySettings.estimate_default_terms_and_conditions || ''
           this.newEstimate.estimate_date = moment().format('YYYY-MM-DD')
           if (companyStore.selectedCompanySettings.estimate_set_expiry_date_automatically === 'YES') {
             this.newEstimate.expiry_date = moment()

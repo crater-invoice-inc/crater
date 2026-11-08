@@ -147,7 +147,7 @@
         hover:text-gray-600
         transition-opacity
         duration-200
-        focus:outline-none focus:opacity-100
+        focus:outline-none
       "
       :class="
         isHovered

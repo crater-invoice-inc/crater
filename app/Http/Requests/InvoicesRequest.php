@@ -82,6 +82,10 @@ class InvoicesRequest extends FormRequest
             'items.*.price' => [
                 'required',
             ],
+            'payment_information' => [
+                'nullable',
+                'string',
+            ],
         ];
 
         $companyCurrency = CompanySetting::getSetting('currency', $this->header('company'));

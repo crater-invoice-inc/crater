@@ -94,12 +94,20 @@
           "
         >
           <div class="relative w-full lg:w-1/2 lg:mr-4">
+            <!-- Invoice Payment Information -->
+            <PaymentInformationFields
+              :store="invoiceStore"
+              store-prop="newInvoice"
+              :fields="invoiceNoteFieldList"
+            />
+
             <!-- Invoice Custom Notes -->
             <NoteFields
               :store="invoiceStore"
               store-prop="newInvoice"
               :fields="invoiceNoteFieldList"
               type="Invoice"
+              label="invoices.terms_and_conditions"
             />
 
             <!-- Invoice Custom Fields -->
@@ -160,6 +168,7 @@ import SelectTemplate from '@/scripts/admin/components/estimate-invoice-common/S
 import InvoiceBasicFields from './InvoiceCreateBasicFields.vue'
 import InvoiceCustomFields from '@/scripts/admin/components/custom-fields/CreateCustomFields.vue'
 import NoteFields from '@/scripts/admin/components/estimate-invoice-common/CreateNotesField.vue'
+import PaymentInformationFields from '@/scripts/admin/components/estimate-invoice-common/CreatePaymentInformationField.vue'
 import SelectTemplateModal from '@/scripts/admin/components/modal-components/SelectTemplateModal.vue'
 import TaxTypeModal from '@/scripts/admin/components/modal-components/TaxTypeModal.vue'
 import ItemModal from '@/scripts/admin/components/modal-components/ItemModal.vue'

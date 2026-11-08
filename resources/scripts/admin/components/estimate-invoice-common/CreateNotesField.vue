@@ -6,7 +6,7 @@
       <SelectNotePopup :type="type" @select="onSelectNote" />
     </div>
     <label class="text-gray-800 font-medium mb-4 text-sm">
-      {{ $t('invoices.notes') }}
+      {{ $t(label) }}
     </label>
     <BaseCustomInput
       v-model="store[storeProp].notes"
@@ -37,6 +37,10 @@ const props = defineProps({
   type: {
     type: String,
     default: null,
+  },
+  label: {
+    type: String,
+    default: 'invoices.notes',
   },
 })
 

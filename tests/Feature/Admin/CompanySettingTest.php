@@ -199,3 +199,27 @@ test('get notification email settings', function () {
 
     $response->assertOk();
 });
+
+test('company settings accept null values and store empty strings', function () {
+    $data = [
+        'settings' => [
+            'invoice_default_terms_and_conditions' => null,
+            'invoice_default_payment_information' => null,
+        ],
+    ];
+
+    postJson('api/v1/company/settings', $data)
+        ->assertOk();
+
+    $this->assertDatabaseHas('company_settings', [
+        'company_id' => User::find(1)->companies()->first()->id,
+        'option' => 'invoice_default_terms_and_conditions',
+        'value' => '',
+    ]);
+
+    $this->assertDatabaseHas('company_settings', [
+        'company_id' => User::find(1)->companies()->first()->id,
+        'option' => 'invoice_default_payment_information',
+        'value' => '',
+    ]);
+});

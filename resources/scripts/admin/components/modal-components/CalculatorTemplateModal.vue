@@ -5,7 +5,7 @@
   >
     <template #header>
       <div class="flex justify-between w-full">
-        {{ modalStore.title }}
+        {{ modalTitle }}
         <BaseIcon
           name="XIcon"
           class="h-6 w-6 text-gray-500 cursor-pointer"
@@ -30,21 +30,6 @@
               :invalid="v$.currentTemplate.name.$error"
               type="text"
               @input="v$.currentTemplate.name.$touch()"
-            />
-          </BaseInputGroup>
-
-          <BaseInputGroup
-            :label="$t('calculator.templates.category')"
-            required
-          >
-            <BaseMultiselect
-              v-model="calculatorStore.currentTemplate.category"
-              :options="categoryOptions"
-              label="label"
-              value-prop="value"
-              :placeholder="$t('calculator.templates.select_category')"
-              :can-deselect="false"
-              track-by="value"
             />
           </BaseInputGroup>
 
@@ -109,21 +94,50 @@ const modalStore = useModalStore()
 
 let isSaving = ref(false)
 
-const categoryOptions = [
-  { value: 'pre_production', label: t('calculator.categories.pre_production') },
-  { value: 'production', label: t('calculator.categories.production') },
-  { value: 'post_production', label: t('calculator.categories.post_production') },
-  { value: 'travel', label: t('calculator.categories.travel') },
-  { value: 'production_expenses', label: t('calculator.categories.production_expenses') },
-]
+// the category is set by the opener (per-list add button or row edit) and
+// never changed inside the modal; the title reflects what is being added
+const TEMPLATE_TITLES = {
+  pre_production: {
+    add: 'calculator.templates.add_role',
+    edit: 'calculator.templates.edit_role',
+  },
+  production: {
+    add: 'calculator.templates.add_role',
+    edit: 'calculator.templates.edit_role',
+  },
+  post_production: {
+    add: 'calculator.templates.add_role',
+    edit: 'calculator.templates.edit_role',
+  },
+  production_expenses: {
+    add: 'calculator.templates.add_expense',
+    edit: 'calculator.templates.edit_expense',
+  },
+  equipment: {
+    add: 'calculator.templates.add_equipment',
+    edit: 'calculator.templates.edit_equipment',
+  },
+  travel: {
+    add: 'calculator.templates.add_fee',
+    edit: 'calculator.templates.edit_fee',
+  },
+}
+
+const modalTitle = computed(() => {
+  const titles = TEMPLATE_TITLES[calculatorStore.currentTemplate.category] || {
+    add: 'calculator.templates.add_new',
+    edit: 'calculator.templates.edit',
+  }
+
+  return t(
+    calculatorStore.isTemplateEdit ? titles.edit : titles.add
+  )
+})
 
 const rules = computed(() => {
   return {
     currentTemplate: {
       name: {
-        required: helpers.withMessage(t('validation.required'), required),
-      },
-      category: {
         required: helpers.withMessage(t('validation.required'), required),
       },
     },

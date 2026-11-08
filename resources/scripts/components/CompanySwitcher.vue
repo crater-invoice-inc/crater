@@ -3,18 +3,11 @@
     <CompanyModal />
 
     <div
-      class="
-        flex
-        items-center
-        w-full
-        px-2.5
-        py-2
-        text-sm
-        bg-gray-50
-        rounded-lg
-        cursor-pointer
-        hover:bg-gray-100
-      "
+      :title="collapsed && companyStore.selectedCompany ? companyStore.selectedCompany.name : null"
+      :class="[
+        'flex items-center w-full px-2.5 py-2 text-sm bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100',
+        collapsed ? 'justify-center' : '',
+      ]"
       @click="isShow = !isShow"
     >
       <span
@@ -46,13 +39,14 @@
       </span>
 
       <span
-        v-if="companyStore.selectedCompany"
+        v-if="companyStore.selectedCompany && !collapsed"
         class="flex-1 ml-3 font-medium text-gray-900 truncate"
       >
         {{ companyStore.selectedCompany.name }}
       </span>
 
       <BaseIcon
+        v-if="!collapsed"
         name="ChevronDownIcon"
         class="h-5 ml-2 shrink-0 text-gray-400"
       />
@@ -205,6 +199,10 @@ import { useGlobalStore } from '@/scripts/admin//stores/global'
 import { useUserStore } from '@/scripts/admin/stores/user'
 
 import CompanyModal from '@/scripts/admin/components/modal-components/CompanyModal.vue'
+
+defineProps({
+  collapsed: { type: Boolean, default: false },
+})
 
 const companyStore = useCompanyStore()
 const modalStore = useModalStore()

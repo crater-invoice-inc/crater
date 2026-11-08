@@ -1,25 +1,18 @@
 <template>
   <div ref="userCard" class="relative">
     <div
-      class="
-        flex
-        items-center
-        w-full
-        px-2.5
-        py-2
-        text-sm
-        bg-gray-50
-        rounded-lg
-        cursor-pointer
-        hover:bg-gray-100
-      "
+      :title="collapsed ? userStore.currentUser.name : null"
+      :class="[
+        'flex items-center w-full px-2.5 py-2 text-sm bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100',
+        collapsed ? 'justify-center' : '',
+      ]"
       @click="isShow = !isShow"
     >
       <img
         :src="previewAvatar"
         class="w-9 h-9 rounded-md object-cover shrink-0"
       />
-      <div class="flex flex-col flex-1 min-w-0 ml-3">
+      <div v-if="!collapsed" class="flex flex-col flex-1 min-w-0 ml-3">
         <span class="font-medium text-gray-900 truncate">
           {{ userStore.currentUser.name }}
         </span>
@@ -27,7 +20,11 @@
           {{ userStore.currentUser.email }}
         </span>
       </div>
-      <BaseIcon name="ChevronDownIcon" class="h-5 ml-2 shrink-0 text-gray-400" />
+      <BaseIcon
+        v-if="!collapsed"
+        name="ChevronDownIcon"
+        class="h-5 ml-2 shrink-0 text-gray-400"
+      />
     </div>
 
     <transition
@@ -88,6 +85,10 @@ import { useRouter } from 'vue-router'
 import { onClickOutside } from '@vueuse/core'
 import { useUserStore } from '@/scripts/admin/stores/user'
 import { useAuthStore } from '@/scripts/admin/stores/auth'
+
+defineProps({
+  collapsed: { type: Boolean, default: false },
+})
 
 const userStore = useUserStore()
 const authStore = useAuthStore()

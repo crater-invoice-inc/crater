@@ -110,39 +110,97 @@
   <!-- DESKTOP MENU -->
   <div
     class="
+      site-sidebar
       hidden
-      w-56
       h-screen
-      overflow-y-auto
       bg-white
       border-r border-gray-200 border-solid
-      xl:w-64
+      z-10
       md:fixed md:flex md:flex-col md:inset-y-0
       pt-16
     "
+    :class="isCollapsed ? 'w-16' : 'w-56 xl:w-64'"
   >
-    <div class="flex flex-col flex-1 px-4 pt-4 pb-4 overflow-y-auto">
-      <CompanySwitcher />
+    <!-- collapse / expand toggle, shown when hovering the sidebar -->
+    <button
+      type="button"
+      :title="
+        isCollapsed ? $t('navigation.expand_sidebar') : $t('navigation.collapse_sidebar')
+      "
+      class="
+        sidebar-collapse-toggle
+        absolute
+        top-36
+        z-20
+        flex
+        items-center
+        justify-center
+        w-7
+        h-7
+        -right-3.5
+        bg-white
+        border border-gray-200 border-solid
+        rounded-lg
+        shadow-sm
+        text-gray-400
+        hover:text-gray-600
+        focus:outline-none
+      "
+      @click="globalStore.toggleSidebarCollapsed()"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="2"
+        stroke="currentColor"
+        class="w-3.5 h-3.5"
+        aria-hidden="true"
+      >
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+      </svg>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="2"
+        stroke="currentColor"
+        class="w-3.5 h-3.5 -ml-1"
+        aria-hidden="true"
+      >
+        <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+      </svg>
+    </button>
 
-      <nav class="flex-1 mt-6 space-y-1">
-        <SidebarMenuItem
-          v-for="item in mainMenuItems"
-          :key="item.name"
-          :item="item"
-          :gap="item.gap"
-        />
-      </nav>
+    <div
+      class="flex flex-col flex-1 pt-4 pb-4 min-h-0"
+      :class="isCollapsed ? 'px-2' : 'px-4'"
+    >
+      <CompanySwitcher :collapsed="isCollapsed" />
+
+      <div class="flex-1 min-h-0 overflow-y-auto mt-6">
+        <nav class="space-y-1">
+          <SidebarMenuItem
+            v-for="item in mainMenuItems"
+            :key="item.name"
+            :item="item"
+            :gap="item.gap"
+            :collapsed="isCollapsed"
+          />
+        </nav>
+      </div>
 
       <nav class="mt-6 space-y-1">
         <SidebarMenuItem
           v-for="item in bottomMenuItems"
           :key="item.name"
           :item="item"
+          :collapsed="isCollapsed"
         />
       </nav>
 
       <div class="pt-4 mt-4 border-t border-gray-100">
-        <SidebarUserCard />
+        <SidebarUserCard :collapsed="isCollapsed" />
       </div>
     </div>
   </div>
@@ -172,6 +230,8 @@ const route = useRoute()
 const globalStore = useGlobalStore()
 const dashboardStore = useDashboardStore()
 const notificationStore = useNotificationStore()
+
+const isCollapsed = computed(() => globalStore.isSidebarCollapsed)
 
 const BOTTOM_MENU_NAMES = ['Users', 'Reports', 'Settings']
 
@@ -229,3 +289,21 @@ onMounted(() => {
   }
 })
 </script>
+
+<style scoped>
+.site-sidebar {
+  transition: width 0.3s ease;
+}
+
+.sidebar-collapse-toggle {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.site-sidebar:hover .sidebar-collapse-toggle {
+  opacity: 1;
+  pointer-events: auto;
+}
+</style>
+

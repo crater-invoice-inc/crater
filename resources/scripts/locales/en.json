@@ -14,7 +14,9 @@
     "logout": "Logout",
     "users": "Users",
     "modules": "Modules",
-    "profile": "Profile"
+    "profile": "Profile",
+    "collapse_sidebar": "Collapse",
+    "expand_sidebar": "Expand"
   },
   "calculator": {
     "title": "Calculator",
@@ -36,9 +38,6 @@
     "created_message": "Budget saved successfully",
     "updated_message": "Budget updated successfully",
     "deleted_message": "Budget deleted successfully",
-    "roles_table": "Production",
-    "expenses_table": "Travel & expenses",
-    "category": "Category",
     "role": "Role",
     "rate_per_hour": "$/h",
     "hours": "Hours",
@@ -57,27 +56,37 @@
       "pre_production": "Pre-production",
       "production": "Production",
       "post_production": "Post-production",
-      "travel": "Travel expenses",
-      "production_expenses": "Production expenses"
+      "production_expenses": "Production expenses",
+      "equipment": "Equipment",
+      "travel": "Travel expenses"
     },
     "templates": {
       "name": "Name",
-      "category": "Category",
       "default_price": "Default price",
       "add_new": "New role / expense",
       "edit": "Edit role / expense",
-      "select_category": "Select a category",
       "none_in_category": "No predefined entries in this category yet.",
       "confirm_delete": "Are you sure you want to delete this entry?",
       "created_message": "Entry saved successfully",
       "updated_message": "Entry updated successfully",
       "deleted_message": "Entry deleted successfully",
-      "is_default": "Set as default"
+      "is_default": "Set as default",
+      "add_role": "New role",
+      "edit_role": "Edit role",
+      "add_expense": "New expense",
+      "edit_expense": "Edit expense",
+      "add_equipment": "New equipment",
+      "edit_equipment": "Edit equipment",
+      "add_fee": "New expense",
+      "edit_fee": "Edit expense"
     },
     "overview": "Budget overview",
     "duplicate": "Duplicate",
     "duplicated_message": "Budget duplicated successfully",
-    "select_category": "Select a category"
+    "item_name": "Name",
+    "fee": "Expense",
+    "select_equipment": "Select equipment",
+    "select_fee": "Select an expense"
   },
   "general": {
     "add_company": "Add Company",
@@ -86,6 +95,7 @@
     "download_pdf": "Download PDF",
     "save": "Save",
     "create": "Create",
+    "add": "Add",
     "cancel": "Cancel",
     "update": "Update",
     "deselect": "Deselect",

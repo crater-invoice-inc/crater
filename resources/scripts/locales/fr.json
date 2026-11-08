@@ -14,7 +14,9 @@
     "logout": "Déconnexion",
     "users": "Utilisateurs",
     "modules": "Modules",
-    "profile": "Profil"
+    "profile": "Profil",
+    "collapse_sidebar": "Réduire",
+    "expand_sidebar": "Développer"
   },
   "calculator": {
     "title": "Calculateur",
@@ -36,9 +38,6 @@
     "created_message": "Budget enregistré avec succès",
     "updated_message": "Budget mis à jour avec succès",
     "deleted_message": "Budget supprimé avec succès",
-    "roles_table": "Production",
-    "expenses_table": "Frais et dépenses",
-    "category": "Catégorie",
     "role": "Rôle",
     "rate_per_hour": "$/h",
     "hours": "Heures",
@@ -57,27 +56,37 @@
       "pre_production": "Pré-production",
       "production": "Production",
       "post_production": "Post-production",
-      "travel": "Frais de déplacement",
-      "production_expenses": "Dépenses de production"
+      "production_expenses": "Dépenses de production",
+      "equipment": "Équipements",
+      "travel": "Frais de déplacement"
     },
     "templates": {
       "name": "Nom",
-      "category": "Catégorie",
       "default_price": "Prix par défaut",
       "add_new": "Nouveau rôle / dépense",
       "edit": "Modifier le rôle / la dépense",
-      "select_category": "Choisir une catégorie",
       "none_in_category": "Aucune entrée prédéfinie dans cette catégorie.",
       "confirm_delete": "Voulez-vous vraiment supprimer cette entrée ?",
       "created_message": "Entrée enregistrée avec succès",
       "updated_message": "Entrée mise à jour avec succès",
       "deleted_message": "Entrée supprimée avec succès",
-      "is_default": "Par défaut"
+      "is_default": "Par défaut",
+      "add_role": "Nouveau rôle",
+      "edit_role": "Modifier le rôle",
+      "add_expense": "Nouvelle dépense",
+      "edit_expense": "Modifier la dépense",
+      "add_equipment": "Nouvel équipement",
+      "edit_equipment": "Modifier l'équipement",
+      "add_fee": "Nouveau frais",
+      "edit_fee": "Modifier le frais"
     },
     "overview": "Aperçu du budget",
     "duplicate": "Dupliquer",
     "duplicated_message": "Budget dupliqué avec succès",
-    "select_category": "Choisir une catégorie"
+    "item_name": "Nom",
+    "fee": "Frais",
+    "select_equipment": "Choisir un équipement",
+    "select_fee": "Choisir un frais"
   },
   "general": {
     "add_company": "Ajouter une entreprise",
@@ -86,6 +95,7 @@
     "download_pdf": "Télécharger le PDF",
     "save": "Enregistrer",
     "create": "Créer",
+    "add": "Ajouter",
     "cancel": "Annuler",
     "update": "Mettre à jour",
     "deselect": "Enlever",

@@ -173,16 +173,12 @@
         </template>
 
         <template #cell-is_active="{ row }">
-          <span
-            class="inline-block px-2.5 py-0.5 text-xs font-medium rounded-full"
-            :class="
-              row.data.is_active
-                ? 'bg-teal-100 text-teal-800'
-                : 'bg-gray-100 text-gray-600'
-            "
+          <BaseItemStatusBadge
+            :status="row.data.is_active ? 'ACTIVE' : 'INACTIVE'"
+            class="px-3 py-1"
           >
             {{ row.data.is_active ? $t('items.active') : $t('items.inactive') }}
-          </span>
+          </BaseItemStatusBadge>
         </template>
 
         <template #cell-unit_name="{ row }">

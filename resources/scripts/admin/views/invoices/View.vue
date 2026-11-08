@@ -8,6 +8,7 @@ import { useInvoiceStore } from '@/scripts/admin/stores/invoice'
 import { useModalStore } from '@/scripts/stores/modal'
 import { useUserStore } from '@/scripts/admin/stores/user'
 import { useDialogStore } from '@/scripts/stores/dialog'
+import { useGlobalStore } from '@/scripts/admin/stores/global'
 
 import SendInvoiceModal from '@/scripts/admin/components/modal-components/SendInvoiceModal.vue'
 import InvoiceDropdown from '@/scripts/admin/components/dropdowns/InvoiceIndexDropdown.vue'
@@ -18,6 +19,7 @@ import abilities from '@/scripts/admin/stub/abilities'
 const modalStore = useModalStore()
 const invoiceStore = useInvoiceStore()
 const userStore = useUserStore()
+const globalStore = useGlobalStore()
 const dialogStore = useDialogStore()
 
 const { t } = useI18n()
@@ -294,12 +296,12 @@ onSearched = debounce(onSearched, 500)
         h-full
         pt-16
         pb-[6.4rem]
-        ml-56
         bg-white
-        xl:ml-64
         w-88
         xl:block
       "
+      style="transition: margin 0.3s ease"
+      :class="globalStore.isSidebarCollapsed ? 'xl:ml-16' : 'ml-56 xl:ml-64'"
     >
       <div
         class="

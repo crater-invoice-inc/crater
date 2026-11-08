@@ -1,14 +1,16 @@
 <template>
   <router-link
     :to="item.link"
+    :title="collapsed ? $t(item.title) : null"
     :class="[
       hasActiveUrl(item.link)
         ? 'text-primary-600 bg-primary-50'
         : 'text-gray-700',
-      gap ? '' : '',
-      'cursor-pointer px-3 py-2.5 rounded-lg hover:bg-gray-50 group flex items-center text-sm not-italic font-medium',
+      collapsed
+        ? 'cursor-pointer mx-2 px-0 py-2.5 rounded-lg hover:bg-gray-50 group flex items-center justify-center text-sm not-italic font-medium'
+        : 'cursor-pointer px-3 py-2.5 rounded-lg hover:bg-gray-50 group flex items-center text-sm not-italic font-medium',
     ]"
-    :style="gap ? { marginTop: '24px' } : {}"
+    :style="gap && !collapsed ? { marginTop: '24px' } : {}"
   >
     <BaseIcon
       :name="item.icon"
@@ -16,14 +18,14 @@
         hasActiveUrl(item.link)
           ? 'text-primary-500 group-hover:text-primary-500 '
           : 'text-gray-400 group-hover:text-gray-600',
-        'mr-3.5 shrink-0 h-5 w-5',
+        collapsed ? 'shrink-0 h-5 w-5' : 'mr-3.5 shrink-0 h-5 w-5',
       ]"
     />
 
-    {{ $t(item.title) }}
+    <span v-if="!collapsed">{{ $t(item.title) }}</span>
 
     <span
-      v-if="badgeCount"
+      v-if="badgeCount && !collapsed"
       class="
         px-2
         py-0.5
@@ -48,6 +50,7 @@ import { useDashboardStore } from '@/scripts/admin/stores/dashboard'
 const props = defineProps({
   item: { type: Object, required: true },
   gap: { type: Boolean, default: false },
+  collapsed: { type: Boolean, default: false },
 })
 
 const route = useRoute()

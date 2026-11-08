@@ -5,23 +5,27 @@
   >
     <CalculatorTemplateModal />
 
-    <template #action>
-      <BaseButton variant="primary-outline" @click="openTemplateModal">
-        <template #left="slotProps">
-          <BaseIcon :class="slotProps.class" name="PlusIcon" />
-        </template>
-        {{ $t('calculator.templates.add_new') }}
-      </BaseButton>
-    </template>
-
     <div
       v-for="group in groupedTemplates"
       :key="group.category"
       class="mt-8"
     >
-      <h6 class="mb-2 text-sm font-semibold text-gray-900">
-        {{ $t(`calculator.categories.${group.category}`) }}
-      </h6>
+      <div class="flex items-center justify-between mb-2">
+        <h6 class="text-sm font-semibold text-gray-900">
+          {{ $t(`calculator.categories.${group.category}`) }}
+        </h6>
+
+        <BaseButton
+          size="sm"
+          variant="primary-outline"
+          @click="openTemplateModal(group.category)"
+        >
+          <template #left="slotProps">
+            <BaseIcon :class="slotProps.class" name="PlusIcon" />
+          </template>
+          {{ $t('general.add') }}
+        </BaseButton>
+      </div>
 
       <BaseTable
         v-if="group.items.length"
@@ -75,7 +79,7 @@ const companyStore = useCompanyStore()
 const modalStore = useModalStore()
 
 const ROLE_CATEGORIES = ['pre_production', 'production', 'post_production']
-const COST_CATEGORIES = ['travel', 'production_expenses']
+const COST_CATEGORIES = ['production_expenses', 'equipment', 'travel']
 
 const groupedTemplates = computed(() => {
   const groups = [...ROLE_CATEGORIES, ...COST_CATEGORIES].map(
@@ -123,11 +127,11 @@ async function loadData() {
   await calculatorStore.fetchTemplates({ limit: 'all' })
 }
 
-function openTemplateModal() {
+function openTemplateModal(category) {
   calculatorStore.resetCurrentTemplate()
+  calculatorStore.currentTemplate.category = category
 
   modalStore.openModal({
-    title: t('calculator.templates.add_new'),
     componentName: 'CalculatorTemplateModal',
     size: 'sm',
   })

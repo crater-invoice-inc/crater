@@ -107,22 +107,18 @@ import { useVuelidate } from '@vuelidate/core'
 import { useModalStore } from '@/scripts/stores/modal'
 import { useNotificationStore } from '@/scripts/stores/notification'
 import { useNotesStore } from '@/scripts/admin/stores/note'
-import { useInvoiceStore } from '@/scripts/admin/stores/invoice'
 import { usePaymentStore } from '@/scripts/admin/stores/payment'
-import { useEstimateStore } from '@/scripts/admin/stores/estimate'
 
 const modalStore = useModalStore()
 const notificationStore = useNotificationStore()
 const noteStore = useNotesStore()
-const invoiceStore = useInvoiceStore()
 const paymentStore = usePaymentStore()
-const estimateStore = useEstimateStore()
 
 const route = useRoute()
 const { t } = useI18n()
 
 let isSaving = ref(false)
-const types = reactive(['Invoice', 'Estimate', 'Payment'])
+const types = reactive(['Payment'])
 let fields = ref(['customer', 'customerCustom'])
 
 const modalActive = computed(() => {
@@ -162,25 +158,11 @@ watch(
 )
 
 onMounted(() => {
-  if (route.name === 'estimates.create') {
-    noteStore.currentNote.type = 'Estimate'
-  } else if (route.name === 'invoices.create') {
-    noteStore.currentNote.type = 'Invoice'
-  } else {
-    noteStore.currentNote.type = 'Payment'
-  }
+  noteStore.currentNote.type = 'Payment'
 })
 
 function setFields() {
   fields.value = ['customer', 'customerCustom']
-
-  if (noteStore.currentNote.type == 'Invoice') {
-    fields.value.push('invoice', 'invoiceCustom')
-  }
-
-  if (noteStore.currentNote.type == 'Estimate') {
-    fields.value.push('estimate', 'estimateCustom')
-  }
 
   if (noteStore.currentNote.type == 'Payment') {
     fields.value.push('payment', 'paymentCustom')
@@ -216,48 +198,31 @@ async function submitNote() {
         isSaving.value = false
       })
   } else {
-    await noteStore
-      .addNote(noteStore.currentNote)
-      .then((res) => {
-        isSaving.value = false
-        if (res.data) {
-          notificationStore.showNotification({
-            type: 'success',
-            message: t('settings.customization.notes.note_added'),
+        await noteStore
+          .addNote(noteStore.currentNote)
+          .then((res) => {
+            isSaving.value = false
+            if (res.data) {
+              notificationStore.showNotification({
+                type: 'success',
+                message: t('settings.customization.notes.note_added'),
+              })
+
+              if (
+                (route.name === 'payments.create' &&
+                  res.data.data.type === 'Payment') ||
+                (route.name === 'payments.edit' && res.data.data.type === 'Payment')
+              ) {
+                paymentStore.selectNote(res.data.data)
+              }
+            }
+
+            modalStore.refreshData ? modalStore.refreshData() : ''
+            closeNoteModal()
           })
-
-          if (
-            (route.name === 'invoices.create' &&
-              res.data.data.type === 'Invoice') ||
-            (route.name === 'invoices.edit' && res.data.data.type === 'Invoice')
-          ) {
-            invoiceStore.selectNote(res.data.data)
-          }
-
-          if (
-            (route.name === 'estimates.create' &&
-              res.data.data.type === 'Estimate') ||
-            (route.name === 'estimates.edit' &&
-              res.data.data.type === 'Estimate')
-          ) {
-            estimateStore.selectNote(res.data.data)
-          }
-
-          if (
-            (route.name === 'payments.create' &&
-              res.data.data.type === 'Payment') ||
-            (route.name === 'payments.edit' && res.data.data.type === 'Payment')
-          ) {
-            paymentStore.selectNote(res.data.data)
-          }
-        }
-
-        modalStore.refreshData ? modalStore.refreshData() : ''
-        closeNoteModal()
-      })
-      .catch((err) => {
-        isSaving.value = false
-      })
+          .catch((err) => {
+            isSaving.value = false
+          })
   }
 }
 

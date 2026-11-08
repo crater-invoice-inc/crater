@@ -39,9 +39,7 @@
 import { computed, reactive, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useModalStore } from '@/scripts/stores/modal'
-import { useDialogStore } from '@/scripts/stores/dialog'
 import { useNotesStore } from '@/scripts/admin/stores/note'
-import { useNotificationStore } from '@/scripts/stores/notification'
 import NoteDropdown from '@/scripts/admin/components/dropdowns/NoteIndexDropdown.vue'
 import NoteModal from '@/scripts/admin/components/modal-components/NoteModal.vue'
 import { useUserStore } from '@/scripts/admin/stores/user'
@@ -50,9 +48,7 @@ import abilities from '@/scripts/admin/stub/abilities'
 const { t } = useI18n()
 
 const modalStore = useModalStore()
-const dialogStore = useDialogStore()
 const noteStore = useNotesStore()
-const notificationStore = useNotificationStore()
 const userStore = useUserStore()
 
 const table = ref('')

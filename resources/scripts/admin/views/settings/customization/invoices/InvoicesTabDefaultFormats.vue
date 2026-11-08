@@ -26,6 +26,7 @@
       <BaseCustomInput
         v-model="formatSettings.invoice_default_payment_information"
         :fields="invoiceDefaultFields"
+        :show-fields-button="false"
       />
     </BaseInputGroup>
 
@@ -38,6 +39,7 @@
       <BaseCustomInput
         v-model="formatSettings.invoice_default_terms_and_conditions"
         :fields="invoiceDefaultFields"
+        :show-fields-button="false"
       />
     </BaseInputGroup>
 

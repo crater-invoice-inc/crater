@@ -28,6 +28,7 @@
       <BaseCustomInput
         v-model="formatSettings.estimate_default_terms_and_conditions"
         :fields="estimateDefaultFields"
+        :show-fields-button="false"
       />
     </BaseInputGroup>
 

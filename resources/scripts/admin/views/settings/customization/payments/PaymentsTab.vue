@@ -5,6 +5,10 @@
 
   <PaymentsTabDefaultFormats />
 
+  <BaseDivider class="my-8" />
+
+  <PaymentsTabNotes />
+
   <BaseDivider class="mt-6 mb-2" />
 
   <ul class="divide-y divide-gray-200">
@@ -25,6 +29,7 @@ import { computed, reactive, inject } from 'vue'
 import { useCompanyStore } from '@/scripts/admin/stores/company'
 import PaymentsTabPaymentNumber from './PaymentsTabPaymentNumber.vue'
 import PaymentsTabDefaultFormats from './PaymentsTabDefaultFormats.vue'
+import PaymentsTabNotes from './PaymentsTabNotes.vue'
 
 const utils = inject('utils')
 const companyStore = useCompanyStore()

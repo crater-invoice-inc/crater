@@ -91,7 +91,6 @@
         .item-label { font-weight: bold; margin-top: 6pt; }
         .item-text { margin: 0; }
 
-        /* Bloc total : sa largeur s'adapte à son contenu et se colle au bord droit */
         .totals { float: right; width: auto; margin-top: 14pt; margin-right: 0; page-break-inside: avoid; }
         .totals td { padding: 3pt 10pt; font-size: 10.5pt; color: #2c2d2d; white-space: nowrap; }
         .totals td.value { text-align: right; padding-left: 24pt; }
@@ -132,10 +131,16 @@
             }
         }
 
+        // Bloc client : le nom du client s'affiche toujours ; l'adresse s'ajoute si elle existe
         $clientLines = [];
+        $customerName = trim((string) optional($invoice->customer)->name);
         $billing = optional($invoice->customer)->billingAddress;
+        if ($customerName !== '') {
+            $clientLines[] = $customerName;
+        } elseif ($billing && trim((string) $billing->name) !== '') {
+            $clientLines[] = trim((string) $billing->name);
+        }
         if ($billing) {
-            $clientLines[] = trim((string) ($invoice->customer->name ?? $billing->name));
             $street = collect([$billing->address_street_1, $billing->address_street_2])
                 ->map(function ($v) { return trim((string) $v); })
                 ->filter()
@@ -153,7 +158,6 @@
                     $clientLines[] = $line;
                 }
             }
-            $clientLines = array_values(array_filter($clientLines, function ($l) { return $l !== ''; }));
         }
     @endphp
 
@@ -184,16 +188,12 @@
         </tr>
     </table>
 
-    @if (count($clientLines) > 0 || $billing_address)
+    @if (count($clientLines) > 0)
         <div style="margin-top: 36pt;">
             <div class="heading title" style="margin-bottom: 8pt;">@lang('pdf_bill_to')</div>
-            @if (count($clientLines) > 0)
-                @foreach ($clientLines as $line)
-                    <div class="client-line">{{ $line }}</div>
-                @endforeach
-            @else
-                <div class="address">{!! $billing_address !!}</div>
-            @endif
+            @foreach ($clientLines as $line)
+                <div class="client-line">{{ $line }}</div>
+            @endforeach
         </div>
     @endif
 
@@ -270,7 +270,7 @@
     </table>
     <div class="clear"></div>
 
-    @if ($payment_information)
+    @if (!empty($payment_information))
         <div class="block">
             <div class="heading small-title">@lang('pdf_payment_information')</div>
             <div>{!! $payment_information !!}</div>

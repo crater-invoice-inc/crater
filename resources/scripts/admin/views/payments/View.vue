@@ -34,6 +34,7 @@
         w-88
         xl:block
       "
+      style="transition: margin 0.3s ease"
       :class="globalStore.isSidebarCollapsed ? 'xl:ml-16' : 'ml-56 xl:ml-64'"
     >
       <div

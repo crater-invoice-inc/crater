@@ -109,8 +109,8 @@
 
   <!-- DESKTOP MENU -->
   <div
-    ref="sidebarEl"
     class="
+      site-sidebar
       hidden
       h-screen
       bg-white
@@ -120,8 +120,6 @@
       pt-16
     "
     :class="isCollapsed ? 'w-16' : 'w-56 xl:w-64'"
-    @mouseenter="isHovered = true"
-    @mouseleave="isHovered = false"
   >
     <!-- collapse / expand toggle, shown when hovering the sidebar -->
     <button
@@ -130,6 +128,7 @@
         isCollapsed ? $t('navigation.expand_sidebar') : $t('navigation.collapse_sidebar')
       "
       class="
+        sidebar-collapse-toggle
         absolute
         top-36
         z-40
@@ -145,16 +144,9 @@
         shadow-sm
         text-gray-400
         hover:text-gray-600
-        transition-opacity
-        duration-200
         focus:outline-none
       "
-      :class="
-        isHovered
-          ? 'opacity-100'
-          : 'opacity-0 pointer-events-none'
-      "
-      @click="onToggleClick"
+      @click="globalStore.toggleSidebarCollapsed()"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -215,7 +207,7 @@
 </template>
 
 <script setup>
-import { computed, nextTick, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, watch } from 'vue'
 import { useDebounceFn } from '@vueuse/core'
 import MainLogo from '@/scripts/components/icons/MainLogo.vue'
 import CompanySwitcher from '@/scripts/components/CompanySwitcher.vue'
@@ -240,25 +232,6 @@ const dashboardStore = useDashboardStore()
 const notificationStore = useNotificationStore()
 
 const isCollapsed = computed(() => globalStore.isSidebarCollapsed)
-const isHovered = ref(false)
-const sidebarEl = ref(null)
-
-// the sidebar resizes under the pointer when toggling: re-evaluate the
-// hover state from the click position, otherwise the toggle button stays
-// visible even though the pointer is no longer over the sidebar
-async function onToggleClick(e) {
-  globalStore.toggleSidebarCollapsed()
-
-  await nextTick()
-
-  const rect = sidebarEl.value.getBoundingClientRect()
-
-  isHovered.value =
-    e.clientX >= rect.left &&
-    e.clientX <= rect.right &&
-    e.clientY >= rect.top &&
-    e.clientY <= rect.bottom
-}
 
 const BOTTOM_MENU_NAMES = ['Users', 'Reports', 'Settings']
 
@@ -316,3 +289,21 @@ onMounted(() => {
   }
 })
 </script>
+
+<style scoped>
+.site-sidebar {
+  transition: width 0.3s ease;
+}
+
+.sidebar-collapse-toggle {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.site-sidebar:hover .sidebar-collapse-toggle {
+  opacity: 1;
+  pointer-events: auto;
+}
+</style>
+

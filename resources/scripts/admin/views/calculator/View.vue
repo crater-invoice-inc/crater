@@ -14,7 +14,7 @@
       overflow-y-auto
     "
     :class="globalStore.isSidebarCollapsed ? 'xl:ml-16' : 'xl:ml-64'"
-    style="width: 18rem"
+    style="width: 18rem; transition: margin 0.3s ease"
   >
     <div class="px-4 pt-8 pb-4">
       <div class="flex items-center justify-between mb-4">

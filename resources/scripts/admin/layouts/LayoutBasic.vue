@@ -12,6 +12,7 @@
 
     <main
       class="
+        main-content
         relative
         z-0
         h-screen
@@ -99,3 +100,10 @@ onMounted(() => {
   })
 })
 </script>
+
+<style scoped>
+.main-content {
+  transition: padding 0.3s ease;
+}
+</style>
+

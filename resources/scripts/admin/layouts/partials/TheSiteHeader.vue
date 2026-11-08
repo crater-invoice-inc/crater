@@ -71,8 +71,6 @@
           dark-color="white"
         />
       </router-link>
-
-      <GlobalSearchBar class="hidden md:block w-full max-w-md" />
     </div>
   </header>
 </template>
@@ -81,7 +79,6 @@
 import { useGlobalStore } from '@/scripts/admin/stores/global'
 
 import MainLogo from '@/scripts/components/icons/MainLogo.vue'
-import GlobalSearchBar from '@/scripts/components/GlobalSearchBar.vue'
 import { computed } from 'vue'
 
 const globalStore = useGlobalStore()

@@ -600,3 +600,22 @@ test('invoice4 pdf shows payment information only when filled', function () {
     $this->assertStringNotContainsString('pdf_payment_information', $html);
     $this->assertStringNotContainsString('pdf_invoice_terms_and_conditions', $html);
 });
+
+test('invoice pdf shows invoice level taxes', function () {
+    $invoice = Invoice::factory()->create([
+        'template_name' => 'invoice4',
+        'tax_per_item' => 'NO',
+    ]);
+
+    $tax = $invoice->taxes()->create(
+        Tax::factory()->raw(['amount' => 50, 'percent' => 5])
+    );
+
+    $response = get("/invoices/pdf/{$invoice->unique_hash}?preview=1");
+
+    $response->assertOk();
+
+    $html = $response->getContent();
+    $this->assertStringContainsString($tax->name, $html);
+    $this->assertStringContainsString('(5%)', $html);
+});

@@ -1,10 +1,10 @@
 <template>
   <form @submit.prevent="submitForm">
     <h6 class="text-gray-900 text-lg font-medium">
-      {{ $t('settings.customization.invoices.default_formats') }}
+      {{ $t('settings.customization.invoices.default_content') }}
     </h6>
     <p class="mt-1 text-sm text-gray-500 mb-2">
-      {{ $t('settings.customization.invoices.default_formats_description') }}
+      {{ $t('settings.customization.invoices.default_content_description') }}
     </p>
 
     <BaseInputGroup
@@ -18,32 +18,26 @@
     </BaseInputGroup>
 
     <BaseInputGroup
-      :label="$t('settings.customization.invoices.company_address_format')"
+      :label="
+        $t('settings.customization.invoices.default_invoice_payment_information')
+      "
       class="mt-6 mb-4"
     >
       <BaseCustomInput
-        v-model="formatSettings.invoice_company_address_format"
-        :fields="companyFields"
+        v-model="formatSettings.invoice_default_payment_information"
+        :fields="invoiceDefaultFields"
       />
     </BaseInputGroup>
 
     <BaseInputGroup
-      :label="$t('settings.customization.invoices.shipping_address_format')"
+      :label="
+        $t('settings.customization.invoices.default_invoice_terms_and_conditions')
+      "
       class="mt-6 mb-4"
     >
       <BaseCustomInput
-        v-model="formatSettings.invoice_shipping_address_format"
-        :fields="shippingFields"
-      />
-    </BaseInputGroup>
-
-    <BaseInputGroup
-      :label="$t('settings.customization.invoices.billing_address_format')"
-      class="mt-6 mb-4"
-    >
-      <BaseCustomInput
-        v-model="formatSettings.invoice_billing_address_format"
-        :fields="billingFields"
+        v-model="formatSettings.invoice_default_terms_and_conditions"
+        :fields="invoiceDefaultFields"
       />
     </BaseInputGroup>
 
@@ -77,29 +71,20 @@ const invoiceMailFields = ref([
   'company',
 ])
 
-const billingFields = ref([
-  'billing',
+const invoiceDefaultFields = ref([
   'customer',
+  'company',
   'customerCustom',
+  'invoice',
   'invoiceCustom',
 ])
-
-const shippingFields = ref([
-  'shipping',
-  'customer',
-  'customerCustom',
-  'invoiceCustom',
-])
-
-const companyFields = ref(['company', 'invoiceCustom'])
 
 let isSaving = ref(false)
 
 const formatSettings = reactive({
   invoice_mail_body: null,
-  invoice_company_address_format: null,
-  invoice_shipping_address_format: null,
-  invoice_billing_address_format: null,
+  invoice_default_payment_information: null,
+  invoice_default_terms_and_conditions: null,
 })
 
 utils.mergeSettings(formatSettings, {

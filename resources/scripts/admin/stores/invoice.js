@@ -511,6 +511,10 @@ export const useInvoiceStore = (useWindow = false) => {
           this.newInvoice.sales_tax_address_type = companyStore.selectedCompanySettings.sales_tax_address_type
           this.newInvoice.discount_per_item =
             companyStore.selectedCompanySettings.discount_per_item
+          this.newInvoice.notes =
+            companyStore.selectedCompanySettings.invoice_default_terms_and_conditions || ''
+          this.newInvoice.payment_information =
+            companyStore.selectedCompanySettings.invoice_default_payment_information || ''
           this.newInvoice.invoice_date = moment().format('YYYY-MM-DD')
           if (companyStore.selectedCompanySettings.invoice_set_due_date_automatically === 'YES') {
             this.newInvoice.due_date = moment()

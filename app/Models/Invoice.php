@@ -571,6 +571,10 @@ class Invoice extends Model implements HasMedia
                     }
                 }
             }
+        } else {
+            foreach ($this->taxes as $tax) {
+                $taxes->push($tax);
+            }
         }
 
         $invoiceTemplate = self::find($this->id)->template_name;

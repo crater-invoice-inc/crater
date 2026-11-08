@@ -45,10 +45,14 @@ const props = defineProps({
   },
 })
 
-const COLOR_SALES = '#4C3CD6'
+// Série InvoiceShelf (bleu / vert / orange, gris pour le résultat)
+const COLOR_SALES = '#2A78D6'
 const COLOR_RECEIPTS = '#1BAF7A'
 const COLOR_EXPENSES = '#EB6834'
-const COLOR_INCOME = '#3C4052'
+const COLOR_INCOME = '#646A7E'
+
+const GRID_COLOR = '#E6E8EE'
+const TICK_COLOR = '#646A7E'
 
 let myLineChart = null
 const graph = ref(null)
@@ -58,26 +62,72 @@ const defaultCurrency = computed(() => {
   return companyStore.selectedCompanyCurrency
 })
 
+function hexToRgba(hex, alpha) {
+  const value = hex.replace('#', '')
+  const r = parseInt(value.substring(0, 2), 16)
+  const g = parseInt(value.substring(2, 4), 16)
+  const b = parseInt(value.substring(4, 6), 16)
+
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`
+}
+
+// Dégradé vertical sous chaque courbe. Chart.js v2 résout les styles des
+// datasets pendant update() : le hook beforeUpdate est le seul point où
+// chartArea existe ET où la mutation est encore prise en compte.
+function applyAreaGradients(chart) {
+  const area = chart.chartArea
+
+  if (!area) {
+    return
+  }
+
+  chart.data.datasets.forEach((dataset) => {
+    if (dataset.fill === false) {
+      return
+    }
+
+    const gradient = chart.ctx.createLinearGradient(0, area.top, 0, area.bottom)
+    gradient.addColorStop(0, hexToRgba(dataset.borderColor, 0.16))
+    gradient.addColorStop(1, hexToRgba(dataset.borderColor, 0))
+    dataset.backgroundColor = gradient
+  })
+}
+
+const areaGradient = {
+  id: 'areaGradient',
+  beforeUpdate(chart) {
+    applyAreaGradients(chart)
+  },
+}
+
 function makeDataset(label, color, values) {
   return {
     label,
-    fill: false,
+    fill: true,
     lineTension: 0.4,
     borderColor: color,
-    borderWidth: 3,
+    borderWidth: 2,
     borderCapStyle: 'round',
     borderJoinStyle: 'round',
-    pointBorderColor: color,
     pointBackgroundColor: '#fff',
-    pointBorderWidth: 2,
-    pointHoverRadius: 6,
+    pointBorderWidth: 0,
+    pointHoverRadius: 5,
     pointHoverBackgroundColor: color,
     pointHoverBorderColor: '#fff',
     pointHoverBorderWidth: 2,
-    pointRadius: 3.5,
+    pointRadius: 0,
     pointHitRadius: 12,
     data: values.map((value) => value / 100),
   }
+}
+
+// La courbe du résultat reste un simple trait gris : superposer son
+// remplissage à ceux des ventes brouillerait les teintes du graphique.
+function makeIncomeDataset(label, color, values) {
+  const dataset = makeDataset(label, color, values)
+  dataset.fill = false
+
+  return dataset
 }
 
 function buildDatasets() {
@@ -89,7 +139,7 @@ function buildDatasets() {
 
   if (props.income && props.income.length) {
     datasets.push(
-      makeDataset(t('dashboard.chart_info.net_income'), COLOR_INCOME, props.income)
+      makeIncomeDataset(t('dashboard.chart_info.net_income'), COLOR_INCOME, props.income)
     )
   }
 
@@ -98,6 +148,20 @@ function buildDatasets() {
 
 function formatValue(value) {
   return utils.formatMoney(Math.round(value * 100), defaultCurrency.value)
+}
+
+function compactTick(value) {
+  const amount = value * 100
+
+  if (Math.abs(amount) >= 1e6) {
+    return `${amount / 1e6}M`
+  }
+
+  if (Math.abs(amount) >= 1e3) {
+    return `${amount / 1e3}k`
+  }
+
+  return `${amount}`
 }
 
 function renderTooltip(model) {
@@ -176,7 +240,7 @@ onMounted(() => {
             display: false,
           },
           ticks: {
-            fontColor: '#9ca3af',
+            fontColor: TICK_COLOR,
             fontSize: 12,
             padding: 8,
           },
@@ -185,17 +249,15 @@ onMounted(() => {
       yAxes: [
         {
           gridLines: {
-            color: '#f3f4f6',
+            color: GRID_COLOR,
             drawBorder: false,
-            borderDash: [4, 4],
-            zeroLineColor: '#f3f4f6',
-            zeroLineBorderDash: [4, 4],
           },
           ticks: {
-            fontColor: '#9ca3af',
+            fontColor: TICK_COLOR,
             fontSize: 12,
             padding: 8,
-            maxTicksLimit: 6,
+            maxTicksLimit: 5,
+            callback: compactTick,
           },
         },
       ],
@@ -209,7 +271,12 @@ onMounted(() => {
       datasets: buildDatasets(),
     },
     options: options,
+    plugins: [areaGradient],
   })
+
+  // La zone du graphique n'existe qu'après la première passe : une seconde
+  // update déclenche le hook beforeUpdate qui pose les dégradés.
+  myLineChart.update()
 })
 </script>
 
@@ -220,9 +287,9 @@ onMounted(() => {
   position: absolute;
   min-width: 190px;
   background: #fff;
-  border: 1px solid #f3f4f6;
+  border: 1px solid #e6e8ee;
   border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 8px 24px rgba(28, 24, 69, 0.1);
   padding: 12px 14px;
   pointer-events: none;
   opacity: 0;
@@ -233,7 +300,7 @@ onMounted(() => {
 .chart-tooltip-title {
   font-weight: 600;
   font-size: 13px;
-  color: #111827;
+  color: #161827;
   margin-bottom: 8px;
 }
 
@@ -241,7 +308,7 @@ onMounted(() => {
   display: flex;
   align-items: center;
   font-size: 13px;
-  color: #4b5563;
+  color: #3c4052;
   margin-top: 4px;
 }
 
@@ -258,7 +325,7 @@ onMounted(() => {
 
 .chart-tooltip-value {
   font-weight: 500;
-  color: #111827;
+  color: #161827;
   margin-left: 24px;
 }
 </style>

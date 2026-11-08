@@ -562,9 +562,9 @@ test('clone invoice copies payment information', function () {
     ]);
 });
 
-test('invoice4 pdf renders for invoice without payment information', function () {
+test('Black & White pdf renders for invoice without payment information', function () {
     $invoice = Invoice::factory()->create([
-        'template_name' => 'invoice4',
+        'template_name' => 'Black & White',
         'payment_information' => null,
     ]);
 
@@ -573,15 +573,15 @@ test('invoice4 pdf renders for invoice without payment information', function ()
     $response->assertOk();
 });
 
-test('invoice4 pdf shows payment information only when filled', function () {
+test('Black & White pdf shows payment information only when filled', function () {
     $invoice = Invoice::factory()->create([
-        'template_name' => 'invoice4',
+        'template_name' => 'Black & White',
         'payment_information' => 'Interac transfer: billing@example.com',
         'notes' => 'Some terms',
     ]);
 
     $emptyInvoice = Invoice::factory()->create([
-        'template_name' => 'invoice4',
+        'template_name' => 'Black & White',
         'payment_information' => null,
         'notes' => 'Some terms',
     ]);
@@ -603,7 +603,7 @@ test('invoice4 pdf shows payment information only when filled', function () {
 
 test('invoice pdf shows invoice level taxes', function () {
     $invoice = Invoice::factory()->create([
-        'template_name' => 'invoice4',
+        'template_name' => 'Black & White',
         'tax_per_item' => 'NO',
     ]);
 

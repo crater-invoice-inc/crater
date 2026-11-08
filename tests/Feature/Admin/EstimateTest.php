@@ -448,7 +448,7 @@ test('update estimate with EUR currency', function () {
 
 test('estimate pdf shows estimate level taxes', function () {
     $estimate = Estimate::factory()->create([
-        'template_name' => 'estimate4',
+        'template_name' => 'Black & White',
         'tax_per_item' => 'NO',
     ]);
 

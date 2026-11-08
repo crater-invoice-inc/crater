@@ -10,6 +10,7 @@ use Crater\Models\User;
 use Illuminate\Support\Facades\Artisan;
 use Laravel\Sanctum\Sanctum;
 
+use function Pest\Laravel\get;
 use function Pest\Laravel\getJson;
 use function Pest\Laravel\postJson;
 use function Pest\Laravel\putJson;
@@ -458,4 +459,163 @@ test('update invoice with EUR currency', function () {
         'name' => $invoice2['taxes'][0]['name'],
         'base_amount' => $invoice2['taxes'][0]['base_amount'],
     ]);
+});
+
+test('create invoice with payment information and notes', function () {
+    $invoice = Invoice::factory()
+        ->raw([
+            'taxes' => [Tax::factory()->raw()],
+            'items' => [InvoiceItem::factory()->raw()],
+            'notes' => 'Footer terms text',
+            'payment_information' => 'Interac transfer: billing@example.com',
+        ]);
+
+    $response = postJson('api/v1/invoices', $invoice);
+
+    $response->assertOk();
+
+    $this->assertDatabaseHas('invoices', [
+        'invoice_number' => $invoice['invoice_number'],
+        'notes' => 'Footer terms text',
+        'payment_information' => 'Interac transfer: billing@example.com',
+    ]);
+
+    $response->assertJsonPath('data.notes', 'Footer terms text');
+    $response->assertJsonPath('data.payment_information', 'Interac transfer: billing@example.com');
+});
+
+test('create invoice without payment information', function () {
+    $invoice = Invoice::factory()
+        ->raw([
+            'taxes' => [Tax::factory()->raw()],
+            'items' => [InvoiceItem::factory()->raw()],
+        ]);
+    unset($invoice['payment_information']);
+
+    $response = postJson('api/v1/invoices', $invoice);
+
+    $response->assertOk();
+
+    $this->assertDatabaseHas('invoices', [
+        'invoice_number' => $invoice['invoice_number'],
+        'payment_information' => null,
+    ]);
+});
+
+test('payment information must be a string when present', function () {
+    $invoice = Invoice::factory()
+        ->raw([
+            'taxes' => [Tax::factory()->raw()],
+            'items' => [InvoiceItem::factory()->raw()],
+            'payment_information' => ['not', 'a', 'string'],
+        ]);
+
+    postJson('api/v1/invoices', $invoice)
+        ->assertStatus(422)
+        ->assertJsonValidationErrors('payment_information');
+});
+
+test('update invoice payment information', function () {
+    $invoice = Invoice::factory()->create([
+        'payment_information' => null,
+    ]);
+
+    $invoice2 = Invoice::factory()
+        ->raw([
+            'taxes' => [Tax::factory()->raw()],
+            'items' => [InvoiceItem::factory()->raw()],
+            'payment_information' => 'Updated payment info',
+        ]);
+
+    putJson('api/v1/invoices/'.$invoice->id, $invoice2)->assertOk();
+
+    $this->assertDatabaseHas('invoices', [
+        'id' => $invoice->id,
+        'payment_information' => 'Updated payment info',
+    ]);
+
+    $invoice3 = Invoice::factory()
+        ->raw([
+            'taxes' => [Tax::factory()->raw()],
+            'items' => [InvoiceItem::factory()->raw()],
+            'payment_information' => null,
+        ]);
+
+    putJson('api/v1/invoices/'.$invoice->id, $invoice3)->assertOk();
+
+    $this->assertDatabaseHas('invoices', [
+        'id' => $invoice->id,
+        'payment_information' => null,
+    ]);
+});
+
+test('clone invoice copies payment information', function () {
+    $invoice = Invoice::factory()->create([
+        'payment_information' => 'Cloned payment info',
+    ]);
+
+    $response = postJson("api/v1/invoices/{$invoice->id}/clone")
+        ->assertStatus(201);
+
+    $this->assertDatabaseHas('invoices', [
+        'payment_information' => 'Cloned payment info',
+    ]);
+});
+
+test('invoice4 pdf renders for invoice without payment information', function () {
+    $invoice = Invoice::factory()->create([
+        'template_name' => 'invoice4',
+        'payment_information' => null,
+    ]);
+
+    $response = get("/invoices/pdf/{$invoice->unique_hash}");
+
+    $response->assertOk();
+});
+
+test('invoice4 pdf shows payment information only when filled', function () {
+    $invoice = Invoice::factory()->create([
+        'template_name' => 'invoice4',
+        'payment_information' => 'Interac transfer: billing@example.com',
+        'notes' => 'Some terms',
+    ]);
+
+    $emptyInvoice = Invoice::factory()->create([
+        'template_name' => 'invoice4',
+        'payment_information' => null,
+        'notes' => 'Some terms',
+    ]);
+
+    $filled = get("/invoices/pdf/{$invoice->unique_hash}?preview=1");
+    $filled->assertOk();
+    $html = $filled->getContent();
+    $this->assertStringContainsString('Interac transfer: billing@example.com', $html);
+    $this->assertStringNotContainsString('pdf_payment_information', $html);
+    $this->assertStringNotContainsString('pdf_invoice_terms_and_conditions', $html);
+
+    $empty = get("/invoices/pdf/{$emptyInvoice->unique_hash}?preview=1");
+    $empty->assertOk();
+    $html = $empty->getContent();
+    $this->assertStringNotContainsString('Interac transfer: billing@example.com', $html);
+    $this->assertStringNotContainsString('pdf_payment_information', $html);
+    $this->assertStringNotContainsString('pdf_invoice_terms_and_conditions', $html);
+});
+
+test('invoice pdf shows invoice level taxes', function () {
+    $invoice = Invoice::factory()->create([
+        'template_name' => 'invoice4',
+        'tax_per_item' => 'NO',
+    ]);
+
+    $tax = $invoice->taxes()->create(
+        Tax::factory()->raw(['amount' => 50, 'percent' => 5])
+    );
+
+    $response = get("/invoices/pdf/{$invoice->unique_hash}?preview=1");
+
+    $response->assertOk();
+
+    $html = $response->getContent();
+    $this->assertStringContainsString($tax->name, $html);
+    $this->assertStringContainsString('(5%)', $html);
 });

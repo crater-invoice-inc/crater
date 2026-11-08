@@ -13,6 +13,7 @@ use Crater\Models\User;
 use Illuminate\Support\Facades\Artisan;
 use Laravel\Sanctum\Sanctum;
 
+use function Pest\Laravel\get;
 use function Pest\Laravel\getJson;
 use function Pest\Laravel\postJson;
 use function Pest\Laravel\putJson;
@@ -443,4 +444,23 @@ test('update estimate with EUR currency', function () {
     ]);
 
     $response->assertStatus(200);
+});
+
+test('estimate pdf shows estimate level taxes', function () {
+    $estimate = Estimate::factory()->create([
+        'template_name' => 'estimate4',
+        'tax_per_item' => 'NO',
+    ]);
+
+    $tax = $estimate->taxes()->create(
+        Tax::factory()->raw(['amount' => 50, 'percent' => 5])
+    );
+
+    $response = get("/estimates/pdf/{$estimate->unique_hash}?preview=1");
+
+    $response->assertOk();
+
+    $html = $response->getContent();
+    $this->assertStringContainsString($tax->name, $html);
+    $this->assertStringContainsString('(5%)', $html);
 });

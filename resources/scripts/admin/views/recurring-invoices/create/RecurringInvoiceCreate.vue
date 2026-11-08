@@ -100,6 +100,7 @@
               store-prop="newRecurringInvoice"
               :fields="recurringInvoiceFields"
               type="Invoice"
+              :show-note-popup="false"
             />
 
             <!-- Invoice Custom Fields -->

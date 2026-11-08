@@ -389,6 +389,10 @@ class Estimate extends Model implements HasMedia
                     }
                 }
             }
+        } else {
+            foreach ($this->taxes as $tax) {
+                $taxes->push($tax);
+            }
         }
 
         $estimateTemplate = self::find($this->id)->template_name;

@@ -69,6 +69,7 @@ class CloneInvoiceController extends Controller
             'discount_per_item' => $invoice->discount_per_item,
             'tax' => $invoice->tax,
             'notes' => $invoice->notes,
+            'payment_information' => $invoice->payment_information,
             'exchange_rate' => $exchange_rate,
             'base_total' => $invoice->total * $exchange_rate,
             'base_discount_val' => $invoice->discount_val * $exchange_rate,

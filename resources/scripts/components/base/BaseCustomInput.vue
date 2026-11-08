@@ -8,7 +8,7 @@
   </BaseContentPlaceholders>
 
   <div v-else class="relative">
-    <div class="absolute bottom-0 right-0 z-10">
+    <div v-if="showFieldsButton" class="absolute bottom-0 right-0 z-10">
       <BaseDropdown
         :close-on-select="true"
         max-height="220"
@@ -79,6 +79,10 @@ const props = defineProps({
   fields: {
     type: Array,
     default: null,
+  },
+  showFieldsButton: {
+    type: Boolean,
+    default: true,
   },
 })
 

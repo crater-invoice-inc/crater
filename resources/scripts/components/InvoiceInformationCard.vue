@@ -48,11 +48,22 @@
           </dd>
         </div>
         <div
+          v-if="invoice.formatted_payment_information"
+          class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6"
+        >
+          <dt class="text-sm font-medium text-gray-500">
+            {{ $t('invoices.payment_information') }}
+          </dt>
+          <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+            <span v-html="invoice.formatted_payment_information"></span>
+          </dd>
+        </div>
+        <div
           v-if="invoice.formatted_notes"
           class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6"
         >
           <dt class="text-sm font-medium text-gray-500">
-            {{ $t('invoices.notes') }}
+            {{ $t('invoices.terms_and_conditions') }}
           </dt>
           <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
             <span v-html="invoice.formatted_notes"></span>

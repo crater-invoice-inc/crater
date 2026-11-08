@@ -7,7 +7,6 @@ use Crater\Models\ExchangeRateProvider;
 use Crater\Models\Expense;
 use Crater\Models\Invoice;
 use Crater\Models\Item;
-use Crater\Models\Note;
 use Crater\Models\Payment;
 use Crater\Models\RecurringInvoice;
 use Crater\Models\TaxType;
@@ -244,16 +243,6 @@ return [
             'owner_only' => false,
             'ability' => 'view-calculator',
             'model' => Crater\Models\Calculator::class
-        ],
-        [
-            'title' => 'settings.menu_title.notes',
-            'group' => '',
-            'name' => 'Notes',
-            'link' => '/admin/settings/notes',
-            'icon' => 'ClipboardCheckIcon',
-            'owner_only' => false,
-            'ability' => 'view-all-notes',
-            'model' => Note::class
         ],
         [
             'title' => 'settings.menu_title.expense_category',

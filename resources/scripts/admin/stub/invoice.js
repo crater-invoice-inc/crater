@@ -12,6 +12,7 @@ export default function () {
     invoice_date: '',
     due_date: '',
     notes: '',
+    payment_information: '',
     discount: 0,
     discount_type: 'fixed',
     discount_val: 0,

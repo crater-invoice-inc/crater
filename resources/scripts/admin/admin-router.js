@@ -41,8 +41,6 @@ const PaymentMode = () =>
   import('@/scripts/admin/views/settings/PaymentsModeSetting.vue')
 const CustomFieldsIndex = () =>
   import('@/scripts/admin/views/settings/CustomFieldsSetting.vue')
-const NotesSetting = () =>
-  import('@/scripts/admin/views/settings/NotesSetting.vue')
 const ExpenseCategory = () =>
   import('@/scripts/admin/views/settings/ExpenseCategorySetting.vue')
 const ExchangeRateSetting = () =>
@@ -302,12 +300,6 @@ export default [
             name: 'settings.ai-assistant',
             meta: { isOwnerOrSuperAdmin: true },
             component: AiAssistantSetting,
-          },
-          {
-            path: 'notes',
-            name: 'notes',
-            meta: { ability: abilities.VIEW_ALL_NOTES },
-            component: NotesSetting,
           },
           {
             path: 'payment-mode',

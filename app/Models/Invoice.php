@@ -166,6 +166,20 @@ class Invoice extends Model implements HasMedia
         return $this->getNotes();
     }
 
+    public function getPaymentInformation()
+    {
+        if ($this->payment_information === null || $this->payment_information === '') {
+            return null;
+        }
+
+        return $this->getFormattedString($this->payment_information);
+    }
+
+    public function getFormattedPaymentInformationAttribute($value)
+    {
+        return $this->getPaymentInformation();
+    }
+
     public function getFormattedCreatedAtAttribute($value)
     {
         $dateFormat = CompanySetting::getSetting('carbon_date_format', $this->company_id);
@@ -557,6 +571,10 @@ class Invoice extends Model implements HasMedia
                     }
                 }
             }
+        } else {
+            foreach ($this->taxes as $tax) {
+                $taxes->push($tax);
+            }
         }
 
         $invoiceTemplate = self::find($this->id)->template_name;
@@ -576,6 +594,7 @@ class Invoice extends Model implements HasMedia
             'shipping_address' => $this->getCustomerShippingAddress(),
             'billing_address' => $this->getCustomerBillingAddress(),
             'notes' => $this->getNotes(),
+            'payment_information' => $this->getPaymentInformation(),
             'logo' => $logo ?? null,
             'taxes' => $taxes,
         ]);

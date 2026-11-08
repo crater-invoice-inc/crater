@@ -101,6 +101,9 @@
               store-prop="newEstimate"
               :fields="estimateNoteFieldList"
               type="Estimate"
+              label="estimates.terms_and_conditions"
+              :show-note-popup="false"
+              :show-fields-button="false"
             />
 
             <!-- Estimate Custom Fields -->

@@ -20,32 +20,15 @@
     </BaseInputGroup>
 
     <BaseInputGroup
-      :label="$t('settings.customization.estimates.company_address_format')"
+      :label="
+        $t('settings.customization.estimates.default_estimate_terms_and_conditions')
+      "
       class="mt-6 mb-4"
     >
       <BaseCustomInput
-        v-model="formatSettings.estimate_company_address_format"
-        :fields="companyFields"
-      />
-    </BaseInputGroup>
-
-    <BaseInputGroup
-      :label="$t('settings.customization.estimates.shipping_address_format')"
-      class="mt-6 mb-4"
-    >
-      <BaseCustomInput
-        v-model="formatSettings.estimate_shipping_address_format"
-        :fields="shippingFields"
-      />
-    </BaseInputGroup>
-
-    <BaseInputGroup
-      :label="$t('settings.customization.estimates.billing_address_format')"
-      class="mt-6 mb-4"
-    >
-      <BaseCustomInput
-        v-model="formatSettings.estimate_billing_address_format"
-        :fields="billingFields"
+        v-model="formatSettings.estimate_default_terms_and_conditions"
+        :fields="estimateDefaultFields"
+        :show-fields-button="false"
       />
     </BaseInputGroup>
 
@@ -79,29 +62,19 @@ const estimateMailFields = ref([
   'company',
 ])
 
-const billingFields = ref([
-  'billing',
+const estimateDefaultFields = ref([
   'customer',
+  'company',
   'customerCustom',
+  'estimate',
   'estimateCustom',
 ])
-
-const shippingFields = ref([
-  'shipping',
-  'customer',
-  'customerCustom',
-  'estimateCustom',
-])
-
-const companyFields = ref(['company', 'estimateCustom'])
 
 let isSaving = ref(false)
 
 const formatSettings = reactive({
   estimate_mail_body: null,
-  estimate_company_address_format: null,
-  estimate_shipping_address_format: null,
-  estimate_billing_address_format: null,
+  estimate_default_terms_and_conditions: null,
 })
 
 utils.mergeSettings(formatSettings, {

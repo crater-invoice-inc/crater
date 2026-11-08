@@ -25,6 +25,7 @@ class InvoiceResource extends JsonResource
             'tax_per_item' => $this->tax_per_item,
             'discount_per_item' => $this->discount_per_item,
             'notes' => $this->notes,
+            'payment_information' => $this->payment_information,
             'discount_type' => $this->discount_type,
             'discount' => $this->discount,
             'discount_val' => $this->discount_val,

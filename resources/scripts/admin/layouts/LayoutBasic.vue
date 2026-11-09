@@ -22,7 +22,7 @@
       "
       :class="globalStore.isSidebarCollapsed ? 'md:pl-16' : 'md:pl-56 xl:pl-64'"
     >
-      <div class="pt-16 pb-16">
+      <div class="pt-16 pb-16 md:pt-0">
         <router-view />
       </div>
     </main>

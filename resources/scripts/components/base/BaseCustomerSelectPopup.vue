@@ -13,145 +13,116 @@
 
     <div
       v-if="selectedCustomer"
-      class="flex flex-col p-4 bg-surface border border-line-light border-solid rounded-xl shadow-card"
+      class="p-5 bg-surface border border-line-light border-solid rounded-xl shadow-card"
       @click.stop
     >
-      <div class="flex relative justify-between items-center mb-2">
-        <BaseText
-          :text="selectedCustomer.name"
-          :length="30"
-          class="flex-1 text-base font-medium text-left text-heading"
-        />
-        <div class="flex">
-          <a
+      <div class="flex items-center justify-between">
+        <div class="flex items-center min-w-0 gap-4">
+          <span
             class="
-              relative
-              my-0
-              ml-6
-              text-sm
-              font-medium
-              cursor-pointer
-              text-primary-500
-              items-center
               flex
+              items-center
+              justify-center
+              w-12
+              h-12
+              shrink-0
+              text-base
+              font-semibold
+              text-white
+              bg-primary-500
+              rounded-xl
+            "
+          >
+            {{ initGenerator(selectedCustomer.name) }}
+          </span>
+          <div class="min-w-0">
+            <p class="text-xs leading-tight text-muted">
+              {{ $t('customers.customer') }}
+            </p>
+            <BaseText
+              :text="selectedCustomer.name"
+              :length="30"
+              class="
+                block
+                text-lg
+                font-semibold
+                leading-snug
+                text-left text-heading
+                truncate
+              "
+            />
+            <p
+              v-if="selectedCustomer.contact_name"
+              class="text-sm leading-snug text-muted truncate"
+            >
+              {{ selectedCustomer.contact_name }}
+            </p>
+          </div>
+        </div>
+
+        <div class="flex items-center shrink-0 gap-1">
+          <button
+            type="button"
+            :title="$t('general.edit')"
+            class="
+              p-2
+              rounded-lg
+              text-muted
+              hover:bg-surface-secondary hover:text-heading
+              transition-colors
+              cursor-pointer
+              focus:outline-none
             "
             @click.stop="editCustomer"
           >
-            <BaseIcon name="PencilIcon" class="text-muted h-4 w-4 mr-1" />
-
-            {{ $t('general.edit') }}
-          </a>
-          <a
+            <BaseIcon name="PencilIcon" class="h-4 w-4" />
+          </button>
+          <button
+            type="button"
+            :title="$t('general.deselect')"
             class="
-              relative
-              my-0
-              ml-6
-              text-sm
-              flex
-              items-center
-              font-medium
+              p-2
+              rounded-lg
+              text-muted
+              hover:bg-surface-secondary hover:text-heading
+              transition-colors
               cursor-pointer
-              text-primary-500
+              focus:outline-none
             "
             @click="resetSelectedCustomer"
           >
-            <BaseIcon name="XCircleIcon" class="text-muted h-4 w-4 mr-1" />
-            {{ $t('general.deselect') }}
-          </a>
+            <BaseIcon name="XIcon" class="h-4 w-4" />
+          </button>
         </div>
       </div>
+
       <div
-        class="grid gap-x-8 gap-y-2 mt-1"
-        :class="{
-          'grid-cols-2': showShipping && selectedCustomer.shipping,
-          'grid-cols-1': !(showShipping && selectedCustomer.shipping),
-        }"
+        v-if="selectedCustomer.billing"
+        class="pt-4 mt-4 border-t border-line-light border-solid"
       >
-        <div v-if="selectedCustomer.billing" class="flex flex-col">
-          <label
-            class="
-              mb-1
-              text-sm
-              font-medium
-              text-left text-muted
-              whitespace-nowrap
-            "
-          >
-            {{ $t('general.bill_to') }}
-          </label>
+        <p class="mb-1 text-sm text-muted">
+          {{ $t('general.bill_to') }}
+        </p>
 
-          <div
-            v-if="selectedCustomer.billing"
-            class="flex flex-col flex-1 p-0 text-left"
-          >
-            <label class="relative text-sm truncate">
-              <span v-if="selectedCustomer.billing.city">
-                {{ selectedCustomer.billing.city }}
-              </span>
-              <span
-                v-if="
-                  selectedCustomer.billing.city &&
-                  selectedCustomer.billing.state
-                "
-              >
-                ,
-              </span>
-              <span v-if="selectedCustomer.billing.state">
-                {{ selectedCustomer.billing.state }}
-              </span>
-            </label>
-            <label
-              v-if="selectedCustomer.billing.zip"
-              class="relative text-sm truncate"
+        <div class="text-sm leading-relaxed text-left">
+          <p class="m-0">
+            <span v-if="selectedCustomer.billing.city">
+              {{ selectedCustomer.billing.city }}
+            </span>
+            <span
+              v-if="
+                selectedCustomer.billing.city && selectedCustomer.billing.state
+              "
             >
-              {{ selectedCustomer.billing.zip }}
-            </label>
-          </div>
-        </div>
-
-        <div
-          v-if="showShipping && selectedCustomer.shipping"
-          class="flex flex-col"
-        >
-          <label
-            class="
-              mb-1
-              text-sm
-              font-medium
-              text-left text-muted
-              whitespace-nowrap
-            "
-          >
-            {{ $t('general.ship_to') }}
-          </label>
-
-          <div
-            v-if="selectedCustomer.shipping"
-            class="flex flex-col flex-1 p-0 text-left"
-          >
-            <label class="relative text-sm truncate">
-              <span v-if="selectedCustomer.shipping.city">
-                {{ selectedCustomer.shipping.city }}
-              </span>
-              <span
-                v-if="
-                  selectedCustomer.shipping.city &&
-                  selectedCustomer.shipping.state
-                "
-              >
-                ,
-              </span>
-              <span v-if="selectedCustomer.shipping.state">
-                {{ selectedCustomer.shipping.state }}
-              </span>
-            </label>
-            <label
-              v-if="selectedCustomer.shipping.zip"
-              class="relative text-sm truncate"
-            >
-              {{ selectedCustomer.shipping.zip }}
-            </label>
-          </div>
+              ,
+            </span>
+            <span v-if="selectedCustomer.billing.state">
+              {{ selectedCustomer.billing.state }}
+            </span>
+          </p>
+          <p v-if="selectedCustomer.billing.zip" class="m-0">
+            {{ selectedCustomer.billing.zip }}
+          </p>
         </div>
       </div>
     </div>
@@ -412,12 +383,6 @@ const props = defineProps({
   contentLoading: {
     type: Boolean,
     default: false,
-  },
-  // Service-only documents (estimates/invoices) hide the shipping address;
-  // recurring invoices and the calculator keep the previous rendering.
-  showShipping: {
-    type: Boolean,
-    default: true,
   },
 })
 

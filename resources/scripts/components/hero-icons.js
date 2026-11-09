@@ -224,6 +224,7 @@ import {
   VolumeUpIcon,
   WifiIcon,
   XCircleIcon,
+  XIcon,
   ZoomInIcon,
   ZoomOutIcon,
 } from '@heroicons/vue/outline'
@@ -483,6 +484,7 @@ export const heroIcons = {
   VolumeUpIcon,
   WifiIcon,
   XCircleIcon,
+  XIcon,
   ZoomInIcon,
   ZoomOutIcon,
 }

@@ -11,8 +11,7 @@
       :valid="v.customer_id"
       :content-loading="isLoading"
       type="estimate"
-      :show-shipping="false"
-      class="lg:col-span-4"
+      class="lg:col-span-6"
     />
 
     <div
@@ -24,8 +23,8 @@
         rounded-2xl
         shadow-card
         sm:grid-cols-2
-        lg:col-span-8
-        lg:grid-cols-3 lg:self-start
+        lg:col-span-6
+        lg:grid-cols-2 lg:self-start
       "
     >
       <BaseInputGroup

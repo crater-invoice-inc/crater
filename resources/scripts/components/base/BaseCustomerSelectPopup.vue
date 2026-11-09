@@ -112,11 +112,27 @@
           </p>
 
           <div class="text-sm leading-relaxed text-left">
-            <p v-if="selectedCustomer.billing.address_street_1" class="m-0">
-              {{ selectedCustomer.billing.address_street_1 }}
-            </p>
-            <p v-if="selectedCustomer.billing.address_street_2" class="m-0">
-              {{ selectedCustomer.billing.address_street_2 }}
+            <p
+              v-if="
+                selectedCustomer.billing.address_street_1 ||
+                selectedCustomer.billing.address_street_2
+              "
+              class="m-0"
+            >
+              <span v-if="selectedCustomer.billing.address_street_1">
+                {{ selectedCustomer.billing.address_street_1 }}
+              </span>
+              <span
+                v-if="
+                  selectedCustomer.billing.address_street_1 &&
+                  selectedCustomer.billing.address_street_2
+                "
+              >
+                ,
+              </span>
+              <span v-if="selectedCustomer.billing.address_street_2">
+                {{ selectedCustomer.billing.address_street_2 }}
+              </span>
             </p>
             <p class="m-0">
               <span v-if="selectedCustomer.billing.city">
@@ -133,14 +149,23 @@
                 {{ selectedCustomer.billing.state }}
               </span>
             </p>
-            <p v-if="selectedCustomer.billing.zip" class="m-0">
-              {{ selectedCustomer.billing.zip }}
-            </p>
-            <p v-if="selectedCustomer.billing.country" class="m-0">
-              {{ selectedCustomer.billing.country.name }}
-            </p>
-            <p v-if="selectedCustomer.billing.phone" class="m-0">
-              {{ selectedCustomer.billing.phone }}
+            <p
+              v-if="
+                selectedCustomer.billing.zip || selectedCustomer.billing.country
+              "
+              class="m-0"
+            >
+              <span v-if="selectedCustomer.billing.zip">
+                {{ selectedCustomer.billing.zip }}
+              </span>
+              <span
+                v-if="selectedCustomer.billing.zip && selectedCustomer.billing.country"
+              >
+                ,
+              </span>
+              <span v-if="selectedCustomer.billing.country">
+                {{ selectedCustomer.billing.country.name }}
+              </span>
             </p>
           </div>
         </div>

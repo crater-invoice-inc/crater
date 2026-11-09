@@ -190,6 +190,10 @@
         :class="isCollapsed ? 'justify-center' : 'px-1'"
       >
         <img v-if="adminLogo" :src="adminLogo" class="block h-6 max-w-full" alt="Logo" />
+        <CraterMark
+          v-else-if="isCollapsed"
+          class="block h-8 w-8"
+        />
         <MainLogo
           v-else
           class="block h-6 max-w-full"
@@ -235,6 +239,7 @@
 import { computed, onMounted, watch } from 'vue'
 import { useDebounceFn } from '@vueuse/core'
 import MainLogo from '@/scripts/components/icons/MainLogo.vue'
+import CraterMark from '@/scripts/components/icons/CraterMark.vue'
 import CompanySwitcher from '@/scripts/components/CompanySwitcher.vue'
 import SidebarMenuItem from '@/scripts/admin/layouts/partials/SidebarMenuItem.vue'
 import SidebarUserCard from '@/scripts/admin/layouts/partials/SidebarUserCard.vue'

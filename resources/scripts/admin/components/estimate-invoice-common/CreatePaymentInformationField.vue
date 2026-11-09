@@ -1,6 +1,6 @@
 <template>
   <div class="mb-6">
-    <label class="text-gray-800 font-medium mb-4 text-sm">
+    <label class="text-heading font-medium mb-4 text-sm">
       {{ $t(label) }}
     </label>
     <BaseCustomInput

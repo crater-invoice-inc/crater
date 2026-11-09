@@ -13,14 +13,14 @@
 
     <div
       v-if="selectedCustomer"
-      class="flex flex-col p-4 bg-white border border-gray-200 border-solid rounded-md"
+      class="flex flex-col p-4 bg-surface border border-line-light border-solid rounded-xl shadow-card"
       @click.stop
     >
       <div class="flex relative justify-between items-center mb-2">
         <BaseText
           :text="selectedCustomer.name"
           :length="30"
-          class="flex-1 text-base font-medium text-left text-gray-900"
+          class="flex-1 text-base font-medium text-left text-heading"
         />
         <div class="flex">
           <a
@@ -37,7 +37,7 @@
             "
             @click.stop="editCustomer"
           >
-            <BaseIcon name="PencilIcon" class="text-gray-500 h-4 w-4 mr-1" />
+            <BaseIcon name="PencilIcon" class="text-muted h-4 w-4 mr-1" />
 
             {{ $t('general.edit') }}
           </a>
@@ -55,7 +55,7 @@
             "
             @click="resetSelectedCustomer"
           >
-            <BaseIcon name="XCircleIcon" class="text-gray-500 h-4 w-4 mr-1" />
+            <BaseIcon name="XCircleIcon" class="text-muted h-4 w-4 mr-1" />
             {{ $t('general.deselect') }}
           </a>
         </div>
@@ -73,8 +73,7 @@
               mb-1
               text-sm
               font-medium
-              text-left text-gray-400
-              uppercase
+              text-left text-muted
               whitespace-nowrap
             "
           >
@@ -119,8 +118,7 @@
               mb-1
               text-sm
               font-medium
-              text-left text-gray-400
-              uppercase
+              text-left text-muted
               whitespace-nowrap
             "
           >
@@ -162,11 +160,11 @@
       <PopoverButton
         :class="{
           'text-opacity-90': open,
-          'border border-solid border-red-500 focus:ring-red-500 rounded':
+          'border border-solid border-red-500 focus:ring-red-500 rounded-xl':
             valid.$error,
           'focus:ring-2 focus:ring-primary-400': !valid.$error,
         }"
-        class="w-full outline-none rounded-md"
+        class="w-full outline-none rounded-xl"
       >
         <div
           class="
@@ -174,13 +172,15 @@
             flex
             items-center
             justify-center
-            px-0
-            p-0
+            px-4
             py-6
-            bg-white
-            border border-gray-200 border-solid
-            rounded-md
+            bg-surface
+            border-2 border-dashed border-line-strong
+            border-solid
+            rounded-xl
+            transition-colors
           "
+          :class="open ? 'border-primary-400' : ''"
         >
           <BaseIcon
             name="UserIcon"
@@ -190,16 +190,17 @@
               !w-10
               !h-10
               p-2
-              mr-5
-              text-sm text-white
-              bg-gray-200
-              rounded-full
+              mr-4
+              text-base text-muted
+              bg-surface-muted
+              rounded-lg
+              shrink-0
               font-base
             "
           />
 
-          <div>
-            <label class="text-lg font-medium text-gray-900">
+          <div class="text-left">
+            <label class="text-base font-medium text-heading">
               {{ $t('customers.new_customer') }}
               <span class="text-red-500"> * </span>
             </label>
@@ -211,6 +212,11 @@
               {{ $t('estimates.errors.required') }}
             </p>
           </div>
+
+          <BaseIcon
+            name="ChevronDownIcon"
+            class="!w-5 !h-5 ml-auto shrink-0 text-muted"
+          />
         </div>
       </PopoverButton>
 
@@ -230,10 +236,10 @@
             static
             class="
               overflow-hidden
-              rounded-md
-              shadow-lg
+              rounded-xl
+              shadow-card
               ring-1 ring-black ring-opacity-5
-              bg-white
+              bg-surface
             "
           >
             <div class="relative">
@@ -252,7 +258,7 @@
                   flex flex-col
                   overflow-auto
                   list
-                  border-t border-gray-200
+                  border-t border-line-light
                 "
               >
                 <li
@@ -263,10 +269,10 @@
                     flex
                     px-6
                     py-2
-                    border-b border-gray-200 border-solid
+                    border-b border-line-light border-solid
                     cursor-pointer
-                    hover:cursor-pointer hover:bg-gray-100
-                    focus:outline-none focus:bg-gray-100
+                    hover:cursor-pointer hover:bg-surface-secondary
+                    focus:outline-none focus:bg-surface-secondary
                     last:border-b-0
                   "
                   @click="selectNewCustomer(customer.id, close)"
@@ -283,8 +289,8 @@
                       text-xl
                       font-semibold
                       leading-9
-                      text-white
-                      bg-gray-300
+                      text-muted
+                      bg-surface-muted
                       rounded-full
                       avatar
                     "
@@ -341,14 +347,16 @@
                 w-full
                 px-2
                 py-3
-                bg-gray-200
+                bg-surface-secondary
                 border-none
                 outline-none
-                focus:bg-gray-300
+                hover:bg-surface-muted
+                transition-colors
+                text-primary-500
               "
               @click="openCustomerModal"
             >
-              <BaseIcon name="UserAddIcon" class="text-primary-400" />
+              <BaseIcon name="UserAddIcon" class="text-primary-500" />
 
               <label
                 class="

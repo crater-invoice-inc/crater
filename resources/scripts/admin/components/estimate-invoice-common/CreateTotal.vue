@@ -1,12 +1,13 @@
 <template>
   <div
     class="
-      px-5
-      py-4
+      px-6
+      py-5
       mt-6
-      bg-white
-      border border-gray-200 border-solid
-      rounded
+      bg-surface
+      border border-line-light border-solid
+      rounded-2xl
+      shadow-card
       md:min-w-[390px]
       min-w-[300px]
       lg:mt-7
@@ -18,7 +19,7 @@
       </BaseContentPlaceholders>
       <label
         v-else
-        class="text-sm font-semibold leading-5 text-gray-400 uppercase"
+        class="text-sm font-medium leading-5 text-muted"
       >
         {{ $t('estimates.sub_total') }}
       </label>
@@ -29,7 +30,7 @@
 
       <label
         v-else
-        class="flex items-center justify-center m-0 text-lg text-black uppercase "
+        class="flex items-center justify-center m-0 text-lg font-semibold text-heading"
       >
         <BaseFormatMoney
           :amount="store.getSubTotal"
@@ -48,7 +49,7 @@
       </BaseContentPlaceholders>
       <label
         v-else-if="store[storeProp].tax_per_item === 'YES'"
-        class="m-0 text-sm font-semibold leading-5 text-gray-500 uppercase"
+        class="m-0 text-sm font-medium leading-5 text-muted"
       >
         {{ tax.name }} - {{ tax.percent }}%
       </label>
@@ -59,7 +60,7 @@
 
       <label
         v-else-if="store[storeProp].tax_per_item === 'YES'"
-        class="flex items-center justify-center m-0 text-lg text-black uppercase "
+        class="flex items-center justify-center m-0 text-lg font-semibold text-heading"
       >
         <BaseFormatMoney :amount="tax.amount" :currency="defaultCurrency" />
       </label>
@@ -77,7 +78,7 @@
       </BaseContentPlaceholders>
       <label
         v-else
-        class="text-sm font-semibold leading-5 text-gray-400 uppercase"
+        class="text-sm font-medium leading-5 text-muted"
       >
         {{ $t('estimates.discount') }}
       </label>
@@ -100,7 +101,7 @@
         <BaseDropdown position="bottom-end">
           <template #activator>
             <BaseButton
-              class="p-2 rounded-none rounded-tr-md rounded-br-md"
+              class="p-2 rounded-none rounded-tr-lg rounded-br-lg"
               type="button"
               variant="white"
             >
@@ -166,14 +167,14 @@
     </div>
 
     <div
-      class="flex items-center justify-between w-full pt-2 mt-5 border-t border-gray-200 border-solid "
+      class="flex items-center justify-between w-full pt-2 mt-5 border-t border-line-light border-solid "
     >
       <BaseContentPlaceholders v-if="isLoading">
         <BaseContentPlaceholdersText :lines="1" class="w-16 h-5" />
       </BaseContentPlaceholders>
       <label
         v-else
-        class="m-0 text-sm font-semibold leading-5 text-gray-400 uppercase"
+        class="m-0 text-sm font-semibold leading-5 text-heading"
         >{{ $t('estimates.total') }} {{ $t('estimates.amount') }}:</label
       >
 
@@ -182,7 +183,7 @@
       </BaseContentPlaceholders>
       <label
         v-else
-        class="flex items-center justify-center text-lg uppercase  text-primary-400"
+        class="flex items-center justify-center text-lg font-bold text-primary-600"
       >
         <BaseFormatMoney :amount="store.getTotal" :currency="defaultCurrency" />
       </label>

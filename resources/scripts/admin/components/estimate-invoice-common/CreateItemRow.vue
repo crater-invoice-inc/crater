@@ -1,5 +1,5 @@
 <template>
-  <tr class="box-border bg-white border border-gray-200 border-solid rounded-b">
+  <tr class="box-border bg-surface border-b border-line-light border-solid">
     <td colspan="5" class="p-0 text-left align-top">
       <!-- Stacks vertically on mobile (cells become blocks) and keeps the
            billing columns on md+ screens. -->

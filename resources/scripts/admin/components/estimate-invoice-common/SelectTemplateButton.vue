@@ -1,6 +1,6 @@
 <template>
   <div>
-    <label class="flex text-gray-800 font-medium text-sm mb-2">
+    <label class="flex text-heading font-medium text-sm mb-2">
       {{ $t('general.select_template') }}
       <span class="text-sm text-red-500"> *</span>
     </label>

@@ -18,6 +18,11 @@
     <div
       class="
         grid grid-cols-1 gap-y-5 gap-x-4
+        p-5
+        bg-surface
+        border border-line-light border-solid
+        rounded-2xl
+        shadow-card
         sm:grid-cols-2
         lg:col-span-8
         lg:grid-cols-3 lg:self-start

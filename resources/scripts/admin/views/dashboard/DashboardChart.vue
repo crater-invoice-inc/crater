@@ -33,77 +33,6 @@
           </div>
         </div>
 
-        <!-- Tuiles de stats (Sales / Receipts / Expenses / Net income) -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mt-8">
-          <div class="flex items-center gap-3">
-            <span class="flex items-center justify-center w-11 h-11 shrink-0 rounded-xl bg-status-blue-bg">
-              <BaseIcon name="DocumentTextIcon" class="w-5 h-5 text-status-blue" />
-            </span>
-            <div class="min-w-0">
-              <p class="text-sm text-muted truncate">
-                {{ $t('dashboard.chart_info.total_sales') }}
-              </p>
-              <p class="text-lg font-bold text-heading truncate">
-                <BaseFormatMoney
-                  :amount="dashboardStore.totalSales"
-                  :currency="companyStore.selectedCompanyCurrency"
-                />
-              </p>
-            </div>
-          </div>
-
-          <div class="flex items-center gap-3">
-            <span class="flex items-center justify-center w-11 h-11 shrink-0 rounded-xl bg-status-green-bg">
-              <BaseIcon name="CashIcon" class="w-5 h-5 text-status-green" />
-            </span>
-            <div class="min-w-0">
-              <p class="text-sm text-muted truncate">
-                {{ $t('dashboard.chart_info.total_receipts') }}
-              </p>
-              <p class="text-lg font-bold text-heading truncate">
-                <BaseFormatMoney
-                  :amount="dashboardStore.totalReceipts"
-                  :currency="companyStore.selectedCompanyCurrency"
-                />
-              </p>
-            </div>
-          </div>
-
-          <div class="flex items-center gap-3">
-            <span class="flex items-center justify-center w-11 h-11 shrink-0 rounded-xl bg-status-yellow-bg">
-              <BaseIcon name="CreditCardIcon" class="w-5 h-5 text-status-yellow" />
-            </span>
-            <div class="min-w-0">
-              <p class="text-sm text-muted truncate">
-                {{ $t('dashboard.chart_info.total_expense') }}
-              </p>
-              <p class="text-lg font-bold text-heading truncate">
-                <BaseFormatMoney
-                  :amount="dashboardStore.totalExpenses"
-                  :currency="companyStore.selectedCompanyCurrency"
-                />
-              </p>
-            </div>
-          </div>
-
-          <div class="flex items-center gap-3">
-            <span class="flex items-center justify-center w-11 h-11 shrink-0 rounded-xl bg-status-purple-bg">
-              <BaseIcon name="ScaleIcon" class="w-5 h-5 text-status-purple" />
-            </span>
-            <div class="min-w-0">
-              <p class="text-sm text-muted truncate">
-                {{ $t('dashboard.chart_info.net_income') }}
-              </p>
-              <p class="text-lg font-bold text-heading truncate">
-                <BaseFormatMoney
-                  :amount="dashboardStore.totalNetIncome"
-                  :currency="companyStore.selectedCompanyCurrency"
-                />
-              </p>
-            </div>
-          </div>
-        </div>
-
         <LineChart
           class="mt-6 sm:w-full"
           :invoices="dashboardStore.chartData.invoiceTotals"
@@ -138,11 +67,9 @@ import GaugeChart from '@/scripts/admin/components/charts/GaugeChart.vue'
 import ChartPlaceholder from './DashboardChartPlaceholder.vue'
 import abilities from '@/scripts/admin/stub/abilities'
 import { useUserStore } from '@/scripts/admin/stores/user'
-import { useCompanyStore } from '@/scripts/admin/stores/company'
 
 const dashboardStore = useDashboardStore()
 const userStore = useUserStore()
-const companyStore = useCompanyStore()
 const selectedYear = ref(null)
 let syncingDefaultYear = false
 

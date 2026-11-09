@@ -2,118 +2,111 @@
   <BaseCard class="flex flex-col mt-6">
     <ChartPlaceholder v-if="customerStore.isFetchingViewData" />
 
-    <div v-else class="grid grid-cols-12">
-      <div class="col-span-12 xl:col-span-9 xxl:col-span-10">
-        <div class="flex justify-between mt-1 mb-6">
-          <h6 class="flex items-center">
-            <BaseIcon name="ChartSquareBarIcon" class="h-5 text-primary-400" />
+    <div v-else>
+      <!-- En-tête façon "Cash flow" InvoiceShelf -->
+      <div class="flex justify-between items-center flex-col md:flex-row gap-3">
+        <div class="flex items-center gap-3">
+          <span class="flex items-center justify-center w-9 h-9 rounded-lg bg-primary-50">
+            <BaseIcon name="ChartSquareBarIcon" class="w-5 h-5 text-primary-500" />
+          </span>
+          <h6 class="text-lg font-semibold text-heading leading-tight">
             {{ $t('dashboard.monthly_chart.title') }}
           </h6>
+        </div>
 
-          <div class="w-40 h-10">
-            <BaseMultiselect
-              v-model="selectedYear"
-              :options="years"
-              :allow-empty="false"
-              :show-labels="false"
-              :placeholder="$t('dashboard.select_year')"
-              :can-deselect="false"
-              @select="onChangeYear"
-            />
+        <div class="w-full md:w-40 h-10">
+          <BaseMultiselect
+            v-model="selectedYear"
+            :options="years"
+            :allow-empty="false"
+            :show-labels="false"
+            :placeholder="$t('dashboard.select_year')"
+            :can-deselect="false"
+            @select="onChangeYear"
+          />
+        </div>
+      </div>
+
+      <!-- Tuiles de stats (Sales / Receipts / Expenses / Net income) -->
+      <div v-if="isLoading" class="grid grid-cols-2 md:grid-cols-4 gap-6 mt-8">
+        <div class="flex items-center gap-3">
+          <span class="flex items-center justify-center w-11 h-11 shrink-0 rounded-xl bg-status-blue-bg">
+            <BaseIcon name="DocumentTextIcon" class="w-5 h-5 text-status-blue" />
+          </span>
+          <div class="min-w-0">
+            <p class="text-sm text-muted truncate">
+              {{ $t('dashboard.chart_info.total_sales') }}
+            </p>
+            <p class="text-lg font-bold text-heading truncate">
+              <BaseFormatMoney
+                :amount="chartData.salesTotal"
+                :currency="data.currency"
+              />
+            </p>
           </div>
         </div>
 
-        <LineChart
-          v-if="isLoading"
-          :invoices="getChartInvoices"
-          :expenses="getChartExpenses"
-          :receipts="getReceiptTotals"
-          :income="getNetProfits"
-          :labels="getChartMonths"
-          class="sm:w-full"
-        />
-      </div>
-
-      <div
-        class="
-          grid
-          col-span-12
-          mt-6
-          text-center
-          xl:mt-0
-          sm:grid-cols-4
-          xl:text-right xl:col-span-3 xl:grid-cols-1
-          xxl:col-span-2
-        "
-      >
-        <div class="px-6 py-2">
-          <span class="text-xs leading-5 lg:text-sm">
-            {{ $t('dashboard.chart_info.total_sales') }}
+        <div class="flex items-center gap-3">
+          <span class="flex items-center justify-center w-11 h-11 shrink-0 rounded-xl bg-status-green-bg">
+            <BaseIcon name="CashIcon" class="w-5 h-5 text-status-green" />
           </span>
-          <br />
-          <span
-            v-if="isLoading"
-            class="block mt-1 text-xl font-semibold leading-8"
-          >
-            <BaseFormatMoney
-              :amount="chartData.salesTotal"
-              :currency="data.currency"
-            />
-          </span>
+          <div class="min-w-0">
+            <p class="text-sm text-muted truncate">
+              {{ $t('dashboard.chart_info.total_receipts') }}
+            </p>
+            <p class="text-lg font-bold text-heading truncate">
+              <BaseFormatMoney
+                :amount="chartData.totalReceipts"
+                :currency="data.currency"
+              />
+            </p>
+          </div>
         </div>
 
-        <div class="px-6 py-2">
-          <span class="text-xs leading-5 lg:text-sm">
-            {{ $t('dashboard.chart_info.total_receipts') }}
+        <div class="flex items-center gap-3">
+          <span class="flex items-center justify-center w-11 h-11 shrink-0 rounded-xl bg-status-yellow-bg">
+            <BaseIcon name="CreditCardIcon" class="w-5 h-5 text-status-yellow" />
           </span>
-          <br />
-
-          <span
-            v-if="isLoading"
-            class="block mt-1 text-xl font-semibold leading-8"
-            style="color: #00c99c"
-          >
-            <BaseFormatMoney
-              :amount="chartData.totalExpenses"
-              :currency="data.currency"
-            />
-          </span>
+          <div class="min-w-0">
+            <p class="text-sm text-muted truncate">
+              {{ $t('dashboard.chart_info.total_expense') }}
+            </p>
+            <p class="text-lg font-bold text-heading truncate">
+              <BaseFormatMoney
+                :amount="chartData.totalExpenses"
+                :currency="data.currency"
+              />
+            </p>
+          </div>
         </div>
 
-        <div class="px-6 py-2">
-          <span class="text-xs leading-5 lg:text-sm">
-            {{ $t('dashboard.chart_info.total_expense') }}
+        <div class="flex items-center gap-3">
+          <span class="flex items-center justify-center w-11 h-11 shrink-0 rounded-xl bg-status-purple-bg">
+            <BaseIcon name="ScaleIcon" class="w-5 h-5 text-status-purple" />
           </span>
-          <br />
-          <span
-            v-if="isLoading"
-            class="block mt-1 text-xl font-semibold leading-8"
-            style="color: #fb7178"
-          >
-            <BaseFormatMoney
-              :amount="chartData.totalExpenses"
-              :currency="data.currency"
-            />
-          </span>
-        </div>
-
-        <div class="px-6 py-2">
-          <span class="text-xs leading-5 lg:text-sm">
-            {{ $t('dashboard.chart_info.net_income') }}
-          </span>
-          <br />
-          <span
-            v-if="isLoading"
-            class="block mt-1 text-xl font-semibold leading-8"
-            style="color: #5851d8"
-          >
-            <BaseFormatMoney
-              :amount="chartData.netProfit"
-              :currency="data.currency"
-            />
-          </span>
+          <div class="min-w-0">
+            <p class="text-sm text-muted truncate">
+              {{ $t('dashboard.chart_info.net_income') }}
+            </p>
+            <p class="text-lg font-bold text-heading truncate">
+              <BaseFormatMoney
+                :amount="chartData.netProfit"
+                :currency="data.currency"
+              />
+            </p>
+          </div>
         </div>
       </div>
+
+      <LineChart
+        v-if="isLoading"
+        class="mt-6 sm:w-full"
+        :invoices="getChartInvoices"
+        :expenses="getChartExpenses"
+        :receipts="getReceiptTotals"
+        :income="getNetProfits"
+        :labels="getChartMonths"
+      />
     </div>
 
     <CustomerInfo />

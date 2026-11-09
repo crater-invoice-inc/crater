@@ -97,32 +97,80 @@
       </div>
 
       <div
-        v-if="selectedCustomer.billing"
-        class="pt-4 mt-4 border-t border-line-light border-solid"
+        class="
+          grid
+          gap-x-8 gap-y-4
+          pt-4
+          mt-4
+          border-t border-line-light border-solid
+          sm:grid-cols-2
+        "
       >
-        <p class="mb-1 text-sm text-muted">
-          {{ $t('general.bill_to') }}
-        </p>
+        <div v-if="selectedCustomer.billing">
+          <p class="mb-1 text-sm text-muted">
+            {{ $t('general.bill_to') }}
+          </p>
 
-        <div class="text-sm leading-relaxed text-left">
-          <p class="m-0">
-            <span v-if="selectedCustomer.billing.city">
-              {{ selectedCustomer.billing.city }}
-            </span>
-            <span
-              v-if="
-                selectedCustomer.billing.city && selectedCustomer.billing.state
-              "
-            >
-              ,
-            </span>
-            <span v-if="selectedCustomer.billing.state">
-              {{ selectedCustomer.billing.state }}
-            </span>
+          <div class="text-sm leading-relaxed text-left">
+            <p v-if="selectedCustomer.billing.address_street_1" class="m-0">
+              {{ selectedCustomer.billing.address_street_1 }}
+            </p>
+            <p v-if="selectedCustomer.billing.address_street_2" class="m-0">
+              {{ selectedCustomer.billing.address_street_2 }}
+            </p>
+            <p class="m-0">
+              <span v-if="selectedCustomer.billing.city">
+                {{ selectedCustomer.billing.city }}
+              </span>
+              <span
+                v-if="
+                  selectedCustomer.billing.city && selectedCustomer.billing.state
+                "
+              >
+                ,
+              </span>
+              <span v-if="selectedCustomer.billing.state">
+                {{ selectedCustomer.billing.state }}
+              </span>
+            </p>
+            <p v-if="selectedCustomer.billing.zip" class="m-0">
+              {{ selectedCustomer.billing.zip }}
+            </p>
+            <p v-if="selectedCustomer.billing.country" class="m-0">
+              {{ selectedCustomer.billing.country.name }}
+            </p>
+            <p v-if="selectedCustomer.billing.phone" class="m-0">
+              {{ selectedCustomer.billing.phone }}
+            </p>
+          </div>
+        </div>
+
+        <div>
+          <p class="mb-1 text-sm text-muted">
+            {{ $t('customers.basic_info') }}
           </p>
-          <p v-if="selectedCustomer.billing.zip" class="m-0">
-            {{ selectedCustomer.billing.zip }}
-          </p>
+
+          <div class="text-sm leading-relaxed text-left">
+            <p v-if="selectedCustomer.email" class="m-0">
+              <a
+                :href="`mailto:${selectedCustomer.email}`"
+                class="text-body-text hover:text-primary-500"
+                >{{ selectedCustomer.email }}</a
+              >
+            </p>
+            <p v-if="selectedCustomer.phone" class="m-0">
+              {{ selectedCustomer.phone }}
+            </p>
+            <p v-if="selectedCustomer.website" class="m-0">
+              <a
+                :href="selectedCustomer.website"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-body-text hover:text-primary-500"
+                >{{ selectedCustomer.website }}</a
+              >
+            </p>
+          </div>
         </div>
       </div>
     </div>

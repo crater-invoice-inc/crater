@@ -286,7 +286,7 @@ class EnvironmentManager
                     'MAIL_HOST='.config('mail.host')."\n".
                     'MAIL_PORT='.config('mail.port')."\n".
                     'MAIL_USERNAME='.config('mail.username')."\n".
-                    'MAIL_PASSWORD='.config('mail.password')."\n".
+                    'MAIL_PASSWORD="'.config('mail.password')."\"\n".
                     'MAIL_ENCRYPTION='.config('mail.encryption')."\n\n".
                     $mailFromCredential;
 
@@ -295,7 +295,7 @@ class EnvironmentManager
                     'MAIL_HOST='.$request->mail_host."\n".
                     'MAIL_PORT='.$request->mail_port."\n".
                     'MAIL_USERNAME='.$request->mail_username."\n".
-                    'MAIL_PASSWORD='.$request->mail_password."\n".
+                    'MAIL_PASSWORD="'.$request->mail_password."\"\n".
                     'MAIL_ENCRYPTION='.$request->mail_encryption."\n\n".
                     'MAIL_FROM_ADDRESS='.$request->from_mail."\n".
                     'MAIL_FROM_NAME="'.$request->from_name."\"\n\n";
@@ -308,7 +308,7 @@ class EnvironmentManager
                     'MAIL_HOST='.config('mail.host')."\n".
                     'MAIL_PORT='.config('mail.port')."\n".
                     'MAIL_USERNAME='.config('mail.username')."\n".
-                    'MAIL_PASSWORD='.config('mail.password')."\n".
+                    'MAIL_PASSWORD="'.config('mail.password')."\"\n".
                     'MAIL_ENCRYPTION='.config('mail.encryption')."\n\n".
                     $mailFromCredential;
 
@@ -317,7 +317,7 @@ class EnvironmentManager
                     'MAIL_HOST='.$request->mail_host."\n".
                     'MAIL_PORT='.$request->mail_port."\n".
                     'MAIL_USERNAME='.config('mail.username')."\n".
-                    'MAIL_PASSWORD='.config('mail.password')."\n".
+                    'MAIL_PASSWORD="'.config('mail.password')."\"\n".
                     'MAIL_ENCRYPTION='.$request->mail_encryption."\n\n".
                     'MAIL_FROM_ADDRESS='.$request->from_mail."\n".
                     'MAIL_FROM_NAME="'.$request->from_name."\"\n\n";
@@ -342,7 +342,7 @@ class EnvironmentManager
                     'MAIL_HOST='.config('mail.host')."\n".
                     'MAIL_PORT='.config('mail.port')."\n".
                     'MAIL_USERNAME='.config('mail.username')."\n".
-                    'MAIL_PASSWORD='.config('mail.password')."\n".
+                    'MAIL_PASSWORD="'.config('mail.password')."\"\n".
                     'MAIL_ENCRYPTION='.config('mail.encryption')."\n\n".
                     $mailFromCredential;
 
@@ -351,7 +351,7 @@ class EnvironmentManager
                     'MAIL_HOST='.$request->mail_host."\n".
                     'MAIL_PORT='.$request->mail_port."\n".
                     'MAIL_USERNAME='.config('mail.username')."\n".
-                    'MAIL_PASSWORD='.config('mail.password')."\n".
+                    'MAIL_PASSWORD="'.config('mail.password')."\"\n".
                     'MAIL_ENCRYPTION='.$request->mail_encryption."\n\n".
                     'MAIL_FROM_ADDRESS='.$request->from_mail."\n".
                     'MAIL_FROM_NAME="'.$request->from_name."\"\n\n";
@@ -374,7 +374,7 @@ class EnvironmentManager
                     'MAIL_HOST='.config('mail.host')."\n".
                     'MAIL_PORT='.config('mail.port')."\n".
                     'MAIL_USERNAME='.config('mail.username')."\n".
-                    'MAIL_PASSWORD='.config('mail.password')."\n".
+                    'MAIL_PASSWORD="'.config('mail.password')."\"\n".
                     'MAIL_ENCRYPTION='.config('mail.encryption')."\n\n".
                     $mailFromCredential;
 
@@ -383,7 +383,7 @@ class EnvironmentManager
                     'MAIL_HOST='.config('mail.host')."\n".
                     'MAIL_PORT='.config('mail.port')."\n".
                     'MAIL_USERNAME='.config('mail.username')."\n".
-                    'MAIL_PASSWORD='.config('mail.password')."\n".
+                    'MAIL_PASSWORD="'.config('mail.password')."\"\n".
                     'MAIL_ENCRYPTION='.config('mail.encryption')."\n\n".
                     'MAIL_FROM_ADDRESS='.$request->from_mail."\n".
                     'MAIL_FROM_NAME="'.$request->from_name."\"\n\n";
@@ -396,7 +396,7 @@ class EnvironmentManager
                     'MAIL_HOST='.config('mail.host')."\n".
                     'MAIL_PORT='.config('mail.port')."\n".
                     'MAIL_USERNAME='.config('mail.username')."\n".
-                    'MAIL_PASSWORD='.config('mail.password')."\n".
+                    'MAIL_PASSWORD="'.config('mail.password')."\"\n".
                     'MAIL_ENCRYPTION='.config('mail.encryption')."\n\n".
                     $mailFromCredential;
 
@@ -405,7 +405,7 @@ class EnvironmentManager
                     'MAIL_HOST='.config('mail.host')."\n".
                     'MAIL_PORT='.config('mail.port')."\n".
                     'MAIL_USERNAME='.config('mail.username')."\n".
-                    'MAIL_PASSWORD='.config('mail.password')."\n".
+                    'MAIL_PASSWORD="'.config('mail.password')."\"\n".
                     'MAIL_ENCRYPTION='.config('mail.encryption')."\n\n".
                     'MAIL_FROM_ADDRESS='.$request->from_mail."\n".
                     'MAIL_FROM_NAME="'.$request->from_name."\"\n\n";
